@@ -3,6 +3,8 @@ Goals
 --------------------
 
 * Lots...
+* There should a prioritized list of languages, not just one main language
+* ...
 
 Bugs
 --------------------

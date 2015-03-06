@@ -30,4 +30,7 @@ class Translation(models.Model):
 	def __unicode__(self):
 		return self.text[:47] + '...' if len(self.text) > 50 else self.text
 
+	def preview_text(self):
+		return self.text[:47] + '...' if len(self.text) > 50 else self.text
+
 

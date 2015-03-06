@@ -2,8 +2,8 @@
 from django.contrib.messages import add_message, INFO
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
-from django.utils.http import is_safe_url
 from django.views.decorators.http import require_POST
+from basics.decorators import next_GET, next_GET_or
 from learners.forms import EmailLoginForm as LoginForm, LogoutForm, PasswordForm, ProfileForm
 from learners.forms import RegistrationForm
 from django.contrib.auth import login as auth_login, authenticate
@@ -11,25 +11,6 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.views import login_required
 from settings import LOGIN_REDIRECT_URL
 from basics.views import notification
-
-
-def next_GET_or(url_name):
-	"""
-		Do you know decorators? Otherwise ignore.
-	"""
-	def next_GET(func):
-		def func_with_next(request, *args, **kwargs):
-			if url_name is None:
-				next = LOGIN_REDIRECT_URL
-			else:
-				next = reverse(url_name)
-			if 'next' in request.GET:
-				if is_safe_url(url = request.GET['next'], host = request.get_host()):
-					next = request.GET['next']
-			return func(request, *args, next = next, **kwargs)
-		return func_with_next
-	return next_GET
-next_GET = next_GET_or(None)
 
 
 @next_GET

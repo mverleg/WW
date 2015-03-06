@@ -1,0 +1,38 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+	Public lists
+	-
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	<h1>All public lists</h1>
+
+	{% if public_lists %}
+	<table class="table table-striped table-hover">
+	    <thead>
+            <td>Follow?</td>
+            <td style="min-width: 50%;">Name</td>
+            <td>Phrases</td>
+	    </thead>
+	    <tbody>
+    		{% for public_list in public_lists %}
+    			<tr>
+				    <td>[follow link]</td> <!-- #todo -->
+				    <td><a href="{% url 'show_list' pk=public_list.pk slug=public_list.slug %}">{{ public_list.name }}</a></td>
+				    <td>{{ public_list.phrases.count }}</td>
+			    </tr>
+    	    {% endfor %}
+	    </tbody>
+	</table>
+	{% else %}
+		<p>There are no public lists you aren't yet following.</p>
+	{% endif %}
+
+{% endblock content %}
+
+

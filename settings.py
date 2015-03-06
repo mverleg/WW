@@ -15,6 +15,7 @@ SUPPORTED_LANGUAGES = (
 	('zh', 'Mandarin Chinese'),
 	('de', 'German'),
 )
+DEFAULT_LANGUAGE = SUPPORTED_LANGUAGES[0][0]
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -48,6 +49,7 @@ INSTALLED_APPS = (
 	'basics',
 	'learners',
 	'phrasebook',
+	'lists',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -58,6 +60,7 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'basics.middleware.SetLearningLanguage',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

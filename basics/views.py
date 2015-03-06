@@ -1,5 +1,8 @@
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from basics.decorators import next_GET
+from basics.forms import ChooseLanguageForm
+from settings import DEFAULT_LANGUAGE
 
 
 def home(request):
@@ -22,5 +25,17 @@ def notification(request, message):
 def search(request):
 	# django-haystack can be used for searching
 	return notification(request, 'Search is not yet implemented.')
+
+
+@next_GET
+def choose_language(request, next):
+	form = ChooseLanguageForm(request.POST or None, initial = {'language': DEFAULT_LANGUAGE})
+	if form.is_valid():
+		request.session['lang'] = form.cleaned_data['language']
+		return redirect(request.POST['next'] or '/')
+	return render(request, 'choose_language.html', {
+		'form': form,
+		'next': next
+	})
 
 

@@ -1,6 +1,7 @@
 
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
+from settings import SUPPORTED_LANGUAGES
 
 
 """
@@ -35,6 +36,7 @@ class Learner(AbstractBaseUser, PermissionsMixin):
 	email = models.EmailField(blank = True, unique = True, max_length = 254, help_text = 'Email address; also used as login name.')
 	name = models.CharField(max_length = 48, help_text = 'Visible name on the site.')
 	is_staff = models.BooleanField(default = False, help_text = 'Designates whether the user can log into this admin site.')
+	#language = models.CharField(choices = SUPPORTED_LANGUAGES, max_length = 8)
 
 	objects = LearnerManager()
 	USERNAME_FIELD = 'email'
