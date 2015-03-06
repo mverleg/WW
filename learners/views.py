@@ -88,7 +88,7 @@ def register(request, next):
 		if form.is_valid():
 			user = form.save()
 			user = authenticate(username = user.email, password = form.cleaned_data['password'])
-			login(request, user)
+			auth_login(request, user)
 			add_message(request, INFO, 'Your account %s has been created! Welcome to the site!' % user.email)
 			return redirect(to = request.POST['next'] or LOGIN_REDIRECT_URL)
 	return render(request, 'register.html', {
