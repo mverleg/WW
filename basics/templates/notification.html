@@ -1,0 +1,16 @@
+
+{% extends 'frame.html' %}
+
+{% comment %}
+    This html template creates the basic structure of the homepage. The home view (basics/views/home.py) will add the
+    dynamic data, which will be filled in for the {{ VARIABLE }} tags here.
+{% endcomment %}
+
+
+{% block content %}
+	<header class="jumbotron hero-spacer">
+	    <h1>{{ message }}</h1>
+	</header>
+{% endblock content %}
+
+

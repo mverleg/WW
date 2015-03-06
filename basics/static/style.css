@@ -1,0 +1,13 @@
+
+
+#content_area
+{
+	min-height: 30em;
+}
+
+form[role=form]
+{
+	margin: 1em 0 2em 0;
+}
+
+

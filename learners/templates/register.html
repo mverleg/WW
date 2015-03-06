@@ -1,0 +1,26 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+	Register
+	{{ TITLE_SEPARATOR }}
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	<h1>Register</h1>
+
+	<p>Glad you're joining us! You can create your essential information here, more information can be added later. If you already have an account, you can <a href="{% url 'login' %}">login</a> instead.</p>
+
+	<form role="form" action="{% url 'register' %}" method="POST">
+	    {{ form|as_bootstrap }}
+		<input type="hidden" name="next" value="{{ next }}" />
+		{% csrf_token %}
+		<button type="submit" class="btn btn-success">Register</button>
+	</form>
+
+{% endblock content %}
+
+

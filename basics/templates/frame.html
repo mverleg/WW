@@ -1,0 +1,205 @@
+{% comment %}
+	This file contains the basic elements for all pages. Specific pages just need to replace their parts, no need to do
+	the banner and background and menu etc for every page.
+{% endcomment %}
+
+<!-- Style from http://startbootstrap.com/template-overviews/heroic-features/ -->
+
+{% load staticfiles %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>WordsProgram</title>
+
+	<!-- styles -->
+	<link rel='stylesheet' href='{% static 'css/bootstrap.min.css' %}' />
+	<link rel='stylesheet' href="{% static 'css/heroic-features.css' %}">
+	<link rel='stylesheet' href='{% static 'style.css' %}' />
+
+</head>
+
+<body>
+
+	<!-- Navigation -->
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container">
+
+			{% block menu_home %}
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="{% url 'home' %}"><i class="glyphicon glyphicon-home"></i> {% block brand_name %}home{% endblock brand_name %}</a>
+				</div>
+			{% endblock menu_home %}
+
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					{% block menu_info %}
+						<li><a href='/about/'><i class="glyphicon glyphicon-heart"></i> about</a></li>
+					{% endblock menu_info %}
+					{% block menu %}
+						<!-- add menu items here -->
+					{% endblock menu %}
+				</ul>
+
+				<ul class="nav navbar-nav navbar-right">
+					{% block menu_auth %}
+						{% if request.user.is_authenticated %}
+							{% comment %}
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> account <b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><a href='{% url 'profile' %}'><i class="glyphicon glyphicon-user"></i> account</a></li>
+									<li><a href='{% url 'password' %}'><i class="glyphicon glyphicon-lock"></i> password</a></li>
+									<li><a href='{% url 'settings' %}'><i class="glyphicon glyphicon-cog"></i> settings</a></li>
+									<li><a href='{% url 'logout' %}?next={{ request.path }}'><i class="glyphicon glyphicon-off"></i> logout</a></li>
+								</ul>
+							</li>
+							{% endcomment %}
+							<li><a href='{% url 'settings' %}?next={{ request.path }}'><i class="glyphicon glyphicon-cog"></i> settings</a></li>
+							<li><a href='{% url 'profile' %}?next={{ request.path }}'><i class="glyphicon glyphicon-user"></i> account</a></li>
+						{% else %}
+							<li><a href="{% url 'register' %}?next={{ request.path }}"><i class="glyphicon glyphicon-pencil"></i> register</a></li>
+							<li><a href="{% url 'login' %}?next={{ request.path }}"><i class="glyphicon glyphicon-user"></i> login</a></li>
+						{% endif %}
+					{% endblock menu_auth %}
+				</ul>
+
+				{% block search_box %}
+					<form class="navbar-form navbar-right" role="search" method="GET" action="{% url 'search' %}">
+						<div class="form-group">
+							<input name="q" type="text" class="form-control" placeholder="search..." {% block menu_autofocus %}autofocus{% endblock menu_autofocus %}>
+						</div>
+						<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+					</form>
+				{% endblock search_box %}
+			</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
+
+	<!-- Page Content -->
+	<div class="container">
+
+		{% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-dismissible alert-{{ message.tags }}" role="alert">
+	                <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+	                <strong>{{ message.tags.upper }}</strong>:
+	                {{ message }}
+                </div>
+            {% endfor %}
+		{% endif %}
+
+	    <div id="content_area">
+            {% block content %}
+                <header class="jumbotron hero-spacer">
+                    <h1>No content yet!</h1>
+                </header>
+            {% endblock content %}
+	    </div>
+
+		<hr>
+
+		<!-- Title -->
+		<div class="row">
+			<div class="col-lg-12">
+				<h3>What would you like to do?</h3>
+			</div>
+		</div>
+		<!-- /.row -->
+
+		<!-- Page Features -->
+		<div class="row text-center">
+
+			<div class="col-md-3 col-sm-6 hero-feature">
+				<div class="thumbnail">
+					<img src="{% static 'img/placeholder.gif' %}" alt="">
+					<div class="caption">
+						<h3>Feature Label</h3>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+						<p>
+							<a href="#" class="btn btn-primary">Buy Now!</a> <a href="#" class="btn btn-default">More Info</a>
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3 col-sm-6 hero-feature">
+				<div class="thumbnail">
+					<img src="{% static 'img/placeholder.gif' %}" alt="">
+					<div class="caption">
+						<h3>Feature Label</h3>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+						<p>
+							<a href="#" class="btn btn-primary">Buy Now!</a> <a href="#" class="btn btn-default">More Info</a>
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3 col-sm-6 hero-feature">
+				<div class="thumbnail">
+					<img src="{% static 'img/placeholder.gif' %}" alt="">
+					<div class="caption">
+						<h3>Feature Label</h3>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+						<p>
+							<a href="#" class="btn btn-primary">Buy Now!</a> <a href="#" class="btn btn-default">More Info</a>
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3 col-sm-6 hero-feature">
+				<div class="thumbnail">
+					<img src="{% static 'img/placeholder.gif' %}" alt="">
+					<div class="caption">
+						<h3>Feature Label</h3>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+						<p>
+							<a href="#" class="btn btn-primary">Buy Now!</a> <a href="#" class="btn btn-default">More Info</a>
+						</p>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- /.row -->
+
+		<hr>
+
+		<!-- Footer -->
+		<footer>
+			<div class="row">
+				<div class="col-lg-12">
+					<p>&copy; 2014 Werner's Wacky Words</p>
+				</div>
+			</div>
+		</footer>
+
+	</div>
+	<!-- /.container -->
+
+	<!-- scripts -->
+    <script src='{% static 'js/jquery.min.js' %}'></script>
+    <script src='{% static 'js/bootstrap.min.js' %}'></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+	<script src='{% static 'script.js' %}'></script>
+
+</body>
+
+</html>

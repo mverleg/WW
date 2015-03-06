@@ -1,0 +1,38 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+	Profile
+	{{ TITLE_SEPARATOR }}
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	<h1>Profile</h1>
+
+	<p>Your email address, <strong>{{ request.user.email }}</strong>, is also your login. It can not be changed.</p>
+
+	<form role="form" action="{% url 'profile' %}" method="POST">
+	    {{ profile_form|as_bootstrap }}
+		<input type="hidden" name="next" value="{{ next }}" />
+		{% csrf_token %}
+		<button type="submit" class="btn btn-success">Save</button>
+	</form>
+
+	<p>You can also <a href="{% url 'password' %}?next={{ next }}">change your password</a>. Choose a strong one!</p>
+
+	<p><a href="{% url 'password' %}" type="button" class="btn btn-danger">Change password</a></p>
+
+	<p>When you are done, don't forget to log out.</p>
+
+	<form role="form"  action="{% url 'logout' %}" method="POST">
+		<input type="hidden" name="next" value="{{ next }}" />
+		{% csrf_token %}
+		<button type="submit" class="btn btn-warning">Logout</button>
+	</form>
+
+{% endblock content %}
+
+

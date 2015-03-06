@@ -1,0 +1,28 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+	Login
+	{{ TITLE_SEPARATOR }}
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	<h1>Login</h1>
+
+	<p>Welcome to the site! You can login below.</p>
+
+	<form role="form" action="{% url 'login' %}" method="POST">
+	    {{ form|as_bootstrap }}
+		<input type="hidden" name="next" value="{{ next }}" />
+		{% csrf_token %}
+		<button type="submit" class="btn btn-success">Login</button>
+	</form>
+
+	<p>If you don't have an account, you can <a href="{% url 'register' %}?next={{ next }}">register</a> for free!</p>
+
+{% endblock content %}
+
+
