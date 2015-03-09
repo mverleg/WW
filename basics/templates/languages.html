@@ -1,0 +1,22 @@
+
+{% extends 'frame.html' %}
+
+
+{% block content %}
+
+	<h1>Please choose your main language.</h1>
+
+	<p>Here you can choose the language you want to study, in which the phrases will be displayed.</p>
+
+	<form role="form" action="{% url 'choose_languages' %}" method="POST">
+	    {{ form|as_bootstrap }}
+		<input type="hidden" name="next" value="{{ next }}" />
+		{% csrf_token %}
+		<button type="submit" class="btn btn-success">Save</button>
+	</form>
+
+	<p>(This requires session cookies to be enabled.)</p>
+
+{% endblock content %}
+
+

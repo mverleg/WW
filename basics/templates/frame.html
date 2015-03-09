@@ -42,16 +42,16 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="{% url 'home' %}"><i class="glyphicon glyphicon-home"></i> {% block brand_name %}home{% endblock brand_name %}</a>
+					<a class="navbar-brand" href="{% url 'home' %}"><i class="glyphicon glyphicon-home"></i> {% block brand_name %}{% blocktrans context 'menu option: home' %}home{% endblocktrans %}{% endblock brand_name %}</a>
 				</div>
 			{% endblock menu_home %}
 
 			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
 					{% block menu_info %}
-						<li><a href='{% url 'about' %}'><i class="glyphicon glyphicon-heart"></i> about</a></li>
-						<li><a href='{% url 'choose_language' %}?next={{ request.path }}'><i class="glyphicon glyphicon-comment"></i> language</a></li>
-						<li><a href='{% url 'all_lists' %}'><i class="glyphicon glyphicon-th-list"></i> lists</a></li>
+						<li><a href='{% url 'about' %}'><i class="glyphicon glyphicon-heart"></i> {% blocktrans context 'menu option: about' %}about{% endblocktrans %}</a></li>
+						<li><a href='{% url 'choose_languages' %}?next={{ request.path }}'><i class="glyphicon glyphicon-flag"></i> {% blocktrans context 'menu option: languages' %}languages{% endblocktrans %}</a></li>
+						<li><a href='{% url 'all_lists' %}'><i class="glyphicon glyphicon-th-list"></i> {% blocktrans context 'menu option: lists' %}lists{% endblocktrans %}</a></li>
 					{% endblock menu_info %}
 					{% block menu %}
 						<!-- add menu items here -->
@@ -72,11 +72,11 @@
 								</ul>
 							</li>
 							{% endcomment %}
-							<li><a href='{% url 'settings' %}?next={{ request.path }}'><i class="glyphicon glyphicon-cog"></i> settings</a></li>
-							<li><a href='{% url 'profile' %}?next={{ request.path }}'><i class="glyphicon glyphicon-user"></i> account</a></li>
+							<li><a href='{% url 'settings' %}?next={{ request.path }}'><i class="glyphicon glyphicon-cog"></i> {% blocktrans context 'menu option: settings' %}settings{% endblocktrans %}</a></li>
+							<li><a href='{% url 'profile' %}?next={{ request.path }}'><i class="glyphicon glyphicon-user"></i> {% blocktrans context 'menu option: account' %}account{% endblocktrans %}</a></li>
 						{% else %}
-							<li><a href="{% url 'register' %}?next={{ request.path }}"><i class="glyphicon glyphicon-pencil"></i> register</a></li>
-							<li><a href="{% url 'login' %}?next={{ request.path }}"><i class="glyphicon glyphicon-user"></i> login</a></li>
+							<li><a href="{% url 'register' %}?next={{ request.path }}"><i class="glyphicon glyphicon-pencil"></i> {% blocktrans context 'menu option: register' %}register{% endblocktrans %}</a></li>
+							<li><a href="{% url 'login' %}?next={{ request.path }}"><i class="glyphicon glyphicon-user"></i> {% blocktrans context 'menu option: login' %}login{% endblocktrans %}</a></li>
 						{% endif %}
 					{% endblock menu_auth %}
 				</ul>
@@ -84,7 +84,7 @@
 				{% block search_box %}
 					<form class="navbar-form navbar-right" role="search" method="GET" action="{% url 'search' %}">
 						<div class="form-group">
-							<input name="q" type="text" class="form-control" placeholder="search..." {% block menu_autofocus %}autofocus{% endblock menu_autofocus %}>
+							<input name="q" type="text" class="form-control" placeholder="{% blocktrans context 'Search placeholder' %}search{% endblocktrans %}..." {% block menu_autofocus %}autofocus{% endblock menu_autofocus %}>
 						</div>
 						<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
 					</form>
@@ -119,7 +119,7 @@
 		<!-- Title -->
 		<div class="row">
 			<div class="col-lg-12">
-				<h3>What would you like to do?</h3>
+				<h3>{% blocktrans context 'Main page options header' %}What would you like to do?{% endblocktrans %}</h3>
 			</div>
 		</div>
 		<!-- /.row -->

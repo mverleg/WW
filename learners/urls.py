@@ -2,7 +2,6 @@
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
-from django.template import add_to_builtins
 from learners.views import login, logout, register, password, profile, settings
 
 
@@ -15,11 +14,5 @@ urlpatterns = patterns('',
 	url(r'^profile/$', profile, name = 'profile'),
 	url(r'^settings/$', settings, name = 'settings'),
 )
-
-
-"""
-	This is kind of a hack:
-"""
-add_to_builtins('basics.tags')
 
 

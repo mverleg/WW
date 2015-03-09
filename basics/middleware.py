@@ -5,28 +5,35 @@
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.utils.translation import get_language
+from settings import DEFAULT_LEARN_LANGUAGE
 
 
 class SetLearningLanguage(object):
 	"""
-		Set the preferred language for each request. Try:
+		Set the preferred learning language for each request. Try:
 
 		* GET
 		* session
 
 		Otherwise redirect to the language selection screen.
 	"""
-	#todo: maybe this should be a from and to language; the code would be the same
 	def process_request(self, request):
-		chooose_url = reverse('choose_language')
-		if chooose_url in request.path:
+		choose_url = reverse('choose_languages')
+		request.KNOWN_LANG = get_language()
+		if choose_url in request.path:
+			return
+		if 'learn' in request.GET:
+			request.LEARN_LANG = request.GET['learn']
 			return
 		if 'lang' in request.GET:
-			request.lang = request.GET['lang']
+			""" alternative name, in case people try to guess the url parameter """
+			request.LEARN_LANG = request.GET['lang']
 			return
-		if 'lang' in request.session:
-			request.lang = request.session['lang']
+		if 'learn_lang' in request.session:
+			request.LEARN_LANG = request.session['learn_lang']
 			return
-		return HttpResponseRedirect('%s?next=%s' % (chooose_url, request.path))
+		request.session['learn_lang'] = DEFAULT_LEARN_LANGUAGE
+		return HttpResponseRedirect('%s?next=%s' % (choose_url, request.path))
 
 

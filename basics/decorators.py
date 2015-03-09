@@ -48,3 +48,5 @@ def next_GET_or(url_name):
 		return func_with_next
 	return next_GET
 next_GET = next_GET_or(None)
+
+
