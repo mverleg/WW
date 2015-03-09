@@ -1,18 +1,18 @@
 
 from django.contrib import admin
-from lists.models import PhraseList, ListAccess
+from lists.models import TranslationsList, ListAccess
 
 
 class ListAccessAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'phrase_list', 'learner', 'active', 'access', 'priority',)
+	list_display = ('__unicode__', 'translation_list', 'learner', 'active', 'access', 'priority',)
 
 
-class PhraseListAdmin(admin.ModelAdmin):
+class TranslationListAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__',)
 
 
 
-admin.site.register(PhraseList, PhraseListAdmin)
+admin.site.register(TranslationsList, TranslationListAdmin)
 admin.site.register(ListAccess, ListAccessAdmin)
 
 

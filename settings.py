@@ -9,7 +9,6 @@
 	is not in a public git repository...
 """
 
-from django.conf.global_settings import LANGUAGES as DEFAULT_LANGUAGES
 from django.utils.translation import ugettext_lazy as _
 from os.path import join
 
@@ -22,8 +21,8 @@ SUPPORTED_LANGUAGES = (
 	('nl', _('Dutch')),
 )
 #SUPPORTED_LANGUAGES = DEFAULT_LANGUAGES  # replace this if you want to limit the available languages
-DEFAULT_KNOWN_LANGUAGE = SUPPORTED_LANGUAGES[0][0]
-DEFAULT_LEARN_LANGUAGE = SUPPORTED_LANGUAGES[1][0]
+DEFAULT_KNOWN_LANGUAGE = 'zh-cn'
+DEFAULT_LEARN_LANGUAGE = 'nl'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -59,6 +58,7 @@ INSTALLED_APPS = (
 	'phrasebook',
 	'lists',
 	'study',
+	'opinions',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -123,7 +123,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-LOCALE_PATHS = (join(BASE_DIR, 'locale/'),)
+LOCALE_PATHS = (join(BASE_DIR, 'basics/locale/'),)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/

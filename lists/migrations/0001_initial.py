@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('phrasebook', '0002_translation_phrase'),
+        ('phrasebook', '0001_initial'),
     ]
 
     operations = [
@@ -23,39 +23,26 @@ class Migration(migrations.Migration):
                 ('learner', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={
+                'ordering': ('-priority',),
             },
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='ListEntry',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('phrase', models.ForeignKey(to='phrasebook.Phrase')),
-            ],
-            options={
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='PhraseList',
+            name='TranslationsList',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=48)),
+                ('public', models.BooleanField(default=False)),
+                ('phrases', models.ManyToManyField(related_name='lists', to='phrasebook.Phrase')),
             ],
             options={
             },
             bases=(models.Model,),
         ),
         migrations.AddField(
-            model_name='listentry',
-            name='phrase_list',
-            field=models.ForeignKey(to='lists.PhraseList'),
-            preserve_default=True,
-        ),
-        migrations.AddField(
             model_name='listaccess',
-            name='phrase_list',
-            field=models.ForeignKey(to='lists.PhraseList'),
+            name='translation_list',
+            field=models.ForeignKey(to='lists.TranslationsList'),
             preserve_default=True,
         ),
     ]

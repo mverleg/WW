@@ -33,7 +33,7 @@
 		<p>There are no lists that you can edit.</p>
 	{% endif %}
 
-	<h1>Lists you can view</h1>
+	<h1>Other lists you are following</h1>
 
 	{% if view_accesses %}
 	<table class="table table-striped table-hover">
@@ -53,9 +53,12 @@
 	    </tbody>
 	</table>
 	{% else %}
-		<p>There are no lists to which you have only view access.</p>
+		<p>There are no lists to which you are following (but aren't allowed to edit).</p>
 	{% endif %}
 
+	<h1>Other lists</h1>
+
+	<p>You can see <a href="{% url 'all_lists' %}">all lists</a> for inspiration. You can also <a href="{% url 'add_list' %}">create a list</a>.</p>
 
 {% endblock content %}
 

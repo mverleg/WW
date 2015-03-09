@@ -23,8 +23,9 @@ class Migration(migrations.Migration):
             name='Translation',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('language', models.CharField(max_length=8, choices=[(b'en-gb', b'English (British)'), (b'zh', b'Mandarin Chinese'), (b'de', b'German')])),
+                ('language', models.CharField(max_length=8, choices=[(b'en-gb', 'English (British)'), (b'zh-cn', 'Chinese (simplified Mandarin)'), (b'de', 'German'), (b'nl', 'Dutch')])),
                 ('text', models.TextField()),
+                ('phrase', models.ForeignKey(related_name='translations', to='phrasebook.Phrase')),
             ],
             options={
             },

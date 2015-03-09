@@ -1,0 +1,24 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+	{% if add %}Add{% else %}Edit{% endif %} list
+	-
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	<h1>{% if add %}Add{% else %}Edit{% endif %} list</h1>
+
+	<form role="form" action="." method="POST">
+	    {{ form|as_bootstrap }}
+		<input type="hidden" name="next" value="{{ next }}" />
+		{% csrf_token %}
+		<button type="submit" class="btn btn-success">Save</button>
+	</form>
+
+{% endblock content %}
+
+

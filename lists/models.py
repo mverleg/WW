@@ -5,10 +5,10 @@ from learners.models import Learner
 from phrasebook.models import Phrase
 
 
-class PhraseList(models.Model):
-	name = models.CharField(max_length = 48)
+class TranslationsList(models.Model):
+	name = models.CharField(max_length = 48, help_text = 'What is this list called? E.g. "Chinese animal names"')
 	phrases = models.ManyToManyField(Phrase, related_name = 'lists')
-	public = models.BooleanField(default = False)
+	public = models.BooleanField(default = True, help_text = 'Can anyone follow this list?')
 
 	def __unicode__(self):
 		return self.name
@@ -19,7 +19,7 @@ class PhraseList(models.Model):
 
 class ListAccess(models.Model):
 	VIEW, EDIT = 'view', 'edit'
-	phrase_list = models.ForeignKey(PhraseList)
+	translation_list = models.ForeignKey(TranslationsList)
 	learner = models.ForeignKey(Learner)
 	access = models.CharField(choices = ((VIEW, 'view list'), (EDIT, 'edit list')), max_length = 4)
 	priority = models.SmallIntegerField(default = 0)
@@ -30,9 +30,5 @@ class ListAccess(models.Model):
 
 	def __unicode__(self):
 		return '%s %s' % (self.learner, self.phrase_list)
-
-#class ListEntry(models.Model):
-#	phrase_list = models.ForeignKey(PhraseList, related_name = 'entries')
-#	phrase = models.ForeignKey(Phrase, related_name = 'entries')
 
 

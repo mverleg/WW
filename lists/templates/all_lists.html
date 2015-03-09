@@ -12,6 +12,10 @@
 
 	<h1>All public lists</h1>
 
+	{% if request.user.is_authenticated %}
+	    <p>You can see <a href="{% url 'user_lists' %}">your own lists</a>.</p>
+	{% endif %}
+
 	{% if public_lists %}
 	<table class="table table-striped table-hover">
 	    <thead>
