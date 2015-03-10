@@ -12,12 +12,37 @@
 
 	<h1>{% if add %}Add{% else %}Edit{% endif %} list</h1>
 
+	<p>
+		{% if add %}
+			Add a list of phrases that you and others can study. For example "Chinese animal names", "Dutch article practice" or "words I learned in USA 2015".
+		{% else %}
+		    {% if access.editable %}
+			    Below you can edit the list's public properties as well as the settings for you personally.
+		    {% else %}
+			    Since you don't have edit access, below you can change the settings that only influence you.
+		    {% endif %}
+		{% endif %}
+	</p>
+
 	<form role="form" action="." method="POST">
-	    {{ form|as_bootstrap }}
+	    {% if access.editable %}
+	        {{ list_form|as_bootstrap }}
+		{% endif %}
+		{{ access_form|as_bootstrap }}
 		<input type="hidden" name="next" value="{{ next }}" />
 		{% csrf_token %}
 		<button type="submit" class="btn btn-success">Save</button>
 	</form>
+
+	{% if access.editable and not add %}
+        <form role="form" action="{% url 'delete_list' %}" method="POST">
+            <input type="hidden" name="pk" value="{{ list.pk }}" />
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete this list</button>
+        </form>
+	{% endif %}
+
 
 {% endblock content %}
 

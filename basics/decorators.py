@@ -5,6 +5,7 @@
 
 from django.core.urlresolvers import reverse
 from django.http import Http404
+from django.shortcuts import render
 from django.utils.http import is_safe_url
 from settings import LOGIN_REDIRECT_URL
 
@@ -48,5 +49,34 @@ def next_GET_or(url_name):
 		return func_with_next
 	return next_GET
 next_GET = next_GET_or(None)
+
+
+def confirm_first(message, subject = '', submit_text = 'continue', submit_class = 'btn-success', cancel_url_name = None):
+	def actual_decorator(view_func):
+		def wrapped_func(request, *args, **kwargs):
+			''' check if this is a POST request and whether it's already confirmed '''
+			if request.method == 'POST':
+				if 'confirmed' not in request.POST:
+					cancel_url = '/'
+					if cancel_url_name:
+						cancel_url = reverse(cancel_url_name)
+					elif 'next' in request.POST:
+						cancel_url = request.POST['next']
+					return render(request, 'confirm_first.html', {
+						'post': list(request.POST.items()),
+						'subject': subject,
+						'message': message,
+						'cancel_url': cancel_url,
+						'submit_url': '', # same page
+						'submit_text': submit_text,
+						'submit_class': submit_class,
+					})
+			''' not submitting or already confirmed '''
+			return view_func(request, *args, **kwargs)
+		return wrapped_func
+	return actual_decorator
+
+confirm_delete = confirm_first(message = 'Are you sure you want to delete this item?', subject = 'Delete?',
+	submit_text = 'delete', submit_class = 'btn-danger')
 
 

@@ -49,6 +49,6 @@ class Learner(AbstractBaseUser, PermissionsMixin):
 		return self.get_short_name()
 
 	def get_short_name(self):
-		return self.name
+		return self.name or '(nameless#%d)' % self.pk
 
 

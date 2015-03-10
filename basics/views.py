@@ -24,11 +24,6 @@ def notification(request, message):
 	})
 
 
-def search(request):
-	# django-haystack can be used for searching
-	return notification(request, 'Search is not yet implemented.')
-
-
 @next_GET_or('home')
 def choose_language(request, next):
 

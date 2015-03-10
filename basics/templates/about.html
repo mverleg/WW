@@ -6,6 +6,11 @@
     dynamic data, which will be filled in for the {{ VARIABLE }} tags here.
 {% endcomment %}
 
+{% block title %}
+    About WordsProgram
+	-
+	{{ block.super }}
+{% endblock title %}
 
 {% block content %}
 	<header class="jumbotron hero-spacer">

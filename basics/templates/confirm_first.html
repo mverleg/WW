@@ -1,0 +1,30 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+	Confirm
+	-
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	{% if subject %}
+		<h1>{{ subject|safe }}</h1>
+	{% endif %}
+
+	<p>{{ message|safe }}</p>
+
+	<form action="{{ submit_url }}" method="POST">
+        {% for key,val in post %}
+            <input type="hidden" name="{{ key }}" value="{{ val }}" />
+        {% endfor %}
+        <input type="hidden" name="confirmed" value="confirmed" />
+        <a href="{{ cancel_url }}" class="btn btn-default">cancel</a>
+        <input type="submit" class="btn btn-default {{ submit_class }}" value="{{ submit_text }}" />
+	</form>
+
+{% endblock content %}
+
+

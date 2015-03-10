@@ -4,11 +4,11 @@ from lists.models import TranslationsList, ListAccess
 
 
 class ListAccessAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'translation_list', 'learner', 'active', 'access', 'priority',)
+	list_display = ('__unicode__', 'translations_list', 'learner', 'active', 'access', 'priority',)
 
 
 class TranslationListAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__',)
+	list_display = ('__unicode__', 'language',)
 
 
 

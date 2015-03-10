@@ -10,7 +10,7 @@
 """
 
 from django.utils.translation import ugettext_lazy as _
-from os.path import join
+from os.path import join, dirname
 
 
 SUPPORTED_LANGUAGES = (
@@ -24,9 +24,8 @@ SUPPORTED_LANGUAGES = (
 DEFAULT_KNOWN_LANGUAGE = 'zh-cn'
 DEFAULT_LEARN_LANGUAGE = 'nl'
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
-BASE_DIR = os.path.dirname(__file__)
+# Build paths inside the project like this: join(BASE_DIR, ...)
+BASE_DIR = dirname(__file__)
 
 
 # Quick-start development settings - unsuitable for production
@@ -53,6 +52,7 @@ INSTALLED_APPS = (
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
+	'haystack',
 	'basics',
 	'learners',
 	'phrasebook',
@@ -96,7 +96,7 @@ WSGI_APPLICATION = 'wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': os.path.join(BASE_DIR, 'database.sqlite3'),
+		'NAME': join(BASE_DIR, 'database.sqlite3'),
 	},
 	#'default': {
 	#	'ENGINE': 'django.db.backends.mysql',
@@ -111,7 +111,7 @@ DATABASES = {
 LOGIN_URL = '/learner/login/'
 LOGIN_REDIRECT_URL = '/learner/profile/'
 
-PREPEND_WWW = not DEBUG
+PREPEND_WWW = False  # I like turning this on for real sites, but it doesn't work if you access the site using an IP (like 127.0.0.1), so turn it on after testing
 APPEND_SLASH = True
 
 # Internationalization
@@ -130,5 +130,18 @@ LOCALE_PATHS = (join(BASE_DIR, 'basics/locale/'),)
 STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = (
-	os.path.join(BASE_DIR,  'templates'),
+	join(BASE_DIR,  'templates'),
 )
+
+# search engine
+# http://django-haystack.readthedocs.org/en/latest/tutorial.html
+# should probably be changed once performance becomes an issue
+HAYSTACK_CONNECTIONS = {
+	'default': {
+		'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+		'PATH': join(BASE_DIR, 'searchindex.whoosh'),
+	},
+}
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+

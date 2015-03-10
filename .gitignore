@@ -1,6 +1,7 @@
 .idea/
 *.pyc
 *~
-database.sqlite3
 *.mo
+database.sqlite3
+searchindex.whoosh/
 

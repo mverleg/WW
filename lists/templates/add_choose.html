@@ -1,0 +1,59 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+    Choose a phrase to add
+	-
+	{{ block.super }}
+{% endblock title %}
+
+{% block menu_autofocus %}{% endblock menu_autofocus %}
+
+{% block content %}
+
+	<h1>Choose a phrase to add to {{ list.name }}</h1>
+
+	<form class="form form-inline" role="search" method="POST" action="{% url 'add_phrase_search' %}">
+		<div class="form-group">
+			<input style="width: 700px; max-width: 100%;" name="q" type="text" class="form-control" placeholder="{% blocktrans context 'Search placeholder' %}search{% endblocktrans %}..." autofocus>
+		</div>
+        <input type="hidden" name="pk" value="{{ list.pk }}" />
+        <input type="hidden" name="next" value="{{ next }}" />
+        {% csrf_token %}
+		<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+	</form>
+	<br />
+
+	{% if results %}
+		<p>You are adding a phrase to the list {{ list.name }}. Select one of the ones below, or search again above.</p>
+		<table class="table table-striped table-hover">
+		    <thead>
+		        <td style="width: 3em;">Add?</td>
+		        <td>Phrase</td>
+		    </thead>
+		    <tbody>
+                {% for result in results %}
+	                <tr>
+	                    <td>
+		                    <form class="form form-inline" role="search" method="POST" action="{% url 'add_phrase_pk' pk=result.object.pk %}">
+	                            <input type="hidden" name="pk" value="{{ list.pk }}" />
+	                            <input type="hidden" name="next" value="{{ next }}" />
+	                            {% csrf_token %}
+	                    		<button type="submit" class="btn btn-xs btn-default"><i class="glyphicon glyphicon-plus"></i></button>
+	                    	</form>
+	                    </td>
+                        <td>{{ result.words }}</td>
+	                </tr>
+                {% endfor %}
+		    </tbody>
+	    </table>
+	{% else %}
+        <p>You are adding a phrase to the list <strong>{{ list.name }}</strong>, but your search query <strong>{{ query }}</strong> didn't yield any results. Search again above.</p>
+	{% endif %}
+
+	<a href="{% url 'show_list' pk=list.pk slug=list.slug %}" class="btn btn-default">Back to {{ list.name }} (don't add)</a>
+
+{% endblock content %}
+
+

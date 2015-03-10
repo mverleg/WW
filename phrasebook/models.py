@@ -33,4 +33,8 @@ class Translation(models.Model):
 	def preview_text(self):
 		return self.text[:47] + '...' if len(self.text) > 50 else self.text
 
+	def other_languages(self):
+		return Translation.objects.filter(phrase = self.phrase).count() - 1
 
+	def phrase_pk(self):
+		return self.phrase.pk

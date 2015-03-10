@@ -1,22 +1,29 @@
+
 from django.contrib.auth.decorators import login_required
-from django.contrib.messages import add_message, INFO
+from django.contrib.messages import add_message, INFO, WARNING
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
-from basics.decorators import instantiate
-from lists.forms import ListForm
+from django.views.decorators.http import require_POST
+from haystack.forms import HighlightedModelSearchForm
+from basics.decorators import instantiate, confirm_delete, confirm_first
+from basics.views import notification
+from lists.forms import ListForm, ListAccessForm
 from lists.models import ListAccess, TranslationsList
 from phrasebook.models import Translation
 
 
-@instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translation_list')
-def show_list(request, translation_list, slug = None):
-	phrases = translation_list.phrases.all()
-	for phrase in phrases:
-		phrase.lang_translations = Translation.objects.filter(language = request.LEARN_LANG, phrase = phrase)
+@instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
+def show_list(request, translations_list, slug = None):
+	try:
+		access_instance = ListAccess.objects.get(translations_list = translations_list, learner = request.user)
+	except ListAccess.DoesNotExist:
+		return notification(request, 'No access for list "%s".' % translations_list)
+	translations = translations_list.translations.all()
 	#todo: pagination (only load translations on page, for performance)
 	return render(request, 'show_list.html', {
-		'list': translation_list,
-		'phrases': phrases,
+		'list': translations_list,
+		'translations': translations,
+		'access': access_instance,
 	})
 
 
@@ -33,6 +40,7 @@ def user_lists(request):
 
 
 def all_lists(request):
+	#todo: pages
 	#all_accesses = ListAccess.objects.filter(learner = request.user, access = ListAccess.EDIT)
 	public_lists = TranslationsList.objects.filter(public = True)
 	return render(request, 'all_lists.html', {
@@ -42,27 +50,147 @@ def all_lists(request):
 
 @login_required
 def add_list(request):
-	form = ListForm(request.POST or None)
-	if form.is_valid():
+	list_form = ListForm(request.POST or None)
+	access_form = ListAccessForm(request.POST or None)
+	if list_form.is_valid() and access_form.is_valid():
 		""" Create the list and grant the user edit access """
-		li = form.save()
-		ListAccess(translation_list = li, learner = request.user, access = ListAccess.EDIT).save()
+		li = list_form.save()
+		access = access_form.save(commit = False)
+		access.translations_list = li
+		access.learner = request.user
+		access.access = ListAccess.EDIT
+		access.save()
+		return redirect(reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
 	return render(request, 'edit_list.html', {
-		'form': form,
+		'list_form': list_form,
+		'access_form': access_form,
 		'add': True,
 	})
 
 
 @login_required
-@instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translation_list')
-def edit_list(request, translation_list, slug = None):
-	form = ListForm(request.POST or None, instance = translation_list)
-	if form.is_valid():
-		form.save()
-		return redirect(reverse('show_list', kwargs = {'pk': translation_list.pk, 'slug': translation_list.slug}))
+@instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
+def edit_list(request, translations_list, slug = None):
+	list_form = ListForm(request.POST or None, instance = translations_list)
+	try:
+		access_instance = ListAccess.objects.get(translations_list = translations_list, learner = request.user)
+	except ListAccess.DoesNotExist:
+		return notification(request, 'No access for list "%s".' % translations_list)
+	access_form = ListAccessForm(request.POST or None, instance = access_instance)
+	print access_instance.editable
+	if access_instance.editable:
+		if list_form.is_valid() and access_form.is_valid():
+			list_form.save()
+			access_form.save()
+			return redirect(reverse('show_list', kwargs = {'pk': translations_list.pk, 'slug': translations_list.slug}))
+	else:
+		if list_form.is_valid() and access_form.is_valid():
+			access_form.save()
+			return redirect(reverse('show_list', kwargs = {'pk': translations_list.pk, 'slug': translations_list.slug}))
 	return render(request, 'edit_list.html', {
-		'form': form,
+		'list_form': list_form,
+		'access_form': access_form,
 		'add': False,
+		'list': translations_list,
+		'access': access_instance,
 	})
+
+
+@require_POST
+@login_required
+def add_translation_by_search(request):
+	resp, li, access = _list_access_from_post_pk(request, request.POST, need_edit = True)
+	if resp: return resp
+	form = HighlightedModelSearchForm(request.POST)
+	if li.language:
+		results = form.search().filter(language = li.language)
+	else:
+		results = form.search()
+	if len(results) == 1:
+		""" Only one results, apply directly. """
+		if results[0].object in li.translations.all():
+			add_message(request, WARNING, '"%s" (the only result) is already on the list.' % results[0].object)
+		else:
+			li.translations.add(results[0].object)
+			add_message(request, INFO, '"%s" (the only result) was added to the list.' % results[0].object)
+		return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
+	else:
+		""" Show options to the user """
+		return render(request, 'add_choose.html', {
+			'results': results,
+			'query': request.POST['q'],
+			'list': li,
+			'next': request.POST['next'],
+		})
+
+
+@login_required
+@instantiate(Translation, in_kw_name = 'pk', out_kw_name = 'translation')
+def add_translation_by_pk(request, translation):
+	resp, li, access = _list_access_from_post_pk(request, request.POST, need_edit = True)
+	if resp: return resp
+	if translation in li.translations.all():
+		add_message(request, WARNING, '"%s" is already on the list.' % translation)
+	else:
+		li.translations.add(translation)
+		add_message(request, INFO, '"%s" was added to the list.' % translation)
+	return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
+
+
+def _list_access_from_post_pk(request, post, need_access = True, need_edit = True):
+	"""
+		:return: response, list, access (either the first or the other two are None)
+	"""
+	if not need_access: need_edit = False
+	try:
+		list_instance = TranslationsList.objects.get(pk = int(request.POST['pk']))
+	except KeyError:
+		return notification(request, 'No list key found.'), None, None
+	except ValueError:
+		return notification(request, 'List key "%s" is not a valid format found.' % request.POST['pk']), None, None
+	except TranslationsList.DoesNotExist:
+		return notification(request, 'List not found for key %s.' % request.POST['pk']), None, None
+	try:
+		access_instance = ListAccess.objects.get(translations_list = list_instance, learner = request.user)
+	except ListAccess.DoesNotExist:
+		if need_access:
+			return notification(request, 'No access for list "%s".' % list_instance), None, None
+		else:
+			access_instance = None
+	if need_edit:
+		if not access_instance.access == ListAccess.EDIT:
+			return notification(request, 'You don\'t have edit access for list %s.' % list_instance), None, None
+	return None, list_instance, access_instance
+
+
+@confirm_delete
+@login_required
+@require_POST
+def delete_list(request):
+	resp, li, access = _list_access_from_post_pk(request, request.POST, need_edit = True)
+	if resp: return resp
+	li.delete()
+	return redirect(reverse('user_lists'))
+
+
+@login_required
+@require_POST
+def follow_list(request):
+	resp, li, access = _list_access_from_post_pk(request, request.POST, need_access = False)
+	if resp: return resp
+	if access:
+		return notification(request, 'You are already following the list "%s"' % li.name)
+	ListAccess(access = ListAccess.VIEW, translations_list = li, learner = request.user).save()
+	return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
+	#todo
+
+
+@login_required
+@require_POST
+@confirm_first(message = 'Are you sure you want to unfollow this list? You can only refollow it if it\'s a public list.', submit_class = 'btn-primary')
+def unfollow_list(request):
+	resp, li, access = _list_access_from_post_pk(request, request.POST, need_access = True, need_edit = False)
+	if resp: return resp
+	#todo
 
 
