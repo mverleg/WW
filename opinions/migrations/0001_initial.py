@@ -28,20 +28,10 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='TranslationDownVote',
+            name='TranslationVote',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('learner', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('translation', models.ForeignKey(related_name='downvotes', to='phrasebook.Translation')),
-            ],
-            options={
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='TranslationUpVote',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('up', models.BooleanField(default=True, help_text=b"Is this an upvote? (Otherwise it's a downvote)")),
                 ('learner', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
                 ('translation', models.ForeignKey(related_name='upvotes', to='phrasebook.Translation')),
             ],
