@@ -38,3 +38,8 @@ class Translation(models.Model):
 
 	def phrase_pk(self):
 		return self.phrase.pk
+
+	def language_disp(self):
+		return self.get_language_display().split('(')[0].strip()
+
+

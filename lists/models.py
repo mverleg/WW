@@ -8,7 +8,7 @@ from settings import SUPPORTED_LANGUAGES
 
 class TranslationsList(models.Model):
 	name = models.CharField(max_length = 48, help_text = 'What is this list called? E.g. "Chinese animal names"')
-	translations = models.ManyToManyField(Translation, related_name = 'lists')
+	translations = models.ManyToManyField(Translation, related_name = 'lists', blank = True)
 	public = models.BooleanField(default = True, help_text = 'Can anyone follow this list?')
 	language = models.CharField(choices = SUPPORTED_LANGUAGES, max_length = 8, blank = True, null = True, help_text = 'You can select the language to learn for this list, or leave it blank for a mixed-language list.')
 
@@ -21,6 +21,9 @@ class TranslationsList(models.Model):
 	@property
 	def slug(self):
 		return slugify(self.name)
+
+	def language_disp(self):
+		return self.get_language_display().split('(')[0].strip()
 
 
 class ListAccess(models.Model):

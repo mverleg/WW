@@ -1,6 +1,7 @@
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import add_message, INFO, WARNING
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
@@ -17,7 +18,9 @@ def show_list(request, translations_list, slug = None):
 	try:
 		access_instance = ListAccess.objects.get(translations_list = translations_list, learner = request.user)
 	except ListAccess.DoesNotExist:
-		return notification(request, 'No access for list "%s".' % translations_list)
+		if not translations_list.public:
+			return notification(request, 'No access for list "%s".' % translations_list)
+		access_instance = {'editable': False}
 	translations = translations_list.translations.all()
 	#todo: pagination (only load translations on page, for performance)
 	return render(request, 'show_list.html', {
@@ -39,12 +42,39 @@ def user_lists(request):
 	})
 
 
+def _nearby_pages(items):
+	"""
+		Get a list of pages to display for pagination, and None values for continuation dots.
+
+		Shows up to 12 values, always shows the fist and last two elements and the two elements left and right of the current one.
+	"""
+	if items.paginator.num_pages <= 10:
+		return range(1, items.paginator.num_pages + 1)
+	if items.number <= 6:
+		return range(1, 9) + [None, items.paginator.num_pages, items.paginator.num_pages + 1]
+	if items.number >= items.paginator.num_pages - 6:
+		return [1, 2, None] + range(items.paginator.num_pages - 8, items.paginator.num_pages + 1)
+	return [1, 2, None] + range(items.number - 2, items.number + 3) + [None, items.paginator.num_pages, items.paginator.num_pages + 1]
+
+
 def all_lists(request):
-	#todo: pages
-	#all_accesses = ListAccess.objects.filter(learner = request.user, access = ListAccess.EDIT)
+	#todo: hide own lists (or at least hide follow button)
 	public_lists = TranslationsList.objects.filter(public = True)
+	paginator = Paginator(public_lists, 15)
+	page = request.GET.get('page', 1)
+	try:
+		items = paginator.page(page)
+	except PageNotAnInteger:
+		return redirect('%s?page=1' % request.path)
+	except EmptyPage:
+		return redirect('%s?page=%d' % (request.path, paginator.num_pages))
+	access_lists = [ac.translations_list for ac in ListAccess.objects.filter(translations_list__public = True)]
+	for li in items.object_list:
+		if li in access_lists:
+			li.following = True
 	return render(request, 'all_lists.html', {
-		'public_lists': public_lists,
+		'items': items,
+		'nearby_pages': _nearby_pages(items),
 	})
 
 
@@ -77,7 +107,6 @@ def edit_list(request, translations_list, slug = None):
 	except ListAccess.DoesNotExist:
 		return notification(request, 'No access for list "%s".' % translations_list)
 	access_form = ListAccessForm(request.POST or None, instance = access_instance)
-	print access_instance.editable
 	if access_instance.editable:
 		if list_form.is_valid() and access_form.is_valid():
 			list_form.save()
@@ -181,16 +210,17 @@ def follow_list(request):
 	if access:
 		return notification(request, 'You are already following the list "%s"' % li.name)
 	ListAccess(access = ListAccess.VIEW, translations_list = li, learner = request.user).save()
+	add_message(request, INFO, 'You are not following the list "%s".' % li)
 	return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
-	#todo
 
 
 @login_required
 @require_POST
-@confirm_first(message = 'Are you sure you want to unfollow this list? You can only refollow it if it\'s a public list.', submit_class = 'btn-primary')
+@confirm_first(message = 'Are you sure you want to unfollow this list? You can only refollow it if it\'s a public list.', submit_class = 'btn-danger')
 def unfollow_list(request):
 	resp, li, access = _list_access_from_post_pk(request, request.POST, need_access = True, need_edit = False)
 	if resp: return resp
-	#todo
+	access.delete()
+	return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
 
 

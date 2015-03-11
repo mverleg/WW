@@ -15,7 +15,7 @@
 	<h1>{{ list.name }}</h1>
 
 	{% if list.language %}
-	    <p>This list is for learning <strong>{{ list.get_language_display }}</strong>.</p>
+	    <p>This list is for learning <strong>{{ list.language_disp }}</strong>.</p>
 	{% else %}
 		<p>This is a mixed-language list, phrases of multiple languages may appear.</p>
 	{% endif %}
@@ -34,14 +34,14 @@
     			<tr {% if list.language %}{% if not list.language == translation.language %}class="danger"{% endif %}{% endif %}>
 				    {% if not list.language %}
 			            <td>
-			                {{ translation.get_language_display }}
+			                {{ translation.language_disp }}
 			            </td>
 			        {% endif %}
 				    <td>
 					    {{ translation.text }}
 					    {% if list.language %}
 					        {% if not list.language == translation.language %}
-						        [{{ translation.get_language_display }}]
+						        [{{ translation.language_disp }}]
 					        {% endif %}
 					    {% endif %}
 				    </td>
