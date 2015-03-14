@@ -5,6 +5,7 @@
 """
 
 from django.db import models
+from pinyin import get as to_pinyin
 from settings import SUPPORTED_LANGUAGES
 
 
@@ -50,5 +51,11 @@ class Translation(models.Model):
 	@property
 	def score(self):
 		return sum([vote.score for vote in self.get_votes()], 0)
+
+	def romanization(self):
+		pin = to_pinyin(self.text)
+		if not pin == self.text:
+			return pin
+		return ''
 
 

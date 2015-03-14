@@ -14,6 +14,7 @@ Requirements
 * bootstrap (already included)
 * jquery (already included)
 * sqlite3 (default on Ubuntu?)
+* pinyin (literal name of a python module)
 
 A real database like postgres or mysql is recommended instead of sqlite3 for live website and possibly before. But as long as you have no important data to migrate, it is easy to switch, so play around first.
 

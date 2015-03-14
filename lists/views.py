@@ -24,11 +24,20 @@ def show_list(request, translations_list, slug = None):
 			return notification(request, 'No access for list "%s".' % translations_list)
 		access_instance = {'editable': False}
 	translations = translations_list.translations.all()
-	#todo: pagination (only load translations on page, for performance)
+	paginator = Paginator(translations, 50)
+	page = request.GET.get('page', 1)
+	try:
+		items = paginator.page(page)
+	except PageNotAnInteger:
+		return redirect('%s?page=1' % request.path)
+	except EmptyPage:
+		return redirect('%s?page=%d' % (request.path, paginator.num_pages))
 	return render(request, 'show_list.html', {
 		'list': translations_list,
-		'translations': translations,
+		#'translations': translations,
 		'access': access_instance,
+		'items': items,
+		'nearby_pages': _nearby_pages(items),
 	})
 
 
@@ -60,7 +69,6 @@ def _nearby_pages(items):
 
 
 def all_lists(request):
-	#todo: hide own lists (or at least hide follow button)
 	public_lists = TranslationsList.objects.filter(public = True)
 	paginator = Paginator(public_lists, 15)
 	page = request.GET.get('page', 1)

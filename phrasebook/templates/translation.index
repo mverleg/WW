@@ -1,2 +1,3 @@
 {{ object.get_language_display }}
 {{ object.text }}
+{{ object.romanization }}
