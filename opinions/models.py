@@ -9,8 +9,15 @@ class TranslationVote(models.Model):
 	up = models.BooleanField(default = True, help_text = 'Is this an upvote? (Otherwise it\'s a downvote)')
 	learner = models.ForeignKey(Learner)
 
+	class Meta:
+		unique_together = ('translation', 'learner',)
+
 	def __unicode__(self):
 		return '%s %svotes %s' % (self.learner, 'up' if self.up else 'down', self.translation)
+
+	@property
+	def score(self):
+		return 1 if self.up else -1
 
 
 class TranslationComment(models.Model):

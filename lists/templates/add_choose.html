@@ -14,7 +14,7 @@
 
 	<h1>Choose a phrase to add to {{ list.name }}</h1>
 
-	<form class="form form-inline" role="search" method="POST" action="{% url 'add_phrase_search' %}">
+	<form class="form form-inline" role="search" method="POST" action="{% url 'insert_translation_search' %}">
 		<div class="form-group">
 			<input style="width: 700px; max-width: 100%;" name="q" type="text" class="form-control" placeholder="{% blocktrans context 'Search placeholder' %}search{% endblocktrans %}..." autofocus>
 		</div>
@@ -36,7 +36,7 @@
                 {% for result in results %}
 	                <tr>
 	                    <td>
-		                    <form class="form form-inline" role="search" method="POST" action="{% url 'add_phrase_pk' pk=result.object.pk %}">
+		                    <form class="form form-inline" role="search" method="POST" action="{% url 'insert_translation_pk' pk=result.object.pk %}">
 	                            <input type="hidden" name="pk" value="{{ list.pk }}" />
 	                            <input type="hidden" name="next" value="{{ next }}" />
 	                            {% csrf_token %}
@@ -50,6 +50,16 @@
 	    </table>
 	{% else %}
         <p>You are adding a phrase to the list <strong>{{ list.name }}</strong>, but your search query <strong>{{ query }}</strong> didn't yield any results. Search again above.</p>
+	{% endif %}
+
+	{% if list.language %}
+		<h2>Other languages</h2>
+        {% if other_language_results %}
+            <p>The list is set to {{ list.language_disp }}. These results are in other languages:</p>
+	        ...
+        {% else %}
+	        <p>The list is set to {{ list.language_disp }}. Your query yielded no results in other languages.</p>
+        {% endif %}
 	{% endif %}
 
 	<a href="{% url 'show_list' pk=list.pk slug=list.slug %}" class="btn btn-default">Back to {{ list.name }} (don't add)</a>

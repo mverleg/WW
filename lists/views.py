@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 from haystack.forms import HighlightedModelSearchForm
-from basics.decorators import instantiate, confirm_delete, confirm_first
+from basics.decorators import instantiate, confirm_delete, confirm_first, next_GET
 from basics.views import notification
 from lists.forms import ListForm, ListAccessForm
 from lists.models import ListAccess, TranslationsList
@@ -16,7 +16,9 @@ from phrasebook.models import Translation
 @instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
 def show_list(request, translations_list, slug = None):
 	try:
-		access_instance = ListAccess.objects.get(translations_list = translations_list, learner = request.user)
+		# learner = request.user should work here, but it doesn't, so use request.user.id as a kind of hack
+		# http://stackoverflow.com/questions/15878860/int-argument-must-be-a-string-or-a-number-not-simplelazyobject
+		access_instance = ListAccess.objects.get(translations_list = translations_list, learner = request.user.id)
 	except ListAccess.DoesNotExist:
 		if not translations_list.public:
 			return notification(request, 'No access for list "%s".' % translations_list)
@@ -85,7 +87,8 @@ def add_list(request):
 	if list_form.is_valid() and access_form.is_valid():
 		""" Create the list and grant the user edit access """
 		li = list_form.save()
-		access = access_form.save(commit = False)
+		access = access_form.save(commit
+								  = False)
 		access.translations_list = li
 		access.learner = request.user
 		access.access = ListAccess.EDIT
@@ -100,7 +103,8 @@ def add_list(request):
 
 @login_required
 @instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
-def edit_list(request, translations_list, slug = None):
+@next_GET
+def edit_list(request, translations_list, slug = None, next = None):
 	list_form = ListForm(request.POST or None, instance = translations_list)
 	try:
 		access_instance = ListAccess.objects.get(translations_list = translations_list, learner = request.user)
@@ -111,17 +115,18 @@ def edit_list(request, translations_list, slug = None):
 		if list_form.is_valid() and access_form.is_valid():
 			list_form.save()
 			access_form.save()
-			return redirect(reverse('show_list', kwargs = {'pk': translations_list.pk, 'slug': translations_list.slug}))
+			return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': translations_list.pk, 'slug': translations_list.slug}))
 	else:
 		if list_form.is_valid() and access_form.is_valid():
 			access_form.save()
-			return redirect(reverse('show_list', kwargs = {'pk': translations_list.pk, 'slug': translations_list.slug}))
+			return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': translations_list.pk, 'slug': translations_list.slug}))
 	return render(request, 'edit_list.html', {
 		'list_form': list_form,
 		'access_form': access_form,
 		'add': False,
 		'list': translations_list,
 		'access': access_instance,
+		'next': next,
 	})
 
 
@@ -132,25 +137,32 @@ def add_translation_by_search(request):
 	if resp: return resp
 	form = HighlightedModelSearchForm(request.POST)
 	if li.language:
-		results = form.search().filter(language = li.language)
+		results = form.search().filter(language = li.language_disp)
+		other_language_results = form.search().filter(language__not = li.language_disp)
 	else:
 		results = form.search()
+		other_language_results = None
+	print li.language_disp
+	print form.search()[0].language
+	print results
+	print other_language_results
 	if len(results) == 1:
-		""" Only one results, apply directly. """
-		if results[0].object in li.translations.all():
-			add_message(request, WARNING, '"%s" (the only result) is already on the list.' % results[0].object)
-		else:
-			li.translations.add(results[0].object)
-			add_message(request, INFO, '"%s" (the only result) was added to the list.' % results[0].object)
-		return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
-	else:
-		""" Show options to the user """
-		return render(request, 'add_choose.html', {
-			'results': results,
-			'query': request.POST['q'],
-			'list': li,
-			'next': request.POST['next'],
-		})
+		if results[0].object.language == li.language:
+			""" Only one results, apply directly. """
+			if results[0].object in li.translations.all():
+				add_message(request, WARNING, '"%s" (the only result) is already on the list.' % results[0].object)
+			else:
+				li.translations.add(results[0].object)
+				add_message(request, INFO, '"%s" (the only result) was added to the list.' % results[0].object)
+			return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
+	""" Show options to the user """
+	return render(request, 'add_choose.html', {
+		'results': results,
+		'language_results': other_language_results,
+		'query': request.POST['q'],
+		'list': li,
+		'next': request.POST['next'],
+	})
 
 
 @login_required
@@ -190,6 +202,22 @@ def _list_access_from_post_pk(request, post, need_access = True, need_edit = Tru
 		if not access_instance.access == ListAccess.EDIT:
 			return notification(request, 'You don\'t have edit access for list %s.' % list_instance), None, None
 	return None, list_instance, access_instance
+
+
+@login_required
+def remove_translation(request):
+	resp, li, access = _list_access_from_post_pk(request, request.POST, need_edit = True)
+	try:
+		translation = Translation.objects.get(pk = int(request.POST['trans_pk']))
+	except KeyError:
+		return notification(request, 'No translation key found.'), None, None
+	except ValueError:
+		return notification(request, 'Translation key "%s" is not a valid format found.' % request.POST['pk']), None, None
+	except TranslationsList.DoesNotExist:
+		return notification(request, 'Translation not found for key %s.' % request.POST['pk']), None, None
+	li.translations.remove(translation)
+	add_message(request, INFO, '"%s" was removed from the list.' % translation)
+	return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
 
 
 @confirm_delete

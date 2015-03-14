@@ -42,4 +42,13 @@ class Translation(models.Model):
 	def language_disp(self):
 		return self.get_language_display().split('(')[0].strip()
 
+	def get_votes(self):
+		# this import needs to be here to prevent circular import problems
+		from opinions.models import TranslationVote
+		return TranslationVote.objects.filter(translation = self)
+
+	@property
+	def score(self):
+		return sum([vote.score for vote in self.get_votes()], 0)
+
 

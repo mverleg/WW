@@ -14,18 +14,31 @@
 
 	{% if translations %}
 	<table class="table table-striped table-hover table-condensed">
-	    <thead>
-	        <td>Language</td>
-            <td style="min-width: 70%;">Text</td>
-	    </thead>
-	    <tbody>
-    		{% for translation in translations %}
-    			<tr>
-				    <td>{{ translation.language_disp }}</td>
-				    <td>{{ translation.text }}</td>
-			    </tr>
-    	    {% endfor %}
-	    </tbody>
+		<thead>
+			<td>Language</td>
+			<td style="min-width: 70%;">Text</td>
+			<td>Score</td>
+		</thead>
+		<tbody>
+			{% for translation in translations %}
+				<tr>
+					<td>{{ translation.language_disp }}</td>
+					<td>{{ translation.text }}</td>
+					<td>
+						<div class="btn-group" role="group">
+							<form class="form form-inline" method="POST" action="{% url 'add_translation_vote' %}">
+								<input type="hidden" name="trans_pk" value="{{ translation.pk }}" />
+								<input type="hidden" name="next" value="{{ request.get_full_path }}" />
+								{% csrf_token %}
+								<button type="submit" class="btn btn-xs btn-default" name="up" value="0"><i class="glyphicon glyphicon-minus"></i></button>
+								<a type="button" class="btn btn-xs {% if translation.score > 0 %}btn-success{% elif translation.score < 0 %}btn-danger{% else %}btn-default{% endif %} disabled" style="width: 3em;"><strong>{% if translation.score > 0 %}+{% endif %}{{ translation.score }}</strong></a>
+								<button type="submit" class="btn btn-xs btn-default" name="up" value="1"><i class="glyphicon glyphicon-plus"></i></button>
+							</form>
+						</div>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
 	</table>
 	{% else %}
 		<p>There are no translations for this phrase.</p>

@@ -6,8 +6,8 @@ from opinions.views import add_translation_vote, delete_translation_vote, add_tr
 urlpatterns = patterns('',
 	url(r'^vote/$', add_translation_vote, name = 'add_translation_vote'),
 	url(r'^unvote/$', delete_translation_vote, name = 'delete_translation_vote'),
-	url(r'^comment/$', add_translation_comment, name = 'add_translation_vote'),
-	url(r'^uncomment/$', delete_translation_comment, name = 'delete_translation_vote'),
+	url(r'^comment/$', add_translation_comment, name = 'add_translation_comment'),
+	url(r'^uncomment/$', delete_translation_comment, name = 'delete_translation_comment'),
 )
 
 

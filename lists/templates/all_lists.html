@@ -45,7 +45,7 @@
                                 <input type="hidden" name="pk" value="{{ item.pk }}" />
                                 <input type="hidden" name="next" value="{{ request.get_full_path }}" />
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-xs btn-danger" title="Click to add this list to your followed lists collection."><i class="glyphicon glyphicon-remove"></i></button>
+                                <button type="submit" class="btn btn-xs btn-danger" title="Click to remove this list from your followed lists collection."><i class="glyphicon glyphicon-remove"></i></button>
 						    </form>
 					    {% endif %}
 				    </td>
