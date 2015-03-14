@@ -17,31 +17,63 @@
 		<thead>
 			<td>Language</td>
 			<td style="min-width: 70%;">Text</td>
-			<td>Score</td>
+			{#{% if phrase.public_view %}<td>Score</td>{% else %}<td>Delete</td>{% endif %}#}<td>Score</td>
 		</thead>
 		<tbody>
 			{% for translation in translations %}
 				<tr>
 					<td>{{ translation.language_disp }}</td>
 					<td>{{ translation.text }}</td>
-					<td>
-						<div class="btn-group" role="group">
-							<form class="form form-inline" method="POST" action="{% url 'add_translation_vote' %}">
-								<input type="hidden" name="trans_pk" value="{{ translation.pk }}" />
-								<input type="hidden" name="next" value="{{ request.get_full_path }}" />
-								{% csrf_token %}
-								<button type="submit" class="btn btn-xs btn-default" name="up" value="0"><i class="glyphicon glyphicon-minus"></i></button>
-								<a type="button" class="btn btn-xs {% if translation.score > 0 %}btn-success{% elif translation.score < 0 %}btn-danger{% else %}btn-default{% endif %} disabled" style="width: 3em;"><strong>{% if translation.score > 0 %}+{% endif %}{{ translation.score }}</strong></a>
-								<button type="submit" class="btn btn-xs btn-default" name="up" value="1"><i class="glyphicon glyphicon-plus"></i></button>
-							</form>
-						</div>
-					</td>
+		            <td>
+			            {#{% if phrase.public_view %}#}
+                            <div class="btn-group" role="group">
+                                <form class="form form-inline" method="POST" action="{% url 'add_translation_vote' %}">
+                                    <input type="hidden" name="trans_pk" value="{{ translation.pk }}" />
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-xs btn-default" name="up" value="0"><i class="glyphicon glyphicon-minus"></i></button>
+                                    <a type="button" class="btn btn-xs {% if translation.score > 0 %}btn-success{% elif translation.score < 0 %}btn-danger{% else %}btn-default{% endif %} disabled" style="width: 3em;"><strong>{% if translation.score > 0 %}+{% endif %}{{ translation.score }}</strong></a>
+                                    <button type="submit" class="btn btn-xs btn-default" name="up" value="1"><i class="glyphicon glyphicon-plus"></i></button>
+                                </form>
+                            </div>
+		                {#{% endif %}#}
+                        <form role="form" action="{% url 'remove_translation' %}" method="POST" style="display: inline;">
+                            <input type="hidden" name="pk" value="{{ translation.pk }}" />
+                            <input type="hidden" name="next" value="{{ next }}" />
+                            {% csrf_token %}
+	                        <button type="submit" class="btn btn-xs btn-default" title="Remove this item if it has a negative vote count."><i class="glyphicon glyphicon-trash"></i></button>
+                        </form>
+		            </td>
 				</tr>
 			{% endfor %}
 		</tbody>
 	</table>
 	{% else %}
 		<p>There are no translations for this phrase.</p>
+	{% endif %}
+
+	{% if phrase.public_edit or phrase.learner.pk == request.user.pk %}
+		<h2>Add a translation</h2>
+		{% if phrase.public_edit %}
+			<p>This is a public entry. Please feel free to contribute a translation in a language you are familiar with! Improved or alternative translations in existing languages are also welcome!
+		{% else %}
+			You are the owner of this entry. You can add more translations to the list using the form below. Note that other people can help you add translations if you make this list publicly editable.
+		{% endif %} </p>
+        <form role="form" action="{% url 'add_translation' %}" method="POST">
+            {{ add_translation_form|as_bootstrap }}
+            <input type="hidden" name="next" value="{{ next }}" />
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Add translation</button>
+        </form>
+
+		<a href="{% url 'edit_phrase' pk=phrase.pk %}?next={{ request.get_full_path }}" class="btn btn-primary">Edit this phrase</a>
+
+        <form style="display: inline;" role="form" action="{% url 'delete_phrase' %}" method="POST">
+            <input type="hidden" name="pk" value="{{ phrase.pk }}" />
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" title="This deleted all the translations!">Delete this phrase</button>
+        </form>
 	{% endif %}
 
 	{# #todo info about lists #}

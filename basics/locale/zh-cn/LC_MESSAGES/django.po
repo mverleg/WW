@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-09 21:07+0000\n"
+"POT-Creation-Date: 2015-03-14 22:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,49 +45,65 @@ msgctxt "menu option: lists"
 msgid "lists"
 msgstr ""
 
-#: basics/templates/frame.html:76
+#: basics/templates/frame.html:55
+msgctxt "menu option: addphrase"
+msgid "add"
+msgstr ""
+
+#: basics/templates/frame.html:56
+msgctxt "menu option: study"
+msgid "study"
+msgstr ""
+
+#: basics/templates/frame.html:57
+msgctxt "menu option: study"
+msgid "stats"
+msgstr ""
+
+#: basics/templates/frame.html:79
 msgctxt "menu option: settings"
 msgid "settings"
 msgstr ""
 
-#: basics/templates/frame.html:77
+#: basics/templates/frame.html:80
 msgctxt "menu option: account"
 msgid "account"
 msgstr ""
 
-#: basics/templates/frame.html:79
+#: basics/templates/frame.html:82
 msgctxt "menu option: register"
 msgid "register"
 msgstr ""
 
-#: basics/templates/frame.html:80
+#: basics/templates/frame.html:83
 msgctxt "menu option: login"
 msgid "login"
 msgstr ""
 
-#: basics/templates/frame.html:88
+#: basics/templates/frame.html:91 basics/templates/search_results.html:23
+#: lists/templates/add_choose.html:19 lists/templates/show_list.html:97
 msgctxt "Search placeholder"
 msgid "search"
 msgstr ""
 
-#: basics/templates/frame.html:123
+#: basics/templates/frame.html:126
 msgctxt "Main page options header"
 msgid "What would you like to do?"
 msgstr ""
 
-#: basics/templates/home.html:12
+#: basics/templates/home.html:17
 msgctxt "Home page"
 msgid "Welcome to the WordsProgram!"
 msgstr ""
 
-#: basics/templates/home.html:13
+#: basics/templates/home.html:18
 msgctxt "Home page"
 msgid ""
 "This program will help you learn the impossible language of Chinese! Or "
 "others!"
 msgstr ""
 
-#: basics/templates/home.html:15
+#: basics/templates/home.html:20
 msgctxt "Home page"
 msgid "Give it a try!"
 msgstr ""

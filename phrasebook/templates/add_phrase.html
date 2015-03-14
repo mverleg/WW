@@ -1,0 +1,29 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+	Add phrase
+	-
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	<h1>Add phrase</h1>
+
+	<p>Please provide the settings and the first translation for this phrase. You can add more translations immediately after. If you make the phrase public, fellow users can help you add more translations!</p>
+
+	<div class="alert alert-success" role="alert"><strong>Kindly note</strong>: You are about to create a new phrase. That's great! To prevent clutter and extra work, <a class="alert-link" href="{% url 'search' %}?q=">please check</a> first if it doesn't exist yet.</div>
+
+	<form role="form" action="." method="POST">
+		{{ translation_form|as_bootstrap }}
+		{{ phrase_form|as_bootstrap }}
+		<input type="hidden" name="next" value="{{ next }}" />
+		{% csrf_token %}
+		<button type="submit" class="btn btn-success">Create</button>
+	</form>
+
+{% endblock content %}
+
+

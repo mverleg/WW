@@ -102,10 +102,8 @@
 	       		<button type="submit" class="btn btn-default" title="Add the phrase to this list."><i class="glyphicon glyphicon-plus"></i></button>
 	       	</form>
         </div>
-	{% endif %}
-    <br />
+        <br />
 
-	{% if access.editable %}
 		<a href="{% url 'edit_list' pk=list.pk slug=list.slug %}" class="btn btn-primary">Edit this list</a>
 
         <form style="display: inline;" role="form" action="{% url 'delete_list' %}" method="POST">

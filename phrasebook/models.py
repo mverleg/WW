@@ -6,6 +6,7 @@
 
 from django.db import models
 from pinyin import get as to_pinyin
+from learners.models import Learner
 from settings import SUPPORTED_LANGUAGES
 
 
@@ -14,10 +15,18 @@ class Phrase(models.Model):
 		This should be seen as a 'meaning'; there are different language 'implementations' of it.
 	"""
 	#todo you can add e.g. an image here, which would be the same for each language
-	#todo you could also have categories and comments
+	#todo: maybe public_view should not be optional, it would make things easier and more open
+	learner = models.ForeignKey(Learner, blank = True, null = True, default = None)
+	#public_view = models.BooleanField(default = True, verbose_name = 'publicly viewable')
+	public_edit = models.BooleanField(default = True, verbose_name = 'publicly editable')
 
 	def __unicode__(self):
 		return 'phrase #%d' % self.pk
+
+	#def clean(self, *args, **kwargs):
+	#	if self.public_edit:
+	#		self.public_view = True
+	#	return super(Phrase, self).clean(*args, **kwargs)
 
 
 class Translation(models.Model):

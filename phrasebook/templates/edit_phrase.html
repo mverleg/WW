@@ -1,0 +1,26 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+	Edit phrase
+	-
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	<h1>Edit phrase</h1>
+
+	<p>Edit properties for this phrase.</p>
+
+	<form role="form" action="." method="POST">
+        {{ phrase_form|as_bootstrap }}
+		<input type="hidden" name="next" value="{{ next }}" />
+		{% csrf_token %}
+		<button type="submit" class="btn btn-success">Save</button>
+	</form>
+
+{% endblock content %}
+
+
