@@ -1,13 +1,13 @@
 
 from collections import OrderedDict
 from datetime import timedelta
+from django.contrib.messages import add_message, INFO
 from django.shortcuts import render
 from django.utils.timezone import datetime, now
 from basics.views import notification
-from lists.models import TranslationsList, ListAccess
-from phrasebook.models import Translation
+from learners.function import update_learner_actives, get_options, weighted_option_choice
+from lists.models import ListAccess
 from study.models import Result, ActiveTranslation
-
 
 
 #class ListAccess(models.Model):
@@ -19,28 +19,38 @@ from study.models import Result, ActiveTranslation
 #	active = models.BooleanField(default = False, help_text = 'Inactive lists don\'t show up during learning sessions (only applies to you).')
 
 
-
-def update_learner_actives(learner, force = False):
-	"""
-		If needed (or force is True), update all the learner's ActiveTranslation .priority and .active properties.
-	"""
-
-
-
 def study_ask(request):
-	#todo: This needs quite some queries, which could perhaps be prevented. The properties derived from ListAccess only need to be updated when any of the users ListAccesses are updated, which is presumably much less frequently than phrases are shown.
-	#active_list_access = ListAccess.object.filter()
-	pass
+	if request.user.is_authenticated():
+		update_learner_actives(learner = request.user)
+		#todo: active more cards
+		options = get_options(request = request)
+		if not options:
+			return notification(request, 'You don\'t have enough phrases to start a quiz, sorry. You can add some active lists for more phrases!')
+		if request.user.add_randomness:
+			choice = weighted_option_choice(options)
+		else:
+			choice = options[0]
+		asked = choice.translation
+	else:
+		add_message(request, INFO, 'You are studying anonymously. With an account, you can select phrases to learn and store your results!')
+		return notification(request, 'anonymous study coming soon')
+	known = asked.phrase
+
+	return render(request, 'study_question.html', {
+		'anonymous': True,
+
+	})
 
 
 def study_respond(request):
 	return notification(request, 'No study yet!')
+	request.user.phrase_index += 1 #save
 
 
 def stats(request):
-	today_start = datetime(year = now().year, month = now().month, day = now().day)
+	today_start = datetime(year = now().year, month = now().month, day = now().day, tzinfo = now().tzinfo)
 	week_start = today_start - timedelta(days = now().weekday())
-	month_start = datetime(year = now().year, month = now().month, day = 1)
+	month_start = datetime(year = now().year, month = now().month, day = 1, tzinfo = now().tzinfo)
 	summaries = OrderedDict((
 		('today', {
 			'correct': Result.objects.filter(learner = request.user, when__gt = today_start, result = Result.CORRECT).count(),

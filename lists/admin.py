@@ -1,6 +1,5 @@
 
 from django.contrib import admin
-from lists.forms import update_translations_cache
 from lists.models import TranslationsList, ListAccess
 
 
@@ -9,13 +8,12 @@ class ListAccessAdmin(admin.ModelAdmin):
 
 	def save(self, *args, **kwargs):
 		self.instance.learner.need_active_update = True
-		self.instance.learner.need_active_update.save()
+		self.instance.learner.save()
 		super(ListAccessAdmin, self).save(*args, **kwargs)
 
 
 class TranslationListAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'language',)
-
 
 
 admin.site.register(TranslationsList, TranslationListAdmin)

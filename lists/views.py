@@ -95,8 +95,7 @@ def add_list(request):
 	if list_form.is_valid() and access_form.is_valid():
 		""" Create the list and grant the user edit access """
 		li = list_form.save()
-		access = access_form.save(commit
-								  = False)
+		access = access_form.save(commit = False)
 		access.translations_list = li
 		access.learner = request.user
 		access.access = ListAccess.EDIT
@@ -145,17 +144,13 @@ def add_translation_by_search(request):
 	if resp: return resp
 	form = HighlightedModelSearchForm(request.POST)
 	if li.language:
-		results = form.search().filter(language = li.language_disp)
-		other_language_results = form.search().filter(language__not = li.language_disp)
+		results = form.search().filter(language_key = li.language)
+		other_language_results = form.search().filter(language_key__not = li.language)
 	else:
 		results = form.search()
 		other_language_results = None
-	print li.language_disp
-	print form.search()[0].language
-	print results
-	print other_language_results
 	if len(results) == 1:
-		if results[0].object.language == li.language:
+		if results[0].language_key == li.language:
 			""" Only one results, apply directly. """
 			if results[0].object in li.translations.all():
 				add_message(request, WARNING, '"%s" (the only result) is already on the list.' % results[0].object)

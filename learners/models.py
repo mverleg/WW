@@ -1,7 +1,7 @@
 
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from settings import SUPPORTED_LANGUAGES
 
 
 """
@@ -38,6 +38,7 @@ class Learner(AbstractBaseUser, PermissionsMixin):
 	is_staff = models.BooleanField(default = False, help_text = 'Designates whether the user can log into this admin site.')
 	#language = models.CharField(choices = SUPPORTED_LANGUAGES, max_length = 8)
 
+	ask_direction = models.FloatField(default = 65, validators = (MinValueValidator(0), MaxValueValidator(100)), help_text = 'How often to show the known language and ask the unknown one versus the other way around (0: always show unknown, 100: always show known)')
 	add_randomness = models.BooleanField(default = True, help_text = 'Should selecting phrases involve a little randomness?')
 	minimum_delay = models.PositiveIntegerField(default = 10, help_text = 'For how many questions to block a phrase after displaying it.')
 	new_count = models.PositiveIntegerField(default = 10, help_text = 'How many first-time cards to keep active at once.')

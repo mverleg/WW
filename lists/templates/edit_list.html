@@ -25,7 +25,7 @@
 	</p>
 
 	<form role="form" action="." method="POST">
-	    {% if access.editable %}
+	    {% if access.editable or add %}
 	        {{ list_form|as_bootstrap }}
 		{% endif %}
 		{{ access_form|as_bootstrap }}

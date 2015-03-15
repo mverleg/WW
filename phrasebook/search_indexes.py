@@ -9,6 +9,7 @@ class TranslationIndex(indexes.SearchIndex, indexes.Indexable):
 	words = indexes.CharField(model_attr = 'text')
 	romanization = indexes.CharField(model_attr = 'romanization')
 	language = indexes.CharField(model_attr = 'language_disp')
+	language_key = indexes.CharField(model_attr = 'language')
 	other_languages = indexes.IntegerField(model_attr = 'other_languages')
 	phrase_pk = indexes.IntegerField(model_attr = 'phrase_id')
 
