@@ -8,13 +8,19 @@ Goals
 Requirements
 --------------------
 
-* django
+Python:
+* django (and dependencies, automatic with pip)
 * django-haystack
 * whoosh
+* pinyin (literal name of a python module)
+* pytz
+
+Client:
 * bootstrap (already included)
 * jquery (already included)
+
+Ubuntu:
 * sqlite3 (default on Ubuntu?)
-* pinyin (literal name of a python module)
 
 A real database like postgres or mysql is recommended instead of sqlite3 for live website and possibly before. But as long as you have no important data to migrate, it is easy to switch, so play around first.
 
@@ -22,7 +28,7 @@ Setup
 --------------------
 
 * Install the requirements
-* Create the database using (this will also create and show your output your account info)::
+* Create the database using (this will also create and show your account info the first time)::
 
     python2 manage.py migrate
 
@@ -32,9 +38,9 @@ Setup
 
 * Build the search index using::
 
-    python manage.py rebuild_index
+    python manage.py rebuild_index --noinput
 
-* Start the server using (you can always start the server with this command, and stop it with ctrl + C; it needs to be restarted after some syntax etc errors)::
+* Start the server using (you can always start the server with this command, and stop it with ctrl + C; after syntax etc errors it needs to be restarted)::
 
     python manage.py runserver
 

@@ -93,8 +93,8 @@ def profile(request, next):
 	})
 
 
-@login_required
-def settings(request):
-	return notification(request, 'There are no settings yet.')
+#@login_required
+#def settings(request):
+#	return notification(request, 'There are no settings yet.')
 
 

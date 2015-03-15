@@ -38,6 +38,12 @@ class Learner(AbstractBaseUser, PermissionsMixin):
 	is_staff = models.BooleanField(default = False, help_text = 'Designates whether the user can log into this admin site.')
 	#language = models.CharField(choices = SUPPORTED_LANGUAGES, max_length = 8)
 
+	phrase_index = models.IntegerField(default = 0, help_text = 'How many phrases have been shown (a.o. to compare last_shown) (internal only)')
+	add_randomness = models.BooleanField(default = True, help_text = 'Should selecting phrases involve a little randomness?')
+	minimum_delay = models.PositiveIntegerField(default = 10, help_text = 'For how many questions to block a phrase after displaying it.')
+	new_count = models.PositiveIntegerField(default = 10, help_text = 'How many first-time cards to keep active at once.')
+	show_medium_correctness = models.BooleanField(default = False, help_text = 'Besides correct and incorrect, show a third option inbetween them.')
+
 	objects = LearnerManager()
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = []

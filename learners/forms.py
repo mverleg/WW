@@ -43,7 +43,7 @@ PasswordForm = PasswordChangeForm
 class ProfileForm(forms.ModelForm):
 	class Meta:
 		model = get_user_model()
-		fields = ('name',)
+		fields = ('name', 'add_randomness', 'minimum_delay', 'new_count', 'show_medium_correctness',)
 
 
 class RegistrationForm(forms.ModelForm):

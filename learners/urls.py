@@ -2,7 +2,7 @@
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
-from learners.views import login, logout, register, password, profile, settings
+from learners.views import login, logout, register, password, profile
 
 
 urlpatterns = patterns('',
@@ -12,7 +12,7 @@ urlpatterns = patterns('',
 	url(r'^register/$', register, name = 'register'),
 	url(r'^password/$', password, name = 'password'),
 	url(r'^profile/$', profile, name = 'profile'),
-	url(r'^settings/$', settings, name = 'settings'),
+	#url(r'^settings/$', settings, name = 'settings'),
 )
 
 

@@ -23,7 +23,7 @@ def show_phrase(request, phrase):
 			learn_translations.append(translation)
 		else:
 			other_translations.append(translation)
-	add_translation_form = AddTranslationForm(None, initial = {'phrase': phrase})
+	add_translation_form = AddTranslationForm(None, initial = {'phrase': phrase, 'language': request.KNOWN_LANG})
 	return render(request, 'show_phrase.html', {
 		'phrase': phrase,
 		'translations': translations,
@@ -32,10 +32,12 @@ def show_phrase(request, phrase):
 
 
 def add_phrase(request):
-	phrase_form = EditPhraseForm(request.POST or None)
+	phrase_form = EditPhraseForm(request.POST or None, initial = {'language': request.KNOWN_LANG})
 	translation_form = PhraselessTranslationForm(request.POST or None)
 	if phrase_form.is_valid() and translation_form.is_valid():
-		phrase = phrase_form.save()
+		phrase = phrase_form.save(commit = False)
+		phrase.learner = request.user
+		phrase.save()
 		translation = translation_form.save(commit = False)
 		translation.phrase = phrase
 		translation.save()
