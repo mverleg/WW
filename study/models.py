@@ -12,11 +12,16 @@ class ActiveTranslation(models.Model):
 	learner = models.ForeignKey(Learner)
 	translation = models.ForeignKey(Translation)
 	last_shown = models.PositiveIntegerField()
-	""" Note that score is a derived property, stored for performance; it can be recalculated from other data. """
+	""" Note that score, active and priority are derived properties, stored for performance; it can be recalculated from other data. """
 	score = models.FloatField()
+	priority = models.SmallIntegerField(default = 0)
+	active = models.BooleanField(default = False)
 
 	class Meta:
 		unique_together = ('learner', 'translation',)
+
+	def __unicode__(self):
+		return 'active "%s" for "%s"' % (self.translation, self.learner)
 
 
 class Result(models.Model):
@@ -33,5 +38,8 @@ class Result(models.Model):
 
 	class Meta:
 		ordering = ('when',)
+
+	def __unicode__(self):
+		return '"%s" got "%s" %s' % (self.learner, self.asked, self.get_result_display())
 
 

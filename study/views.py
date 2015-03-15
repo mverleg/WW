@@ -19,11 +19,16 @@ from study.models import Result, ActiveTranslation
 #	active = models.BooleanField(default = False, help_text = 'Inactive lists don\'t show up during learning sessions (only applies to you).')
 
 
+
+def update_learner_actives(learner, force = False):
+	"""
+		If needed (or force is True), update all the learner's ActiveTranslation .priority and .active properties.
+	"""
+
+
+
 def study_ask(request):
-	#todo: make sure phrases aren't repeated too often in a row, especially if correct
-	#todo: make the frequency depend on (recent) results
-	#todo: make sure the user can't just hit F5 several times to get multiple results
-	#todo: more generally, make sure the user can't manipulate the data, e.g. request specific phrases
+	#todo: This needs quite some queries, which could perhaps be prevented. The properties derived from ListAccess only need to be updated when any of the users ListAccesses are updated, which is presumably much less frequently than phrases are shown.
 	#active_list_access = ListAccess.object.filter()
 	pass
 
