@@ -37,11 +37,7 @@
 	                <tr>
 	                    <td>{{ result.language }}</td>
                         <td>{{ result.words }}{% if result.romanization %} ({{ result.romanization }}){% endif %}</td>
-		                {% if result.other_languages %}
-	                        <td><a href="{% url 'show_phrase' pk=result.phrase_pk %}">{{ result.other_languages }} other{{ result.other_languages|pluralize }}</a></td>
-	                    {% else %}
-                            <td>no others</td>
-	                    {% endif %}
+                        <td><a href="{% url 'show_phrase' pk=result.phrase_pk %}">{% if result.other_languages %}{{ result.other_languages }} other{{ result.other_languages|pluralize }}{% else %}no others{% endif %}</a></td>
 	                </tr>
                 {% endfor %}
 		    </tbody>

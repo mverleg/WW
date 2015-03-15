@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='learner',
             name='ask_direction',
-            field=models.FloatField(default=65, help_text=b'How often to show the known language and ask the unknown one versus the other way around (0: always show unknown, 100: always show known)', validators=(django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(100))),
+            field=models.FloatField(default=65, help_text=b'How often to show the known language and ask the unknown one, versus the other way around (0: always show unknown, 100: always show known)', validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(100)]),
             preserve_default=True,
         ),
     ]

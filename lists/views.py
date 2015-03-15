@@ -32,6 +32,7 @@ def show_list(request, translations_list, slug = None):
 		return redirect('%s?page=1' % request.path)
 	except EmptyPage:
 		return redirect('%s?page=%d' % (request.path, paginator.num_pages))
+	print [item for item in items]
 	return render(request, 'show_list.html', {
 		'list': translations_list,
 		#'translations': translations,
@@ -156,6 +157,9 @@ def add_translation_by_search(request):
 				add_message(request, WARNING, '"%s" (the only result) is already on the list.' % results[0].object)
 			else:
 				li.translations.add(results[0].object)
+				# everyone who follows this list needs to update active cards
+				for need_update_access in ListAccess.objects.filter(translations_list = li):
+					need_update_access.learner.need_update()
 				add_message(request, INFO, '"%s" (the only result) was added to the list.' % results[0].object)
 			return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
 	""" Show options to the user """
@@ -177,6 +181,9 @@ def add_translation_by_pk(request, translation):
 		add_message(request, WARNING, '"%s" is already on the list.' % translation)
 	else:
 		li.translations.add(translation)
+		# everyone who follows this list needs to update active cards
+		for need_update_access in ListAccess.objects.filter(translations_list = li):
+			need_update_access.learner.need_update()
 		add_message(request, INFO, '"%s" was added to the list.' % translation)
 	return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
 

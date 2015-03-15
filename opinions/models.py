@@ -13,7 +13,7 @@ class TranslationVote(models.Model):
 		unique_together = ('translation', 'learner',)
 
 	def __unicode__(self):
-		return '%s %svotes %s' % (self.learner, 'up' if self.up else 'down', self.translation)
+		return u'%s %svotes %s' % (self.learner, 'up' if self.up else 'down', self.translation)
 
 	@property
 	def score(self):
@@ -28,6 +28,6 @@ class TranslationComment(models.Model):
 	text = models.TextField()
 
 	def __unicode__(self):
-		return '%s comments on %s' % (self.learner, self.translation)
+		return u'%s comments on %s' % (self.learner, self.translation)
 
 

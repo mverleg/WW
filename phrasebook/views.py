@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from basics.decorators import instantiate, next_GET, confirm_delete
 from basics.views import notification
-from phrasebook.forms import AddTranslationForm, EditPhraseForm, PhraselessTranslationForm
+from phrasebook.forms import CreateTranslationForm, EditPhraseForm, PhraselessTranslationForm
 from phrasebook.models import Phrase, Translation
 
 
@@ -23,11 +23,11 @@ def show_phrase(request, phrase):
 			learn_translations.append(translation)
 		else:
 			other_translations.append(translation)
-	add_translation_form = AddTranslationForm(None, initial = {'phrase': phrase, 'language': request.KNOWN_LANG})
+	create_translation_form = CreateTranslationForm(None, initial = {'phrase': phrase, 'language': request.KNOWN_LANG})
 	return render(request, 'show_phrase.html', {
 		'phrase': phrase,
 		'translations': translations,
-		'add_translation_form': add_translation_form,
+		'create_translation_form': create_translation_form,
 	})
 
 
@@ -81,11 +81,11 @@ def delete_phrase(request):
 
 @require_POST
 @login_required
-def add_translation(request):
+def create_translation(request):
 	if not request.POST['language'].strip():
 		add_message(request, ERROR, 'You need to provide the language for this phrase.')
 		return redirect(request.POST['next'] or '/')
-	form = AddTranslationForm(request.POST)
+	form = CreateTranslationForm(request.POST)
 	if form.is_valid():
 		phrase = form.cleaned_data['phrase']
 		if not (phrase.public_edit or phrase.learner == request.user):
@@ -101,7 +101,7 @@ def add_translation(request):
 
 @require_POST
 @login_required
-def remove_translation(request):
+def delete_translation(request):
 	try:
 		translation = Translation.objects.get(pk = int(request.POST['pk']))
 	except (KeyError, ValueError, Translation.DoesNotExist):

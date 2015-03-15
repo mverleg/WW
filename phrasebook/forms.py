@@ -9,7 +9,7 @@ class EditPhraseForm(ModelForm):
 		fields = ('public_edit',)
 
 
-class AddTranslationForm(ModelForm):
+class CreateTranslationForm(ModelForm):
 	class Meta:
 		model = Translation
 		fields = ('phrase', 'text', 'language',)

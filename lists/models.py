@@ -38,7 +38,7 @@ class ListAccess(models.Model):
 		ordering = ('-priority',)
 
 	def __unicode__(self):
-		return '%s %s' % (self.learner, self.translations_list)
+		return u'%s %s' % (self.learner, self.translations_list)
 
 	@property
 	def editable(self):

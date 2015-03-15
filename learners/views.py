@@ -85,7 +85,7 @@ def profile(request, next):
 		if form.is_valid():
 			form.save()
 			add_message(request, INFO, 'Your profile has been saved.')
-			return redirect(to = reverse('profile'))
+			return redirect(to = request.POST['next'] or reverse('profile'))
 	return render(request, 'profile.html', {
 		'profile_form': form,
 		'logout_form': ProfileForm(None),

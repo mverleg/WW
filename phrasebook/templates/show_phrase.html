@@ -59,8 +59,8 @@
 		{% else %}
 			You are the owner of this entry. You can add more translations to the list using the form below. Note that other people can help you add translations if you make this list publicly editable.
 		{% endif %} </p>
-        <form role="form" action="{% url 'add_translation' %}" method="POST">
-            {{ add_translation_form|as_bootstrap }}
+        <form role="form" action="{% url 'create_translation' %}" method="POST">
+            {{ create_translation_form|as_bootstrap }}
             <input type="hidden" name="next" value="{{ next }}" />
             {% csrf_token %}
             <button type="submit" class="btn btn-success">Add translation</button>

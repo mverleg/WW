@@ -21,7 +21,7 @@ class Phrase(models.Model):
 	public_edit = models.BooleanField(default = True, verbose_name = 'publicly editable')
 
 	def __unicode__(self):
-		return 'phrase #%d' % self.pk
+		return u'phrase #%d' % self.pk
 
 	#def clean(self, *args, **kwargs):
 	#	if self.public_edit:
@@ -38,7 +38,7 @@ class Translation(models.Model):
 	text = models.TextField()
 
 	def __unicode__(self):
-		return self.text[:47] + '...' if len(self.text) > 50 else self.text
+		return self.text[:47] + u'...' if len(self.text) > 50 else self.text
 
 	def preview_text(self):
 		return self.text[:47] + '...' if len(self.text) > 50 else self.text
@@ -65,6 +65,6 @@ class Translation(models.Model):
 		pin = to_pinyin(self.text)
 		if not pin == self.text:
 			return pin
-		return ''
+		return u''
 
 
