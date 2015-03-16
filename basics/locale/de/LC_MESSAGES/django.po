@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-14 22:08+0000\n"
+"POT-Creation-Date: 2015-03-16 00:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,11 +19,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: basics/forms.py:12
-msgid "context"
+msgid "Known language"
 msgstr ""
 
 #: basics/forms.py:13
 msgid "Learning language"
+msgstr ""
+
+#: basics/templates/features.html:8
+msgctxt "Main page options header"
+msgid "What would you like to do?"
 msgstr ""
 
 #: basics/templates/frame.html:45
@@ -46,50 +51,40 @@ msgctxt "menu option: lists"
 msgid "lists"
 msgstr ""
 
-#: basics/templates/frame.html:55
+#: basics/templates/frame.html:56
 msgctxt "menu option: addphrase"
 msgid "add"
 msgstr ""
 
-#: basics/templates/frame.html:56
+#: basics/templates/frame.html:57 basics/templates/frame.html.py:60
 msgctxt "menu option: study"
 msgid "study"
 msgstr ""
 
-#: basics/templates/frame.html:57
+#: basics/templates/frame.html:58
 msgctxt "menu option: study"
 msgid "stats"
 msgstr ""
 
-#: basics/templates/frame.html:79
-msgctxt "menu option: settings"
-msgid "settings"
-msgstr ""
-
-#: basics/templates/frame.html:80
+#: basics/templates/frame.html:84
 msgctxt "menu option: account"
 msgid "account"
 msgstr ""
 
-#: basics/templates/frame.html:82
+#: basics/templates/frame.html:86
 msgctxt "menu option: register"
 msgid "register"
 msgstr ""
 
-#: basics/templates/frame.html:83
+#: basics/templates/frame.html:87
 msgctxt "menu option: login"
 msgid "login"
 msgstr ""
 
-#: basics/templates/frame.html:91 basics/templates/search_results.html:23
+#: basics/templates/frame.html:95 basics/templates/search_results.html:23
 #: lists/templates/add_choose.html:19 lists/templates/show_list.html:97
 msgctxt "Search placeholder"
 msgid "search"
-msgstr ""
-
-#: basics/templates/frame.html:126
-msgctxt "Main page options header"
-msgid "What would you like to do?"
 msgstr ""
 
 #: basics/templates/home.html:17
@@ -123,4 +118,24 @@ msgstr ""
 
 #: settings.py:21
 msgid "Dutch"
+msgstr ""
+
+#: study/forms.py:7
+msgid "Solution"
+msgstr ""
+
+#: study/forms.py:11
+msgid "Type your solution..."
+msgstr ""
+
+#: study/templates/study_question.html:20
+#, python-format
+msgctxt "study question header"
+msgid "This %(shown_language)s phrase..."
+msgstr ""
+
+#: study/templates/study_question.html:26
+#, python-format
+msgctxt "study question footer"
+msgid "How to say it in %(hidden_language)s?"
 msgstr ""

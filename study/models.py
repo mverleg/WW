@@ -35,6 +35,7 @@ class Result(models.Model):
 		(CLOSE, 'not quite correct'),
 	))
 	when = models.DateTimeField(auto_now_add = True)
+	verified = models.BooleanField(default = False, help_text = "True if the user typed the solution correctly, False otherwise (if he judged himself)")
 
 	class Meta:
 		ordering = ('when',)

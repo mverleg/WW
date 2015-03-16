@@ -32,10 +32,8 @@ def show_list(request, translations_list, slug = None):
 		return redirect('%s?page=1' % request.path)
 	except EmptyPage:
 		return redirect('%s?page=%d' % (request.path, paginator.num_pages))
-	print [item for item in items]
 	return render(request, 'show_list.html', {
 		'list': translations_list,
-		#'translations': translations,
 		'access': access_instance,
 		'items': items,
 		'nearby_pages': _nearby_pages(items),

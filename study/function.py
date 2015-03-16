@@ -1,9 +1,52 @@
 
-from random import random, choice
+from random import Random
 from django.db.transaction import atomic
 from lists.models import ListAccess
-from study.models import Result, ActiveTranslation
-from django.contrib.messages import WARNING
+from study.models import ActiveTranslation
+from django.contrib.messages import WARNING, ERROR
+
+
+def get_current_question(learner, known_language, learn_language):
+	"""
+		Get the current question and answer Translations.
+
+		This runs into trouble if the user changes list activity or priority between question and answer phase... #todo: solve maybe?
+
+		:return: hidden_translation, shown_translation, messages
+	"""
+	""" Use a fixed random seed, so that question and answer refer to the same card. """
+	randst = Random(x = learner.pk + learner.phrase_index)
+	""" Get all ActiveTranslations to choose from. """
+	msgs = []
+	options = get_options(learner = learner, msgs = msgs, lang = learn_language)
+	if not options:
+		msgs.append((ERROR, 'You don\'t have enough phrases to start a quiz, sorry. You can add some active lists for more phrases!'))
+		return
+	""" Choose among the options. """
+	choice = options[0]
+	if learner.add_randomness:
+		choice = weighted_option_choice(options, randst)
+	""" Now get the other language versions. """
+	other_li = choice.translation.phrase.translations.filter(language = known_language)
+	#todo: order shown_li by votes to get the best one
+	if not other_li:
+		other_li = choice.translation.phrase.translations.exclude(language = learn_language)
+	if not other_li:
+		""" There is only one translation so we don't know what to ask. Disable the bad card, try again (note that messages are intentionally lost). """
+		msgs.append((ERROR, 'The phrase "%s" was skipped because there are no alternative language versions.' % choice.translation.text))
+		choice.active = False
+		choice.save()
+		update_learner_actives(learner = learner)
+		return get_current_question(learner, known_language, learn_language)
+	""" Choice.translation is in the unknown language; should we show this or ask for this? """
+	if randst.random() * 100 < learner.ask_direction:
+		""" We'll ask the learning language and show a (hopefully) known one. """
+		hidden = choice.translation
+		shown = other_li[0]
+	else:
+		hidden = other_li[0]
+		shown = choice.translation
+	return hidden, shown, msgs
 
 
 @atomic
@@ -15,7 +58,6 @@ def update_learner_actives(learner, specific_translation = None, force = False):
 		return
 	accesses = ListAccess.objects.filter(learner = learner, active = True)
 	actives_map = {active.translation.pk: active for active in ActiveTranslation.objects.filter(learner = learner)}
-	print 'actives_map', actives_map
 	for pk, active in actives_map.items():
 		active.active = False
 		active.priority = 0
@@ -51,6 +93,7 @@ def get_options(learner, msgs, lang, amount=20):
 		select = {'sum': 'score + priority'},
 		order_by = ('sum', 'last_shown',)
 	)[:amount]
+	print len(options), options
 	if not options:
 		options = ActiveTranslation.objects.filter(
 			learner = learner,
@@ -98,18 +141,17 @@ def add_more_active_phrases(learner, msgs):
 				).save()
 				cnt -= 1
 				if cnt <= 0:
-					print 'added', (goal_count - unlearned_count), 'actives'
 					learner.need_update()
 					return
 	msgs.append((WARNING, 'Tried to add more cards to the active collection but it seems there are not enough left in your lists.'))
-	#todo: maybe use some random sampling
+	#todo: maybe use some random sampling when choosing which phrase to activate
 
 
-def weighted_option_choice(options):
+def weighted_option_choice(options, random_state):
 	tot = sum(option.sum for option in options)
 	if tot <= 0:
-		return choice(options)
-	rnd = random() * tot
+		return random_state.choice(options)
+	rnd = random_state.random() * tot
 	for option in options:
 		rnd -= option.sum
 		if rnd < 0:

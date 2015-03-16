@@ -17,7 +17,7 @@
     	<h1>{% blocktrans context 'Home page' %}Welcome to the WordsProgram!{% endblocktrans %}</h1>
         <p>{% blocktrans context 'Home page' %}This program will help you learn the impossible language of Chinese! Or others!{% endblocktrans %}</p>
 		{% url 'study' as try_url %} {# actually could be done directly if not inside the trans block #}
-        <p><a class="btn btn-primary btn-lg" href="{{ try_url }}" role="button">{% blocktrans context 'Home page' %}Give it a try!{% endblocktrans %}</a></p>
+        <p><a class="btn btn-primary btn-lg" href="{% url 'study_demo' %}" role="button">{% blocktrans context 'Home page' %}Give it a try!{% endblocktrans %}</a></p>
 	</header>
 {% endblock content %}
 
