@@ -12,14 +12,14 @@
 
 {% block content %}
 
-	{% if correct_count <= 30 %}
+	{% if correct_count <= 3 %}
 		<div class="alert alert-info" role="alert">
 		    <strong>{% blocktrans %}Did you know{% endblocktrans %}</strong>
 		    {% blocktrans context 'study answer hotkeynote' %}You can use hotkeys on this page: 1 for 'incorrect', 2 for 'not quite' and 3 for 'correct'.{% endblocktrans %}
 		</div>
 	{% endif %}
 
-	<div class="panel {% if correct %}panel-success{% elif answer %}panel-default{% else %}panel-danger{% endif %}">
+	<div class="panel {% if correct %}panel-success{% else %}panel-default{% endif %}">
 		<div class="panel-heading">
 			The {{ shown.language_disp }} phrase <strong>{{ shown.text|capfirst }}</strong> in {{ hidden.language_disp }} is said...
         </div>
@@ -40,7 +40,7 @@
         </div>
     </div>
 
-	{% if not correct %}
+	{% if judge %}
         <form role="form" action="{% url 'study_respond' %}" method="POST">
             {% csrf_token %}
             <div class="row">

@@ -23,7 +23,14 @@
 
 	<p>You can also <a href="{% url 'password' %}?next={{ next }}">change your password</a>. Choose a strong one!</p>
 
-	<p><a href="{% url 'password' %}" type="button" class="btn btn-danger">Change password</a></p>
+	<p><a href="{% url 'password' %}" type="button" class="btn btn-primary">Change password</a></p>
+
+	<p>Here's a reset button, just in case. It just clears some cache, it won't destroy your stats except the phrase you are studying at this very time.</p>
+
+	<form role="form"  action="{% url 'reset' %}" method="POST">
+	    {% csrf_token %}
+	    <p><button type="submit" class="btn btn-danger">Reset cache</button></p>
+	</form>
 
 	<p>When you are done, don't forget to log out.</p>
 

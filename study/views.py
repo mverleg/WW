@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from django.utils.timezone import datetime, now
 from basics.views import notification
 from basics.decorators import instantiate
+from learners.models import Learner
 from study.function import update_learner_actives, add_more_active_phrases, get_current_question
 from lists.models import ListAccess, TranslationsList
 from study.forms import SolutionForm
@@ -16,27 +17,68 @@ from study.models import Result, ActiveTranslation
 
 
 @login_required
-def study_ask(request):
-	#learn_translation = models.ForeignKey('study.ActiveTranslation', blank = True, null = True, default = None, related_name = 'current_learners')
-	#is_revealed = models.BooleanField(default = False)
-	if request.user.is_revealed:
-		pass
-	else:
-		""" A lot of preparatory stuff. """
+def study(request):
+	# study_shown = models.ForeignKey('phrasebook.Translation', blank = True, null = True, default = None, related_name = 'current_shown_learners', help_text = 'The Translation that is currently visible, if any (internal only).')
+	# study_hidden = models.ForeignKey('study.ActiveTranslation', blank = True, null = True, default = None, related_name = 'current_hidden_learners', help_text = 'The Translation that is the solution for study_shown (internal only).')
+	# study_state = models.PositiveSmallIntegerField(default = ASK_MEANING, choices = ((ASK_MEANING, 'asking meaning (showing learn lang)'), (ASK_HOWSAY, 'asking how to say (showing known lang)'), (REVEALED, 'revealed, awaiting judgement'), (JUDGED, 'judged')), help_text = '(internal only).')
+	# study_answer = models.TextField(default = '', help_text = 'The latest thing the user answered (internal only).')
+	learner = request.user
+	correct = False
+	result_form = SolutionForm(request.POST)
+	if learner.study_state in [Learner.ASK_MEANING, Learner.ASK_HOWSAY] and 'solution' in request.POST:
+		"""
+			The user submitted a solution.
+		"""
+		if not result_form.is_valid():
+			add_message(request, ERROR, 'Could not find or understand the answer, sorry. Sending back to question.')
+			return redirect(reverse('study_ask'))
+		learner.study_answer = result_form.cleaned_data['solution'].strip()
+		if learner.study_answer == learner.study_hidden.text.strip():
+			correct = True
+			Result(
+				learner = learner,
+				asked = learner.study_hidden,
+				known = learner.study_shown,
+				result = Result.CORRECT,
+				verified = True
+			).save()
+			learner.phrase_index += 1
+			learner.study_state = Learner.JUDGED
+		else:
+			learner.study_state = Learner.REVEALED
+		learner.save()
+	if learner.study_state in [Learner.REVEALED, Learner.JUDGED]:
+		"""
+			Show the solution.
+		"""
+		judge = False if correct else learner.study_state == Learner.REVEALED
+		return render(request, 'study_result.html', {
+			'hidden': learner.study_hidden,
+			'shown': learner.study_shown,
+			'correct': correct,
+			'judge': judge,
+			'answer': learner.study_answer,
+			'result_form': result_form,
+		})
+	if learner.study_state in [Learner.ASK_MEANING, Learner.ASK_HOWSAY]:
+		"""
+			Since there's no solution in POST, the user just wants to see the question.
+		"""
 		msgs = []
-		add_more_active_phrases(learner = request.user, msgs = msgs)
-		update_learner_actives(learner = request.user)
-		hidden, shown, msgs = get_current_question(learner = request.user, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
+		add_more_active_phrases(learner = learner, msgs = msgs)
+		update_learner_actives(learner = learner)
+		learner.study_hidden, learner.study_shown, msgs = get_current_question(learner = learner, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
+		learner.save()
 		for lvl, txt in msgs:
 			add_message(request, lvl, txt)
-		request.user.learn_translation = None # whichever one is in the known language
-		form = SolutionForm(None, initial = {'shown': shown})
+		form = SolutionForm(None)
 		return render(request, 'study_question.html', {
 			'anonymous': True,
-			'shown': shown,
-			'hidden_language': hidden.language_disp(),
+			'shown': learner.study_shown,
+			'hidden_language': learner.study_hidden.language_disp(),
 			'form': form,
 		})
+	#todo: capture scoring
 
 
 def study_respond(request):

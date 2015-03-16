@@ -31,7 +31,7 @@ def create_admin(apps, schema_editor):
 class Migration(migrations.Migration):
 
 	dependencies = [
-		('learners', '0009_current_translation'),
+		('learners', '0009_current_active'),
 	]
 
 	operations = [

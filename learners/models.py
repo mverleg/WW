@@ -33,22 +33,27 @@ class LearnerManager(UserManager):
 """
 class Learner(AbstractBaseUser, PermissionsMixin):
 
+	""" Account details """
 	email = models.EmailField(blank = True, unique = True, max_length = 254, help_text = 'Email address; also used as login name.')
 	name = models.CharField(max_length = 48, help_text = 'Visible name on the site.')
 	is_staff = models.BooleanField(default = False, help_text = 'Designates whether the user can log into this admin site.')
-	#language = models.CharField(choices = SUPPORTED_LANGUAGES, max_length = 8)
 
+	""" Settings """
 	ask_direction = models.FloatField(default = 65, validators = [MinValueValidator(0), MaxValueValidator(100)], help_text = 'How often to show the known language and ask the unknown one, versus the other way around (0: always show unknown, 100: always show known).')
 	add_randomness = models.BooleanField(default = True, help_text = 'Should selecting phrases involve a little randomness?')
 	minimum_delay = models.PositiveIntegerField(default = 10, help_text = 'For how many questions to block a phrase after displaying it.')
 	new_count = models.PositiveIntegerField(default = 10, help_text = 'How many first-time cards to keep active at once.')
 	show_medium_correctness = models.BooleanField(default = False, help_text = 'Besides correct and incorrect, show a third option inbetween them.')
-	phrase_index = models.PositiveIntegerField(default = 100, help_text = 'How many phrases have been shown (a.o. to compare last_shown) (internal only).')
-	need_active_update = models.BooleanField(default = True, help_text = 'Do the cache fields on active phrases need updating? (internal only).')
 	show_correct_count = models.BooleanField(default = True, help_text = 'Show the number of correct responses on every page.')
 
-	learn_translation = models.ForeignKey('study.ActiveTranslation', blank = True, null = True, default = None, related_name = 'current_learners')
-	is_revealed = models.BooleanField(default = False)
+	""" Internal bookkeeping """
+	ASK_MEANING, ASK_HOWSAY, REVEALED, JUDGED = 1, 2, 3, 4
+	phrase_index = models.PositiveIntegerField(default = 100, help_text = 'How many phrases have been shown (a.o. to compare last_shown) (internal only).')
+	need_active_update = models.BooleanField(default = True, help_text = 'Do the cache fields on active phrases need updating? (internal only).')
+	study_shown = models.ForeignKey('phrasebook.Translation', blank = True, null = True, default = None, related_name = 'current_shown_learners', help_text = 'The Translation that is currently visible, if any (internal only).')
+	study_hidden = models.ForeignKey('study.ActiveTranslation', blank = True, null = True, default = None, related_name = 'current_hidden_learners', help_text = 'The Translation that is the solution for study_shown (internal only).')
+	study_state = models.PositiveSmallIntegerField(default = ASK_MEANING, choices = ((ASK_MEANING, 'asking meaning (showing learn lang)'), (ASK_HOWSAY, 'asking how to say (showing known lang)'), (REVEALED, 'revealed, awaiting judgement'), (JUDGED, 'judged')), help_text = '(internal only).')
+	study_answer = models.TextField(default = '', help_text = 'The latest thing the user answered (internal only).')
 
 	objects = LearnerManager()
 	USERNAME_FIELD = 'email'

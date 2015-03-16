@@ -11,6 +11,8 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.views import login_required
 from settings import LOGIN_REDIRECT_URL
 from basics.views import notification
+from study.function import update_learner_actives
+from study.function import add_more_active_phrases
 
 
 @next_GET
@@ -91,6 +93,25 @@ def profile(request, next):
 		'logout_form': ProfileForm(None),
 		'next': next,
 	})
+
+
+@require_POST
+@login_required
+def reset(request):
+	"""
+		Reset some stuff for the user, just in case anything goes wrong.
+	"""
+	request.user.study_shown = None
+	request.user.study_hidden = None
+	request.user.study_state = request.user.ASK_MEANING
+	request.user.study_answer = ''
+	request.user.save()
+	update_learner_actives(learner = request.user)
+	add_more_active_phrases(learner = request.user, msgs = [])
+	update_learner_actives(learner = request.user)
+	add_message(request, INFO, 'Cache properties reset for "%s"' % request.user.email)
+	request.session.clear()
+	return redirect(reverse('profile'))
 
 
 #@login_required
