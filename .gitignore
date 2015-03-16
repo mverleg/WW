@@ -5,4 +5,5 @@
 database.sqlite3
 searchindex.whoosh/
 env/
+static/
 
