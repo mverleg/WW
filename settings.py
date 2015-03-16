@@ -99,6 +99,7 @@ DATABASES = {
 		'ENGINE': 'django.db.backends.sqlite3',
 		'NAME': join(BASE_DIR, 'database.sqlite3'),
 	},
+	## reaplce with this to us mySQL (make sure the database is UTF8):
 	#'default': {
 	#	'ENGINE': 'django.db.backends.mysql',
 	#	'NAME': 'words_database',
@@ -145,5 +146,7 @@ HAYSTACK_CONNECTIONS = {
 	},
 }
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+from local import *
 
 
