@@ -2,8 +2,9 @@
 from collections import OrderedDict
 from datetime import timedelta
 from django.contrib.auth.decorators import login_required
-from django.contrib.messages import add_message, INFO
+from django.contrib.messages import add_message, INFO, ERROR
 from django.core.urlresolvers import reverse
+from django.forms import HiddenInput
 from django.shortcuts import render, redirect
 from django.utils.timezone import datetime, now
 from basics.views import notification
@@ -16,25 +17,54 @@ from study.models import Result, ActiveTranslation
 
 @login_required
 def study_ask(request):
-	""" A lot of preparatory stuff. """
-	msgs = []
-	add_more_active_phrases(learner = request.user, msgs = msgs)
-	update_learner_actives(learner = request.user)
-	hidden, shown, msgs = get_current_question(learner = request.user, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
-	for lvl, txt in msgs:
-		add_message(request, lvl, txt)
-	form = SolutionForm(None)
-	return render(request, 'study_question.html', {
-		'anonymous': True,
-		'shown': shown,
-		'hidden_language': hidden.language_disp(),
-		'form': form,
-	})
+	#learn_translation = models.ForeignKey('study.ActiveTranslation', blank = True, null = True, default = None, related_name = 'current_learners')
+	#is_revealed = models.BooleanField(default = False)
+	if request.user.is_revealed:
+		pass
+	else:
+		""" A lot of preparatory stuff. """
+		msgs = []
+		add_more_active_phrases(learner = request.user, msgs = msgs)
+		update_learner_actives(learner = request.user)
+		hidden, shown, msgs = get_current_question(learner = request.user, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
+		for lvl, txt in msgs:
+			add_message(request, lvl, txt)
+		request.user.learn_translation = None # whichever one is in the known language
+		form = SolutionForm(None, initial = {'shown': shown})
+		return render(request, 'study_question.html', {
+			'anonymous': True,
+			'shown': shown,
+			'hidden_language': hidden.language_disp(),
+			'form': form,
+		})
 
 
 def study_respond(request):
-	return notification(request, 'No study yet!')
-	request.user.phrase_index += 1 #save
+	#todo: check all translations in phrase in target language, not just a random one
+	result_form = SolutionForm(request.POST)
+	if not result_form.is_valid():
+		add_message(request, ERROR, 'Could not find or understand the answer, sorry. Sending back to question page.')
+		return redirect(reverse('study_ask'))
+	hidden, shown, msgs = get_current_question(learner = request.user, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
+	if not shown == result_form.cleaned_data['shown']:
+		add_message(request, ERROR, 'Sorry, the active phrase has changed while you answered this question, so no statistics will be recorded. Possibly someone changed a list or you changed the language?')
+		return redirect(reverse('study_ask'))
+	correct = False
+	if result_form.cleaned_data['solution'] == hidden.text:
+		Result(learner = request.user, asked = hidden, known = shown, result = Result.CORRECT, verified = True).save()
+		correct = True
+	result_form.fields['solution'].widget = HiddenInput()
+	#request.user.phrase_index += 1 #save
+	#request.user.save() # todo: enable
+	#todo: set it to wrong, then let the user click something to mark correct/incorrect?
+	#todo: better save the card on the user after all; target_translation and is_revealed
+	return render(request, 'study_result.html', {
+		'hidden': hidden,
+		'shown': shown,
+		'correct': correct,
+		'result_form': result_form,
+		'answer': result_form.cleaned_data['solution'].strip(),
+	})
 
 
 @instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
@@ -61,6 +91,7 @@ def study_demo(request):
 
 @login_required
 def stats(request):
+	#todo: stats per language
 	update_learner_actives(learner = request.user)
 	today_start = datetime(year = now().year, month = now().month, day = now().day, tzinfo = now().tzinfo)
 	week_start = today_start - timedelta(days = now().weekday())

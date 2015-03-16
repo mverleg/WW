@@ -12,6 +12,7 @@
 	{{ block.super }}
 {% endblock title %}
 
+{% block menu_autofocus %}{% endblock menu_autofocus %}
 
 {% block content %}
 
@@ -20,7 +21,7 @@
             {% blocktrans context 'study question header' with shown_language=shown.language_disp %}This {{ shown_language }} phrase...{% endblocktrans %}
         </div>
             <div class="panel-body">
-                <h1>{{ shown.text|capfirst }}</h1>
+                <h1>{{ shown.text }}</h1>
             </div>
         <div class="panel-footer">
             {% blocktrans context 'study question footer' %}How to say it in {{ hidden_language }}?{% endblocktrans %}
@@ -32,8 +33,8 @@
 		<input type="hidden" name="next" value="{{ next }}" />
 		{% csrf_token %}
 	    <!-- "I don't know" doesn't do anything special but might be more clear -->
-		<button type="submit" class="btn btn-default" title="This is the same as just submitting - an empty submission will be understood as 'I don't know'.">{% blocktrans context 'study question button' %}I don't know{% endblocktrans %}</button>
-		<button type="submit" class="btn btn-primary">{% blocktrans context 'study question button' %}Submit solution{% endblocktrans %}</button>
+		<button type="submit" class="btn btn-default" title="This is the same as just submitting - an empty submission will be understood as 'I don't know'." tabindex="-1">{% blocktrans context 'study question button idk' %}I don't know{% endblocktrans %}</button>
+		<button type="submit" class="btn btn-primary">{% blocktrans context 'study question button submit' %}Submit solution{% endblocktrans %}</button>
 	</form>
 
 {% endblock content %}

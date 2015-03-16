@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-16 00:28+0000\n"
+"POT-Creation-Date: 2015-03-16 08:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,16 +19,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: basics/forms.py:12
-#, fuzzy
-#| msgctxt "menu option: languages"
-#| msgid "languages"
 msgid "Known language"
 msgstr "Bekende taal"
 
 #: basics/forms.py:13
-#, fuzzy
-#| msgctxt "menu option: languages"
-#| msgid "languages"
 msgid "Learning language"
 msgstr "Te leren taal"
 
@@ -42,52 +36,52 @@ msgctxt "menu option: home"
 msgid "home"
 msgstr "hoofdpagina"
 
-#: basics/templates/frame.html:52
+#: basics/templates/frame.html:53
 msgctxt "menu option: about"
 msgid "about"
 msgstr "info"
 
-#: basics/templates/frame.html:53
+#: basics/templates/frame.html:55
 msgctxt "menu option: languages"
 msgid "languages"
 msgstr "talen"
 
-#: basics/templates/frame.html:54
+#: basics/templates/frame.html:56
 msgctxt "menu option: lists"
 msgid "lists"
 msgstr "lijsten"
 
-#: basics/templates/frame.html:56
+#: basics/templates/frame.html:58
 msgctxt "menu option: addphrase"
 msgid "add"
 msgstr "maak"
 
-#: basics/templates/frame.html:57 basics/templates/frame.html.py:60
+#: basics/templates/frame.html:59 basics/templates/frame.html.py:67
 msgctxt "menu option: study"
 msgid "study"
 msgstr "leer"
 
-#: basics/templates/frame.html:58
+#: basics/templates/frame.html:62
 msgctxt "menu option: study"
 msgid "stats"
 msgstr "cijfers"
 
-#: basics/templates/frame.html:84
+#: basics/templates/frame.html:91
 msgctxt "menu option: account"
 msgid "account"
 msgstr "profiel"
 
-#: basics/templates/frame.html:86
+#: basics/templates/frame.html:93
 msgctxt "menu option: register"
 msgid "register"
 msgstr "registreer"
 
-#: basics/templates/frame.html:87
+#: basics/templates/frame.html:94
 msgctxt "menu option: login"
 msgid "login"
 msgstr "inloggen"
 
-#: basics/templates/frame.html:95 basics/templates/search_results.html:23
+#: basics/templates/frame.html:102 basics/templates/search_results.html:23
 #: lists/templates/add_choose.html:19 lists/templates/show_list.html:97
 msgctxt "Search placeholder"
 msgid "search"
@@ -127,22 +121,38 @@ msgstr "Duits"
 msgid "Dutch"
 msgstr "Nederlands"
 
-#: study/forms.py:7
+#: study/forms.py:9
 msgid "Solution"
 msgstr "Oplossing..."
 
-#: study/forms.py:11
+#: study/forms.py:14
 msgid "Type your solution..."
 msgstr "Typ je oplossing..."
 
-#: study/templates/study_question.html:20
+#: study/templates/study_question.html:21
 #, python-format
 msgctxt "study question header"
 msgid "This %(shown_language)s phrase..."
-msgstr "Deze %(shown_language)s zin..."
+msgstr "Deze %(shown_language)s zin"
 
-#: study/templates/study_question.html:26
+#: study/templates/study_question.html:27 study/templates/study_result.html:21
 #, python-format
 msgctxt "study question footer"
 msgid "How to say it in %(hidden_language)s?"
 msgstr "Hoe zeg je dat in het %(hidden_language)s?"
+
+#: study/templates/study_question.html:36 study/templates/study_result.html:30
+msgctxt "study question button idk"
+msgid "I don't know"
+msgstr "Ik weet het niet"
+
+#: study/templates/study_question.html:37 study/templates/study_result.html:31
+msgctxt "study question button submit"
+msgid "Submit solution"
+msgstr "Stuur oplossing..."
+
+#: study/templates/study_result.html:15
+#, python-format
+msgctxt "study question header"
+msgid "This %(shown_language)s phrase"
+msgstr "Deze %(shown_language)s zin"

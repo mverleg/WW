@@ -38,13 +38,17 @@ class Learner(AbstractBaseUser, PermissionsMixin):
 	is_staff = models.BooleanField(default = False, help_text = 'Designates whether the user can log into this admin site.')
 	#language = models.CharField(choices = SUPPORTED_LANGUAGES, max_length = 8)
 
-	ask_direction = models.FloatField(default = 65, validators = [MinValueValidator(0), MaxValueValidator(100)], help_text = 'How often to show the known language and ask the unknown one, versus the other way around (0: always show unknown, 100: always show known)')
+	ask_direction = models.FloatField(default = 65, validators = [MinValueValidator(0), MaxValueValidator(100)], help_text = 'How often to show the known language and ask the unknown one, versus the other way around (0: always show unknown, 100: always show known).')
 	add_randomness = models.BooleanField(default = True, help_text = 'Should selecting phrases involve a little randomness?')
 	minimum_delay = models.PositiveIntegerField(default = 10, help_text = 'For how many questions to block a phrase after displaying it.')
 	new_count = models.PositiveIntegerField(default = 10, help_text = 'How many first-time cards to keep active at once.')
 	show_medium_correctness = models.BooleanField(default = False, help_text = 'Besides correct and incorrect, show a third option inbetween them.')
-	phrase_index = models.IntegerField(default = 0, help_text = 'How many phrases have been shown (a.o. to compare last_shown) (internal only)')
-	need_active_update = models.BooleanField(default = True, help_text = 'Do the cache fields on active phrases need updating? (internal only)')
+	phrase_index = models.PositiveIntegerField(default = 100, help_text = 'How many phrases have been shown (a.o. to compare last_shown) (internal only).')
+	need_active_update = models.BooleanField(default = True, help_text = 'Do the cache fields on active phrases need updating? (internal only).')
+	show_correct_count = models.BooleanField(default = True, help_text = 'Show the number of correct responses on every page.')
+
+	learn_translation = models.ForeignKey('study.ActiveTranslation', blank = True, null = True, default = None, related_name = 'current_learners')
+	is_revealed = models.BooleanField(default = False)
 
 	objects = LearnerManager()
 	USERNAME_FIELD = 'email'

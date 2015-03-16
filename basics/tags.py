@@ -47,3 +47,13 @@ def css_class(field):
 	return field.field.widget.__class__.__name__.lower()
 
 
+#@register.filter
+#def trousands_k(nr):
+#	try:
+#		nr = int(nr)
+#	except ValueError:
+#		return nr
+#	if nr > 1000000:
+#		return str(nr // 1000000) + 'M'
+#	if nr > 1000:
+#		return str(nr // 1000) + 'k'

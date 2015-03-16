@@ -8,14 +8,18 @@ from django.contrib.messages import WARNING, ERROR
 
 def get_current_question(learner, known_language, learn_language):
 	"""
-		Get the current question and answer Translations.
+		Get the current question and answer Translations. Uses a random seed but that's not needed anymore (but can't hurt, so I left it).
 
-		This runs into trouble if the user changes list activity or priority between question and answer phase... #todo: solve maybe?
+		This will not return a consistent result if
+		* If the user changes language between question and answer.
+		* If the user changes list settings between question and answer, then opens a page that reloads cache (study, stats).
+		* If ANY user adds or removes phrases from a high-priority list.
 
 		:return: hidden_translation, shown_translation, messages
 	"""
 	""" Use a fixed random seed, so that question and answer refer to the same card. """
-	randst = Random(x = learner.pk + learner.phrase_index)
+	lang_seed = sum(ord(letter) for letter in known_language) - sum(ord(letter) for letter in learn_language)
+	randst = Random(x = learner.pk + learner.phrase_index + lang_seed)
 	""" Get all ActiveTranslations to choose from. """
 	msgs = []
 	options = get_options(learner = learner, msgs = msgs, lang = learn_language)
@@ -93,7 +97,6 @@ def get_options(learner, msgs, lang, amount=20):
 		select = {'sum': 'score + priority'},
 		order_by = ('sum', 'last_shown',)
 	)[:amount]
-	print len(options), options
 	if not options:
 		options = ActiveTranslation.objects.filter(
 			learner = learner,
