@@ -174,6 +174,7 @@ def study_demo(request):
 @login_required
 def stats(request):
 	#todo: stats per language
+	#todo: bar plot of stats per day
 	update_learner_actives(learner = request.user)
 	today_start = datetime(year = now().year, month = now().month, day = now().day, tzinfo = now().tzinfo)
 	week_start = today_start - timedelta(days = now().weekday())

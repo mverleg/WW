@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-16 08:59+0000\n"
+"POT-Creation-Date: 2015-03-16 22:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,7 +82,7 @@ msgid "login"
 msgstr ""
 
 #: basics/templates/frame.html:102 basics/templates/search_results.html:23
-#: lists/templates/add_choose.html:19 lists/templates/show_list.html:97
+#: lists/templates/add_choose.html:19 lists/templates/show_list.html:77
 msgctxt "Search placeholder"
 msgid "search"
 msgstr ""
@@ -124,34 +124,99 @@ msgstr ""
 msgid "Solution"
 msgstr ""
 
-#: study/forms.py:14
+#: study/forms.py:13
 msgid "Type your solution..."
 msgstr ""
 
-#: study/templates/study_question.html:21
+#: study/templates/study_question.html:21 study/templates/study_result.html:17
+msgid "Careful"
+msgstr ""
+
+#: study/templates/study_question.html:22 study/templates/study_result.html:18
+msgctxt "study anonymous warning base"
+msgid "Your results are not being stored."
+msgstr ""
+
+#: study/templates/study_question.html:24 study/templates/study_result.html:20
+msgctxt "study anonymous warning mode"
+msgid "Use normal study mode to store results."
+msgstr ""
+
+#: study/templates/study_question.html:26 study/templates/study_result.html:22
+msgctxt "study anonymous warning login"
+msgid "Log in to store results."
+msgstr ""
+
+#: study/templates/study_question.html:33
 #, python-format
 msgctxt "study question header"
 msgid "This %(shown_language)s phrase..."
 msgstr ""
 
-#: study/templates/study_question.html:27 study/templates/study_result.html:21
+#: study/templates/study_question.html:39
 #, python-format
 msgctxt "study question footer"
 msgid "How to say it in %(hidden_language)s?"
 msgstr ""
 
-#: study/templates/study_question.html:36 study/templates/study_result.html:30
+#: study/templates/study_question.html:48
 msgctxt "study question button idk"
 msgid "I don't know"
 msgstr ""
 
-#: study/templates/study_question.html:37 study/templates/study_result.html:31
+#: study/templates/study_question.html:49
 msgctxt "study question button submit"
 msgid "Submit solution"
 msgstr ""
 
-#: study/templates/study_result.html:15
+#: study/templates/study_result.html:27
+msgid "Did you know"
+msgstr ""
+
+#: study/templates/study_result.html:28
+msgctxt "study answer hotkeynote"
+msgid ""
+"You can use hotkeys on this page: 1 for 'incorrect', 2 for 'not quite' and 3 "
+"for 'correct'."
+msgstr ""
+
+#: study/templates/study_result.html:41
 #, python-format
-msgctxt "study question header"
-msgid "This %(shown_language)s phrase"
+msgctxt "study answer footer base"
+msgid "You said <strong>%(answer)s</strong>"
+msgstr ""
+
+#: study/templates/study_result.html:43
+msgctxt "study answer footer empty"
+msgid "You didn't type anything"
+msgstr ""
+
+#: study/templates/study_result.html:46
+msgctxt "study answer footer correct"
+msgid "which is correct!"
+msgstr ""
+
+#: study/templates/study_result.html:48
+msgctxt "study answer footer maybecorrect"
+msgid "were you correct?"
+msgstr ""
+
+#: study/templates/study_result.html:59
+msgctxt "study answer button correct"
+msgid "Correct!"
+msgstr ""
+
+#: study/templates/study_result.html:65
+msgctxt "study answer button notquite"
+msgid "Not quite"
+msgstr ""
+
+#: study/templates/study_result.html:71
+msgctxt "study answer button incorrect"
+msgid "Incorrect"
+msgstr ""
+
+#: study/templates/study_result.html:82
+msgctxt "study answer button go_on"
+msgid "Yay! Go on!"
 msgstr ""
