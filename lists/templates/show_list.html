@@ -94,6 +94,8 @@
         </form>
 	{% endif %}
 
+	<a href="{% url 'study_list_ask' pk=list.pk slug=list.slug %}" class="btn btn-default">Study this list</a>
+
 {% endblock content %}
 
 

@@ -7,7 +7,6 @@ from django.contrib.messages import add_message, INFO, ERROR
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.utils.timezone import datetime, now
-from django.views.decorators.http import require_POST
 from basics.views import notification
 from basics.decorators import instantiate
 from learners.models import Learner
@@ -19,6 +18,7 @@ from study.models import Result, ActiveTranslation
 
 @login_required
 def study(request):
+	#todo: show the last X results while studying (easy with Result)
 	learner = request.user
 	result_form = SolutionForm(request.POST)
 	if learner.study_state == Learner.ASKING and 'solution' in request.POST:

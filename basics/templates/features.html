@@ -8,7 +8,6 @@
 		<h3>{% blocktrans context 'Main page options header' %}What would you like to do?{% endblocktrans %}</h3>
 	</div>
 </div>
-<!-- /.row -->
 
 <!-- Page Features -->
 <div class="row text-center">
@@ -17,10 +16,11 @@
 		<div class="thumbnail">
 			<img src="{% static 'img/placeholder.gif' %}" alt="">
 			<div class="caption">
-				<h3>Feature Label</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+				<h3>{% blocktrans %}Study{% endblocktrans %}</h3>
+				<p>{% blocktrans %}Jump in immediately by learning some words! Get ahead of the competition now!{% endblocktrans %}</p>
 				<p>
-					<a href="#" class="btn btn-primary">Buy Now!</a> <a href="#" class="btn btn-default">More Info</a>
+					<a href="{% url 'about_study' %}" class="btn btn-default">{% blocktrans %}More Info{% endblocktrans %}</a>
+					<a href="{% if request.user.is_authenticated %}{% url 'study_ask' %}{% else %}{% url 'study_demo' %}{% endif %}" class="btn btn-primary">{% blocktrans %}Go study!{% endblocktrans %}</a>
 				</p>
 			</div>
 		</div>
@@ -30,10 +30,11 @@
 		<div class="thumbnail">
 			<img src="{% static 'img/placeholder.gif' %}" alt="">
 			<div class="caption">
-				<h3>Feature Label</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+				<h3>{% blocktrans %}Lists{% endblocktrans %}</h3>
+				<p>{% blocktrans %}Seperate your phrases into "animal names" and "Chinese - naughty" and control which to learn first!{% endblocktrans %}</p>
 				<p>
-					<a href="#" class="btn btn-primary">Buy Now!</a> <a href="#" class="btn btn-default">More Info</a>
+					<a href="{% url 'all_lists' %}" class="btn btn-default">{% blocktrans %}View all{% endblocktrans %}</a>
+					<a href="{% url 'add_list' %}" class="btn btn-primary">{% blocktrans %}Make one!{% endblocktrans %}</a>
 				</p>
 			</div>
 		</div>
@@ -43,10 +44,11 @@
 		<div class="thumbnail">
 			<img src="{% static 'img/placeholder.gif' %}" alt="">
 			<div class="caption">
-				<h3>Feature Label</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+				<h3>{% blocktrans %}Search{% endblocktrans %}</h3>
+				<p>{% blocktrans %}Search all the phrases other people have made available, translated into many languages at once!{% endblocktrans %}</p>
 				<p>
-					<a href="#" class="btn btn-primary">Buy Now!</a> <a href="#" class="btn btn-default">More Info</a>
+					<a href="{% url 'search' %}" class="btn btn-default">{% blocktrans %}Let's search{% endblocktrans %}</a>
+					<a href="{% url 'add_phrase' %}" class="btn btn-primary">{% blocktrans %}Own phrase!{% endblocktrans %}</a>
 				</p>
 			</div>
 		</div>
@@ -54,14 +56,27 @@
 
 	<div class="col-md-3 col-sm-6 hero-feature">
 		<div class="thumbnail">
+			{% if request.user.is_authenticated %}
+                <img src="{% static 'img/placeholder.gif' %}" alt="">
+                <div class="caption">
+                    <h3>{% blocktrans %}Statistics{% endblocktrans %}</h3>
+                    <p>{% blocktrans %}Follow your learning progress automatically and improve your strategy as needed!{% endblocktrans %}</p>
+                    <p>
+                        <a href="{% url 'stats' %}" class="btn btn-default">{% blocktrans %}Show me{% endblocktrans %}</a>
+                        <a href="{% url 'study_ask' %}" class="btn btn-primary">{% blocktrans %}Study first!{% endblocktrans %}</a>
+                    </p>
+                </div>
+			{% else %}
 			<img src="{% static 'img/placeholder.gif' %}" alt="">
-			<div class="caption">
-				<h3>Feature Label</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-				<p>
-					<a href="#" class="btn btn-primary">Buy Now!</a> <a href="#" class="btn btn-default">More Info</a>
-				</p>
-			</div>
+                <div class="caption">
+                    <h3>{% blocktrans %}Account{% endblocktrans %}</h3>
+                    <p>{% blocktrans %}To store your phrases, lists and study results, we need you to log in or create an account. It's free!{% endblocktrans %}</p>
+                    <p>
+                        <a href="{% url 'login' %}" class="btn btn-default">{% blocktrans %}Log in{% endblocktrans %}</a>
+                        <a href="{% url 'register' %}" class="btn btn-primary">{% blocktrans %}Make account{% endblocktrans %}</a>
+                    </p>
+                </div>
+			{% endif %}
 		</div>
 	</div>
 

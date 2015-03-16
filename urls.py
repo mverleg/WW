@@ -6,14 +6,16 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.template import add_to_builtins
+from django.views.generic import TemplateView
 from basics.search import search
-from basics.views import home, about, choose_language
+from basics.views import choose_language
 import learners.urls, lists.urls, opinions.urls, phrasebook.urls, study.urls
 
 
 urlpatterns = patterns('',
-	url(r'^$', home, name = 'home'),
-	url(r'^about/$', about, name = 'about'),
+	url(r'^$', TemplateView.as_view(template_name = 'home.html'), name = 'home'),
+	url(r'^about/$', TemplateView.as_view(template_name = 'about.html'), name = 'about'),
+	url(r'^about/study/$', TemplateView.as_view(template_name = 'about_study.html'), name = 'about_study'),
 	url(r'^search/$', search, name = 'search'),
 	url(r'^learner/', include(learners.urls)),
 	url(r'^list/', include(lists.urls)),

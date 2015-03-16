@@ -4,18 +4,8 @@ from django.utils.translation import get_language
 from django.views.i18n import set_language
 from basics.decorators import next_GET_or
 from basics.forms import ChooseLanguagesForm
-from settings import DEFAULT_LEARN_LANGUAGE
-
-
-def home(request):
-	"""
-		This function is called when the homepage is requested (Django knows to call it because of urls.py)
-	"""
-	return render(request, 'home.html')
-
-
-def about(request):
-	return render(request, 'about.html')
+from basics.language import get_in_each_language
+from settings import DEFAULT_LEARN_LANGUAGE, SUPPORTED_LANGUAGES
 
 
 def notification(request, message):

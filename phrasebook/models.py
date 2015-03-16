@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 """
 	Models are the things that store data. The classes are the concepts, which automatically become tables in e.g. SQL.
@@ -6,6 +7,7 @@
 
 from django.db import models
 from pinyin import get as to_pinyin
+from basics.language import get_in_each_language
 from learners.models import Learner
 from settings import SUPPORTED_LANGUAGES
 
@@ -45,6 +47,10 @@ class Translation(models.Model):
 
 	def language_disp(self):
 		return self.get_language_display().split('(')[0].strip()
+
+	def language_all(self):
+		""" This makes sure you can search for 荷兰语 and get all English phrases """
+		return u' '.join(get_in_each_language(self.get_language_display()))
 
 	def get_votes(self):
 		# this import needs to be here to prevent circular import problems

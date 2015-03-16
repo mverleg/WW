@@ -5,10 +5,12 @@ from settings import SUPPORTED_LANGUAGES
 
 
 def get_in_each_language(txt):
+	txts = set()
 	old_lang = get_language()
 	for code, name in SUPPORTED_LANGUAGES:
 		activate(code)
-		print _(txt)
+		txts.add(unicode(_(txt)))
 	activate(old_lang)
+	return txts
 
 

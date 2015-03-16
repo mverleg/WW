@@ -3,8 +3,8 @@
 *~
 *.mo
 database.sqlite3
-searchindex.whoosh/
-env/
-static/
+/searchindex.whoosh/
+/env/
+/static/
 local.py
 
