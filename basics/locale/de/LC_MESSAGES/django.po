@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-16 22:45+0000\n"
+"POT-Creation-Date: 2015-03-16 23:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,6 +29,95 @@ msgstr ""
 #: basics/templates/features.html:8
 msgctxt "Main page options header"
 msgid "What would you like to do?"
+msgstr ""
+
+#: basics/templates/features.html:19
+msgid "Study"
+msgstr ""
+
+#: basics/templates/features.html:20
+msgid ""
+"Jump in immediately by learning some words! Get ahead of the competition now!"
+msgstr ""
+
+#: basics/templates/features.html:22
+msgid "More Info"
+msgstr ""
+
+#: basics/templates/features.html:23
+msgid "Go study!"
+msgstr ""
+
+#: basics/templates/features.html:33
+msgid "Lists"
+msgstr ""
+
+#: basics/templates/features.html:34
+msgid ""
+"Seperate your phrases into \"animal names\" and \"Chinese - naughty\" and "
+"control which to learn first!"
+msgstr ""
+
+#: basics/templates/features.html:36
+msgid "View all"
+msgstr ""
+
+#: basics/templates/features.html:37
+msgid "Make one!"
+msgstr ""
+
+#: basics/templates/features.html:47
+msgid "Search"
+msgstr ""
+
+#: basics/templates/features.html:48
+msgid ""
+"Search all the phrases other people have made available, translated into "
+"many languages at once!"
+msgstr ""
+
+#: basics/templates/features.html:50
+msgid "Let's search"
+msgstr ""
+
+#: basics/templates/features.html:51
+msgid "Own phrase!"
+msgstr ""
+
+#: basics/templates/features.html:62
+msgid "Statistics"
+msgstr ""
+
+#: basics/templates/features.html:63
+msgid ""
+"Follow your learning progress automatically and improve your strategy as "
+"needed!"
+msgstr ""
+
+#: basics/templates/features.html:65
+msgid "Show me"
+msgstr ""
+
+#: basics/templates/features.html:66
+msgid "Study first!"
+msgstr ""
+
+#: basics/templates/features.html:72
+msgid "Account"
+msgstr ""
+
+#: basics/templates/features.html:73
+msgid ""
+"To store your phrases, lists and study results, we need you to log in or "
+"create an account. It's free!"
+msgstr ""
+
+#: basics/templates/features.html:75
+msgid "Log in"
+msgstr ""
+
+#: basics/templates/features.html:76
+msgid "Make account"
 msgstr ""
 
 #: basics/templates/frame.html:45

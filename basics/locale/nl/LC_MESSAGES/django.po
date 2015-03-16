@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-16 22:44+0000\n"
+"POT-Creation-Date: 2015-03-16 23:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,6 +30,124 @@ msgstr "Te leren taal"
 msgctxt "Main page options header"
 msgid "What would you like to do?"
 msgstr "Wat wil je doen?"
+
+#: basics/templates/features.html:19
+#, fuzzy
+#| msgctxt "menu option: study"
+#| msgid "study"
+msgid "Study"
+msgstr "leer"
+
+#: basics/templates/features.html:20
+#msgid "Lists"
+#msgstr "Lijsten"
+
+#: basics/templates/features.html:20
+#msgid "Study"
+#msgstr "Studeer"
+
+#: basics/templates/features.html:20
+msgid ""
+"Jump in immediately by learning some words! Get ahead of the competition now!"
+msgstr "Ga meteen van start met het leren van zinnen! Begin met een voorsprong!"
+
+#: basics/templates/features.html:22
+msgid "More Info"
+msgstr "Meer info"
+
+#: basics/templates/features.html:23
+#, fuzzy
+#| msgctxt "menu option: study"
+#| msgid "study"
+msgid "Go study!"
+msgstr "Studeren!"
+
+#: basics/templates/features.html:33
+#, fuzzy
+#| msgctxt "menu option: lists"
+#| msgid "lists"
+msgid "Lists"
+msgstr "Lijsten"
+
+#: basics/templates/features.html:34
+msgid ""
+"Seperate your phrases into \"animal names\" and \"Chinese - naughty\" and "
+"control which to learn first!"
+msgstr "Verdeel je zinnen in \"dierennamen\" en \"Chinese scheldwoorden\" en kies welke je eerst leert!"
+
+#: basics/templates/features.html:36
+msgid "View all"
+msgstr "Zie allen"
+
+#: basics/templates/features.html:37
+msgid "Make one!"
+msgstr "Maak er een!"
+
+#: basics/templates/features.html:47
+#, fuzzy
+#| msgctxt "Search placeholder"
+#| msgid "search"
+msgid "Search"
+msgstr "Zoeken"
+
+#: basics/templates/features.html:48
+msgid ""
+"Search all the phrases other people have made available, translated into "
+"many languages at once!"
+msgstr "Doorzoek alle zinnen die andere mensen beschikbaar maken, vertaald in vele taken tegelijk!"
+
+#: basics/templates/features.html:50
+#, fuzzy
+#| msgctxt "Search placeholder"
+#| msgid "search"
+msgid "Let's search"
+msgstr "Zoeken"
+
+#: basics/templates/features.html:51
+msgid "Own phrase!"
+msgstr "Eigen zin!"
+
+#: basics/templates/features.html:62
+msgid "Statistics"
+msgstr "Statistiek"
+
+#: basics/templates/features.html:63
+msgid ""
+"Follow your learning progress automatically and improve your strategy as "
+"needed!"
+msgstr "Volg je leerproces automatisch zodat je je strategie meteen kan bijsturen!"
+
+#: basics/templates/features.html:65
+msgid "Show me"
+msgstr "Laat zien"
+
+#: basics/templates/features.html:66
+msgid "Study first!"
+msgstr "Studeren!"
+
+#: basics/templates/features.html:72
+#, fuzzy
+#| msgctxt "menu option: account"
+#| msgid "account"
+msgid "Account"
+msgstr "profiel"
+
+#: basics/templates/features.html:73
+msgid ""
+"To store your phrases, lists and study results, we need you to log in or "
+"create an account. It's free!"
+msgstr ""
+
+#: basics/templates/features.html:75
+msgid "Log in"
+msgstr ""
+
+#: basics/templates/features.html:76
+#, fuzzy
+#| msgctxt "menu option: account"
+#| msgid "account"
+msgid "Make account"
+msgstr "profiel"
 
 #: basics/templates/frame.html:45
 msgctxt "menu option: home"
