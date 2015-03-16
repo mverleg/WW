@@ -1,0 +1,24 @@
+
+<nav class="text-center">
+	<ul class="pagination pagination-centered">
+		<li {% if not items.has_previous %}class="disabled"{% endif %}>
+			<a href="{% if items.has_previous %}?page={{ items.previous_page_number }}{{ extraquery }}{% endif %}" aria-label="Previous">
+				<span aria-hidden="true">&laquo;</span>
+			</a>
+		</li>
+		{% for pagenr in nearby_pages %}
+			{% if pagenr %}
+				<li {% if items.number == pagenr %}class="active"{% endif %}><a href="?page={{ pagenr }}{{ extraquery }}">{{ pagenr }}</a></li>
+			{% else %}
+				<li class="disabled"><a href="#">...</a></li>
+			{% endif %}
+		{% endfor %}
+		<li {% if not items.has_next %}class="disabled"{% endif %}>
+			<a href="{% if items.has_next %}?page={{ items.next_page_number }}{{ extraquery }}{% endif %}" aria-label="Next">
+				<span aria-hidden="true">&raquo;</span>
+			</a>
+		</li>
+	</ul>
+</nav>
+
+

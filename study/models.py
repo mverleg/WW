@@ -38,7 +38,7 @@ class Result(models.Model):
 	verified = models.BooleanField(default = False, help_text = "True if the user typed the solution correctly, False otherwise (if he judged himself)")
 
 	class Meta:
-		ordering = ('when',)
+		ordering = ('-when',)
 
 	def __unicode__(self):
 		return u'"%s" got "%s" %s' % (self.learner, self.asked, self.get_result_display())

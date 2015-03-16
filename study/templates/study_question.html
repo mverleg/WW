@@ -16,6 +16,18 @@
 
 {% block content %}
 
+	{% if list %}
+		<div class="alert alert-warning" role="alert">
+		    <strong>{% blocktrans %}Careful{% endblocktrans %}</strong>
+		    {% blocktrans context 'study anonymous warning base' %}Your results are not being stored.{% endblocktrans %}
+		    {% if request.user.is_authenticated %}
+			    <a class="alert-link" href="{% url 'study_ask' %}">{% blocktrans context 'study anonymous warning mode' %}Use normal study mode to store results.{% endblocktrans %}</a>
+		    {% else %}
+			    <a class="alert-link" href="{% url 'login' %}?next={% url 'study_ask' %}">{% blocktrans context 'study anonymous warning login' %}Log in to store results.{% endblocktrans %}</a>
+		    {% endif %}
+		</div>
+	{% endif %}
+
     <div class="panel panel-default">
         <div class="panel-heading">
             {% blocktrans context 'study question header' with shown_language=shown.language_disp %}This {{ shown_language }} phrase...{% endblocktrans %}
@@ -28,7 +40,7 @@
         </div>
     </div>
 
-	<form role="form" action="{% url 'study_respond' %}" method="POST">
+	<form role="form" action="{% if list %}{% url 'study_list_respond' pk=list.pk slug=list.slug %}{% else %}{% url 'study_respond' %}{% endif %}" method="POST">
 	        {{ form|as_bootstrap }}
 		<input type="hidden" name="next" value="{{ next }}" />
 		{% csrf_token %}

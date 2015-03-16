@@ -148,8 +148,10 @@ def add_translation_by_search(request):
 	else:
 		results = form.search()
 		other_language_results = None
+	print results
 	if len(results) == 1:
-		if results[0].language_key == li.language:
+		print results[0].language_key, li.language
+		if results[0].language_key == li.language or li.language is None:
 			""" Only one results, apply directly. """
 			if results[0].object in li.translations.all():
 				add_message(request, WARNING, '"%s" (the only result) is already on the list.' % results[0].object)

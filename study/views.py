@@ -1,18 +1,19 @@
 
 from collections import OrderedDict
 from datetime import timedelta
+from random import shuffle, random
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import add_message, INFO, ERROR
 from django.core.urlresolvers import reverse
-from django.forms import HiddenInput
 from django.shortcuts import render, redirect
 from django.utils.timezone import datetime, now
+from django.views.decorators.http import require_POST
 from basics.views import notification
 from basics.decorators import instantiate
 from learners.models import Learner
 from study.function import update_learner_actives, add_more_active_phrases, get_current_question
 from lists.models import ListAccess, TranslationsList
-from study.forms import SolutionForm
+from study.forms import SolutionForm, AnonStudyForm
 from study.models import Result, ActiveTranslation
 
 
@@ -77,6 +78,7 @@ def study(request):
 			'judge': judge,
 			'answer': learner.study_answer,
 			'result_form': result_form,
+			'list': None,
 		})
 	if learner.study_state == Learner.NOTHING:
 		learner.study_state = Learner.ASKING
@@ -90,58 +92,73 @@ def study(request):
 			add_more_active_phrases(learner = learner, msgs = msgs)
 			update_learner_actives(learner = learner)
 			learner.study_hidden, learner.study_shown, msgs = get_current_question(learner = learner, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
-			#todo: set study_show_learn = models.BooleanField(default = True, help_text = 'Is the learning language phrase being shown, or asked for (so hidden) (internal only).')
 			learner.save()
 		for lvl, txt in msgs:
 			add_message(request, lvl, txt)
 		form = SolutionForm(None)
 		return render(request, 'study_question.html', {
-			'anonymous': True,
 			'shown': learner.study_shown,
 			'hidden_language': learner.study_hidden.language_disp(),
 			'form': form,
+			'list': None,
 		})
 	raise Exception('nothing matched')
 
 
-def study_respond(request):
-	#todo: check all translations in phrase in target language, not just a random one
-	result_form = SolutionForm(request.POST)
-	if not result_form.is_valid():
-		add_message(request, ERROR, 'Could not find or understand the answer, sorry. Sending back to question page.')
-		return redirect(reverse('study_ask'))
-	hidden, shown, msgs = get_current_question(learner = request.user, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
-	if not shown == result_form.cleaned_data['shown']:
-		add_message(request, ERROR, 'Sorry, the active phrase has changed while you answered this question, so no statistics will be recorded. Possibly someone changed a list or you changed the language?')
-		return redirect(reverse('study_ask'))
-	correct = False
-	if result_form.cleaned_data['solution'] == hidden.text:
-		Result(learner = request.user, asked = hidden, known = shown, result = Result.CORRECT, verified = True).save()
-		correct = True
-	result_form.fields['solution'].widget = HiddenInput()
-	#request.user.phrase_index += 1 #save
-	#request.user.save() # todo: enable
-	#todo: set it to wrong, then let the user click something to mark correct/incorrect?
-	#todo: better save the card on the user after all; target_translation and is_revealed
-	return render(request, 'study_result.html', {
-		'hidden': hidden,
-		'shown': shown,
-		'correct': correct,
-		'result_form': result_form,
-		'answer': result_form.cleaned_data['solution'].strip(),
-	})
-
-
 @instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
 def study_list_ask(request, translations_list, slug):
-	add_message(request, INFO, 'You are studying anonymously. With an account, you can select phrases to learn and store your results!')
-	return notification(request, 'Anonymous study coming soon')
-	#todo: anonymous study should study a specific list
+	"""
+		Study a single list, mostly for demonstration purposes (so no account is needed). Doesn't save results,
+		doesn't store state and easy to cheat with.
+	"""
+	translations = list(translations_list.translations.all()[:500])
+	shuffle(translations)
+	for translation in translations:
+		if translation.language == request.KNOWN_LANG:
+			correct_lang_trans = translation.phrase.translations.filter(language = request.LEARN_LANG)
+		elif translation.language == request.LEARN_LANG:
+			correct_lang_trans = translation.phrase.translations.filter(language = request.KNOWN_LANG)
+		else:
+			continue
+		""" Find a translation of this one that is in the correct langauge """
+		if not correct_lang_trans:
+			continue
+		shown, hidden = translation, correct_lang_trans[0]
+		if random() > 0.5:
+			shown, hidden = hidden, shown
+		form = AnonStudyForm(None, initial = {
+			'shown': shown,
+			'hidden': hidden,
+		})
+		return render(request, 'study_question.html', {
+			'shown': shown,
+			'hidden_language': hidden.language_disp(),
+			'form': form,
+			'list': translations_list,
+		})
+	return notification(request, 'The list seems to contain no pairs of phrases in the languages you know and study.')
 
 
 @instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
 def study_list_respond(request, translations_list, slug):
-	pass
+	if not request.POST:
+		add_message(request, INFO, 'No answer detected, sending back to a new question.')
+		return redirect(reverse('study_list_ask', kwargs = {'pk': translations_list.pk, 'slug': translations_list.slug}))
+	form = AnonStudyForm(request.POST)
+	if form.is_valid():
+		shown, hidden, answer = form.cleaned_data['shown'], form.cleaned_data['hidden'], form.cleaned_data['solution'].strip()
+		correct = answer == hidden.text.strip()
+		judge = not correct
+		result_form = SolutionForm(request.POST)
+		return render(request, 'study_result.html', {
+			'hidden': hidden,
+			'shown': shown,
+			'correct': correct,
+			'judge': judge,
+			'answer': answer,
+			'result_form': result_form,
+			'list': translations_list,
+		})
 
 
 def study_demo(request):
@@ -150,7 +167,7 @@ def study_demo(request):
 	"""
 	lis = TranslationsList.objects.filter(public = True).order_by('pk')
 	if not lis:
-		return notification('There is no public list to study, sorry...')
+		return notification(request, 'There is no public list to study, sorry...')
 	return redirect(reverse('study_list_ask', kwargs = {'pk': lis[0].pk, 'slug': lis[0].slug}))
 
 
@@ -181,7 +198,7 @@ def stats(request):
 	))
 	for label, data in summaries.items():
 		summaries[label]['percentage'] = 100 * summaries[label]['correct'] / max(summaries[label]['total'], 1)
-	results_today = Result.objects.filter(learner = request.user, when__gt = now() - timedelta(days = 1))
+	results_today = Result.objects.filter(learner = request.user, when__gt = now() - timedelta(days = 1))[:100]
 	all_lists = ListAccess.objects.filter(learner = request.user)
 	active_lists = ListAccess.objects.filter(learner = request.user, active = True)
 	all_translations_duplicates = sum([list(li.translations_list.translations.all()) for li in all_lists], [])
@@ -189,7 +206,6 @@ def stats(request):
 	all_translations = all_translations_map.values()
 	active_translations = ActiveTranslation.objects.filter(learner = request.user)
 	possible_translations = ActiveTranslation.objects.filter(learner = request.user, active = True)
-
 	return render(request, 'show_stats.html', {
 		'summaries': summaries,
 		'results_today': results_today,
