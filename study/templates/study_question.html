@@ -7,16 +7,25 @@
 {% endcomment %}
 
 {% block title %}
-	{{ shown.text }} ?
+	{{ shown.text|capfirst }} in {{ hidden_language }}?
 	-
 	{{ block.super }}
 {% endblock title %}
 
-{# #todo: block copy-paste a little #}
 
 {% block content %}
 
-	<h1>{{ shown }}</h1>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {% blocktrans context 'study question header' with shown_language=shown.language_disp %}This {{ shown_language }} phrase...{% endblocktrans %}
+        </div>
+            <div class="panel-body">
+                <h1>{{ shown.text|capfirst }}</h1>
+            </div>
+        <div class="panel-footer">
+            {% blocktrans context 'study question footer' %}How to say it in {{ hidden_language }}?{% endblocktrans %}
+        </div>
+    </div>
 
 {% endblock content %}
 

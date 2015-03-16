@@ -17,16 +17,10 @@ class Phrase(models.Model):
 	#todo you can add e.g. an image here, which would be the same for each language
 	#todo: maybe public_view should not be optional, it would make things easier and more open
 	learner = models.ForeignKey(Learner, blank = True, null = True, default = None)
-	#public_view = models.BooleanField(default = True, verbose_name = 'publicly viewable')
 	public_edit = models.BooleanField(default = True, verbose_name = 'publicly editable')
 
 	def __unicode__(self):
 		return u'phrase #%d' % self.pk
-
-	#def clean(self, *args, **kwargs):
-	#	if self.public_edit:
-	#		self.public_view = True
-	#	return super(Phrase, self).clean(*args, **kwargs)
 
 
 class Translation(models.Model):

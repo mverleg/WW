@@ -14,7 +14,7 @@ from django.db import migrations
 def create_admin(apps, schema_editor):
 	User = apps.get_model('learners', 'Learner')
 	email = BaseUserManager.normalize_email('admin@localhost')
-	user = User(email = email, is_staff = True, is_superuser = True)
+	user = User(email = email, is_staff = True, is_superuser = True)#, minimum_delay = 3, new_count = 5)
 	user.password = make_password('MCTDH')
 	user.save()
 	stderr.write('\n*********************************************************************\nA user with email "admin@localhost" and password "MCTDH" was created.\nYou should update the password!\n*********************************************************************\n')

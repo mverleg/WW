@@ -52,9 +52,13 @@
 						<li><a href='{% url 'about' %}'><i class="glyphicon glyphicon-heart"></i> {% blocktrans context 'menu option: about' %}about{% endblocktrans %}</a></li>
 						<li><a href='{% url 'choose_languages' %}?next={{ request.path }}'><i class="glyphicon glyphicon-flag"></i> {% blocktrans context 'menu option: languages' %}languages{% endblocktrans %}</a></li>
 						<li><a href='{% url 'all_lists' %}'><i class="glyphicon glyphicon-th-list"></i> {% blocktrans context 'menu option: lists' %}lists{% endblocktrans %}</a></li>
-						<li><a href='{% url 'add_phrase' %}'><i class="glyphicon glyphicon-plus"></i> {% blocktrans context 'menu option: addphrase' %}add{% endblocktrans %}</a></li>
-						<li><a href='{% url 'study' %}'><i class="glyphicon glyphicon-check"></i> {% blocktrans context 'menu option: study' %}study{% endblocktrans %}</a></li>
-						<li><a href='{% url 'stats' %}'><i class="glyphicon glyphicon-tasks"></i> {% blocktrans context 'menu option: study' %}stats{% endblocktrans %}</a></li>
+						{% if request.user.is_authenticated %}
+						    <li><a href='{% url 'add_phrase' %}'><i class="glyphicon glyphicon-plus"></i> {% blocktrans context 'menu option: addphrase' %}add{% endblocktrans %}</a></li>
+							<li><a href='{% url 'study_ask' %}'><i class="glyphicon glyphicon-check"></i> {% blocktrans context 'menu option: study' %}study{% endblocktrans %}</a></li>
+						    <li><a href='{% url 'stats' %}'><i class="glyphicon glyphicon-tasks"></i> {% blocktrans context 'menu option: study' %}stats{% endblocktrans %}</a></li>
+						{% else %}
+							<li><a href='{% url 'study_demo' %}'><i class="glyphicon glyphicon-check"></i> {% blocktrans context 'menu option: study' %}study{% endblocktrans %}</a></li>
+						{% endif %}
 					{% endblock menu_info %}
 					{% block menu %}
 						<!-- add menu items here -->

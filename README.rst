@@ -48,7 +48,7 @@ Setup
 
     http://127.0.0.1:8000/
 
-* (Notice the control panel link at the bottom).
+* Notice the control panel link at the bottom? Have you tried searching for an empty string? Did you try setting your known language to Dutch?
 
 Good luck!
 

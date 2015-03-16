@@ -4,11 +4,13 @@ from datetime import timedelta
 from random import random
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import add_message, get_messages, INFO, ERROR
-from django.shortcuts import render
+from django.core.urlresolvers import reverse
+from django.shortcuts import render, redirect
 from django.utils.timezone import datetime, now
 from basics.views import notification
+from basics.decorators import instantiate
 from learners.function import update_learner_actives, get_options, weighted_option_choice, add_more_active_phrases
-from lists.models import ListAccess
+from lists.models import ListAccess, TranslationsList
 from study.models import Result, ActiveTranslation
 
 
@@ -50,6 +52,7 @@ def study_ask(request):
 	return render(request, 'study_question.html', {
 		'anonymous': True,
 		'shown': shown,
+		'hidden_language': hidden.language_disp(),
 	})
 
 
@@ -58,17 +61,29 @@ def study_respond(request):
 	request.user.phrase_index += 1 #save
 
 
-
-def study_list_ask(request, translations_list):
+@instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
+def study_list_ask(request, translations_list, slug):
 	add_message(request, INFO, 'You are studying anonymously. With an account, you can select phrases to learn and store your results!')
 	return notification(request, 'Anonymous study coming soon')
 	#todo: anonymous study should study a specific list
 
 
-def study_list_respond(request, translations_list):
+@instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
+def study_list_respond(request, translations_list, slug):
 	pass
 
 
+def study_demo(request):
+	"""
+		Redirect to a list to study (the first public one).
+	"""
+	lis = TranslationsList.objects.filter(public = True).order_by('pk')
+	if not lis:
+		return notification('There is no public list to study, sorry...')
+	return redirect(reverse('study_list_ask', kwargs = {'pk': lis[0].pk, 'slug': lis[0].slug}))
+
+
+@login_required
 def stats(request):
 	update_learner_actives(learner = request.user)
 	today_start = datetime(year = now().year, month = now().month, day = now().day, tzinfo = now().tzinfo)
