@@ -14,14 +14,20 @@ class Migration(migrations.Migration):
 	operations = [
 		migrations.AddField(
 			model_name='learner',
-			name='study_state',
-			field=models.PositiveSmallIntegerField(default=1, help_text=b'(internal only).', choices=[(1, b'asking meaning (showing learn lang)'), (2, b'asking how to say (showing known lang)'), (3, b'revealed, awaiting judgement'), (4, b'judged')]),
+			name='study_answer',
+			field=models.TextField(default=b'', help_text=b'The latest thing the user answered (internal only).'),
 			preserve_default=True,
 		),
 		migrations.AddField(
 			model_name='learner',
 			name='study_hidden',
-			field=models.ForeignKey(related_name='current_hidden_learners', default=None, blank=True, to='study.ActiveTranslation', help_text=b'The Translation that is the solution for study_shown (internal only).', null=True),
+			field=models.ForeignKey(related_name='current_hidden_learners', default=None, blank=True, to='phrasebook.Translation', help_text=b'The Translation that is the solution for study_shown (internal only).', null=True),
+			preserve_default=True,
+		),
+		migrations.AddField(
+			model_name='learner',
+			name='study_show_learn',
+			field=models.BooleanField(default=True, help_text=b'Is the learning language phrase being shown, or asked for (so hidden) (internal only).'),
 			preserve_default=True,
 		),
 		migrations.AddField(
@@ -32,8 +38,8 @@ class Migration(migrations.Migration):
 		),
 		migrations.AddField(
 			model_name='learner',
-			name='study_answer',
-			field=models.TextField(default=b'', help_text=b'The latest thing the user answered (internal only).'),
+			name='study_state',
+			field=models.PositiveSmallIntegerField(default=0, help_text=b'(internal only).', choices=[(0, b'nothing'), (1, b'asking meaning (showing learn lang)'), (3, b'revealed, awaiting judgement'), (4, b'judged')]),
 			preserve_default=True,
 		),
 	]

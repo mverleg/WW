@@ -103,7 +103,7 @@ def reset(request):
 	"""
 	request.user.study_shown = None
 	request.user.study_hidden = None
-	request.user.study_state = request.user.ASK_MEANING
+	request.user.study_state = request.user.NOTHING
 	request.user.study_answer = ''
 	request.user.save()
 	update_learner_actives(learner = request.user)

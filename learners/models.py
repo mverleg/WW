@@ -47,13 +47,20 @@ class Learner(AbstractBaseUser, PermissionsMixin):
 	show_correct_count = models.BooleanField(default = True, help_text = 'Show the number of correct responses on every page.')
 
 	""" Internal bookkeeping """
-	ASK_MEANING, ASK_HOWSAY, REVEALED, JUDGED = 1, 2, 3, 4
+	NOTHING, ASKING, REVEALED, JUDGED = 0, 1, 3, 4  # 2 missing for historical reasons
 	phrase_index = models.PositiveIntegerField(default = 100, help_text = 'How many phrases have been shown (a.o. to compare last_shown) (internal only).')
 	need_active_update = models.BooleanField(default = True, help_text = 'Do the cache fields on active phrases need updating? (internal only).')
 	study_shown = models.ForeignKey('phrasebook.Translation', blank = True, null = True, default = None, related_name = 'current_shown_learners', help_text = 'The Translation that is currently visible, if any (internal only).')
-	study_hidden = models.ForeignKey('study.ActiveTranslation', blank = True, null = True, default = None, related_name = 'current_hidden_learners', help_text = 'The Translation that is the solution for study_shown (internal only).')
-	study_state = models.PositiveSmallIntegerField(default = ASK_MEANING, choices = ((ASK_MEANING, 'asking meaning (showing learn lang)'), (ASK_HOWSAY, 'asking how to say (showing known lang)'), (REVEALED, 'revealed, awaiting judgement'), (JUDGED, 'judged')), help_text = '(internal only).')
+	study_hidden = models.ForeignKey('phrasebook.Translation', blank = True, null = True, default = None, related_name = 'current_hidden_learners', help_text = 'The Translation that is the solution for study_shown (internal only).')
 	study_answer = models.TextField(default = '', help_text = 'The latest thing the user answered (internal only).')
+	study_show_learn = models.BooleanField(default = True, help_text = 'Is the learning language phrase being shown, or asked for (so hidden) (internal only).') # todo: not used after all right now, but maybe in future
+	study_state = models.PositiveSmallIntegerField(default = NOTHING, choices = (
+		(NOTHING, 'nothing'),
+		(ASKING, 'asking meaning (showing learn lang)'),
+		(REVEALED, 'revealed, awaiting judgement'),
+		(JUDGED, 'judged')
+	), help_text = '(internal only).')
+
 
 	objects = LearnerManager()
 	USERNAME_FIELD = 'email'

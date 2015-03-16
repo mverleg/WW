@@ -18,14 +18,9 @@ from study.models import Result, ActiveTranslation
 
 @login_required
 def study(request):
-	# study_shown = models.ForeignKey('phrasebook.Translation', blank = True, null = True, default = None, related_name = 'current_shown_learners', help_text = 'The Translation that is currently visible, if any (internal only).')
-	# study_hidden = models.ForeignKey('study.ActiveTranslation', blank = True, null = True, default = None, related_name = 'current_hidden_learners', help_text = 'The Translation that is the solution for study_shown (internal only).')
-	# study_state = models.PositiveSmallIntegerField(default = ASK_MEANING, choices = ((ASK_MEANING, 'asking meaning (showing learn lang)'), (ASK_HOWSAY, 'asking how to say (showing known lang)'), (REVEALED, 'revealed, awaiting judgement'), (JUDGED, 'judged')), help_text = '(internal only).')
-	# study_answer = models.TextField(default = '', help_text = 'The latest thing the user answered (internal only).')
 	learner = request.user
-	correct = False
 	result_form = SolutionForm(request.POST)
-	if learner.study_state in [Learner.ASK_MEANING, Learner.ASK_HOWSAY] and 'solution' in request.POST:
+	if learner.study_state == Learner.ASKING and 'solution' in request.POST:
 		"""
 			The user submitted a solution.
 		"""
@@ -34,7 +29,7 @@ def study(request):
 			return redirect(reverse('study_ask'))
 		learner.study_answer = result_form.cleaned_data['solution'].strip()
 		if learner.study_answer == learner.study_hidden.text.strip():
-			correct = True
+			#todo: also check other languages in the future maybe
 			Result(
 				learner = learner,
 				asked = learner.study_hidden,
@@ -47,10 +42,33 @@ def study(request):
 		else:
 			learner.study_state = Learner.REVEALED
 		learner.save()
+	if learner.study_state in [Learner.REVEALED, Learner.JUDGED] and 'result' in request.POST:
+		"""
+			The user judged the result, process it and go to the next question.
+		"""
+		result_map = {'correct': Result.CORRECT, 'notquite': Result.CLOSE, 'incorrect': Result.INCORRECT}
+		try:
+			result = result_map[request.POST['result']]
+		except KeyError:
+			return notification(request, 'The result you submitted, "%s", was not of expected format.' % request.POST['result'])
+		Result(
+			learner = learner,
+			asked = learner.study_hidden,
+			known = learner.study_shown,
+			result = result,
+			verified = False
+		).save()
+		learner.study_shown = learner.study_hidden = None
+		learner.study_answer = ''
+		learner.study_state = Learner.ASKING
+		learner.phrase_index += 1
+		learner.save()
+		""" Skip the judged page; set to asking and match later. """
 	if learner.study_state in [Learner.REVEALED, Learner.JUDGED]:
 		"""
 			Show the solution.
 		"""
+		correct = learner.study_answer == learner.study_hidden.text.strip()
 		judge = False if correct else learner.study_state == Learner.REVEALED
 		return render(request, 'study_result.html', {
 			'hidden': learner.study_hidden,
@@ -60,15 +78,20 @@ def study(request):
 			'answer': learner.study_answer,
 			'result_form': result_form,
 		})
-	if learner.study_state in [Learner.ASK_MEANING, Learner.ASK_HOWSAY]:
+	if learner.study_state == Learner.NOTHING:
+		learner.study_state = Learner.ASKING
+		learner.save()
+	if learner.study_state == Learner.ASKING:
 		"""
 			Since there's no solution in POST, the user just wants to see the question.
 		"""
 		msgs = []
-		add_more_active_phrases(learner = learner, msgs = msgs)
-		update_learner_actives(learner = learner)
-		learner.study_hidden, learner.study_shown, msgs = get_current_question(learner = learner, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
-		learner.save()
+		if not learner.study_shown or not learner.study_hidden:
+			add_more_active_phrases(learner = learner, msgs = msgs)
+			update_learner_actives(learner = learner)
+			learner.study_hidden, learner.study_shown, msgs = get_current_question(learner = learner, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
+			#todo: set study_show_learn = models.BooleanField(default = True, help_text = 'Is the learning language phrase being shown, or asked for (so hidden) (internal only).')
+			learner.save()
 		for lvl, txt in msgs:
 			add_message(request, lvl, txt)
 		form = SolutionForm(None)
@@ -78,7 +101,7 @@ def study(request):
 			'hidden_language': learner.study_hidden.language_disp(),
 			'form': form,
 		})
-	#todo: capture scoring
+	raise Exception('nothing matched')
 
 
 def study_respond(request):
