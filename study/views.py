@@ -10,7 +10,8 @@ from django.utils.timezone import datetime, now
 from basics.views import notification
 from basics.decorators import instantiate
 from learners.models import Learner
-from study.function import update_learner_actives, add_more_active_phrases, get_current_question
+from study.functions import update_learner_actives, add_more_active_phrases
+from study.selection import get_next_question
 from lists.models import ListAccess, TranslationsList
 from study.forms import SolutionForm, AnonStudyForm
 from study.models import Result, ActiveTranslation
@@ -81,7 +82,11 @@ def study(request):
 		if not learner.study_shown or not learner.study_hidden:
 			add_more_active_phrases(learner = learner, lang = request.LEARN_LANG, msgs = msgs)
 			update_learner_actives(learner = learner)
-			learner.study_hidden, learner.study_shown, msgs = get_current_question(learner = learner, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
+			try:
+				learner.study_active, learner.study_hidden, learner.study_shown, msgs = get_next_question(
+					learner = learner, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
+			except ActiveTranslation.DoesNotExist:
+				return notification(request, 'There are no phrases on your lists which are available in both your known and study languages.')
 			learner.save()
 		for lvl, txt in msgs:
 			add_message(request, lvl, txt)

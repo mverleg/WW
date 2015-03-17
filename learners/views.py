@@ -11,8 +11,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.views import login_required
 from settings import LOGIN_REDIRECT_URL
 from basics.views import notification
-from study.function import update_learner_actives
-from study.function import add_more_active_phrases
+from study.functions import update_learner_actives, add_more_active_phrases
 
 
 @next_GET
@@ -31,9 +30,10 @@ def login(request, next):
 	})
 
 
-@require_POST
 @next_GET
 def logout(request, next):
+	if not request.method == 'POST':
+		return redirect(to = reverse('home'))
 	if not request.user.is_authenticated():
 		return redirect(to = reverse('login'))
 	form = LogoutForm(data = request.POST)
@@ -105,6 +105,7 @@ def reset(request):
 	request.user.study_hidden = None
 	request.user.study_state = request.user.NOTHING
 	request.user.study_answer = ''
+	#todo: reset some settings (and warn about that in template)
 	request.user.save()
 	update_learner_actives(learner = request.user)
 	add_more_active_phrases(learner = request.user, lang = request.LEARN_LANG, msgs = [])

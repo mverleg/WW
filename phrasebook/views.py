@@ -41,6 +41,7 @@ def add_phrase(request):
 		translation = translation_form.save(commit = False)
 		translation.phrase = phrase
 		translation.save()
+		""" No need for translations update since a phrase with one translation is never valid for study. """
 		return redirect(phrase_form.instance.get_absolute_url())
 	return render(request, 'add_phrase.html', {
 		'phrase_form': phrase_form,
@@ -57,6 +58,7 @@ def edit_phrase(request, phrase, next = None):
 	phrase_form = EditPhraseForm(request.POST or None, instance = phrase)
 	if phrase_form.is_valid():
 		phrase_form.save()
+		""" No need for actives_update here, doesn't affect translations. """
 		return redirect(request.POST['next'] or phrase.get_absolute_url())
 	return render(request, 'edit_phrase.html', {
 		'phrase': phrase,
@@ -76,6 +78,8 @@ def delete_phrase(request):
 	if not (phrase.public_edit or phrase.learner == request.user):
 		return notification(request, 'You don\'t have permission to delete this phrase.')
 	phrase.delete()
+	request.user.need_active_update = True
+	request.user.save()
 	return redirect(reverse('user_lists'))
 
 
@@ -95,6 +99,8 @@ def create_translation(request):
 		else:
 			add_message(request, INFO, 'Your translation "%s" has been added!' % form.cleaned_data['phrase'])
 			form.save()
+			request.user.need_active_update = True
+			request.user.save()
 		return redirect(request.POST['next'] or phrase.get_absolute_url())
 	return notification(request, 'The submitted phrase was not valid, sorry. %s' % ' '.join('%s: %s' % (field, msg) for field, msg in form.errors.items()))
 
@@ -111,6 +117,8 @@ def delete_translation(request):
 	else:
 		add_message(request, INFO, 'The translation has been deleted')
 		translation.delete()
+		request.user.need_active_update = True
+		request.user.save()
 	return redirect(request.POST['next'] or translation.phrase.get_absolute_url())
 
 

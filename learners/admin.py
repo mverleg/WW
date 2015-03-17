@@ -14,7 +14,7 @@ class LearnerAdmin(admin.ModelAdmin):
 			'fields': ('is_staff', 'is_superuser', 'user_permissions', 'last_login',),
 		}),
 		('Settings', {
-			'fields': ('ask_direction', 'add_randomness', 'minimum_delay', 'new_count', 'show_medium_correctness',
+			'fields': ('ask_direction', 'favor_unknown', 'minimum_delay', 'new_count', 'show_medium_correctness',
 				'show_correct_count', 'reward_magnitude',),
 		}),
 		('Internal only', {

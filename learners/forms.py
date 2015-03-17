@@ -44,7 +44,7 @@ class ProfileForm(forms.ModelForm):
 	class Meta:
 		model = get_user_model()
 		#todo: ask_direction should be a slider
-		fields = ('name', 'ask_direction', 'add_randomness', 'minimum_delay', 'new_count', 'show_medium_correctness',
+		fields = ('name', 'ask_direction', 'favor_unknown', 'minimum_delay', 'new_count', 'show_medium_correctness',
 			'show_correct_count', 'reward_magnitude',)
 
 

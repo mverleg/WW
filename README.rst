@@ -99,6 +99,7 @@ Bugs
 * Random DjangoUnicodeDecodeError even in admin with strings coming coming from database
 * Add images or other context markers to Phrase, to distinguish double meanings (and it's cool anyway)
 * Translation problems for study/Study case sensitivity when making but only one translated
+* Make it a little harder (it's never impossible) to copy-paste the question sentence or to use mouse-over addons
 *
 
 

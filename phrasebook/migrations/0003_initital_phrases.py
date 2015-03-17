@@ -57,7 +57,7 @@ def create_admin(apps, schema_editor):
 class Migration(migrations.Migration):
 
 	dependencies = [
-		('learners', '0012_study_active_instead'),
+		('learners', '0013_favor_unknown'),
 		('phrasebook', '0002_new_access'),
 		('lists', '0007_name_and_default'),
 	]

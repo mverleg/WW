@@ -4,7 +4,7 @@ from phrasebook.views import show_phrase, add_phrase, edit_phrase, delete_phrase
 
 
 urlpatterns = patterns('',
-	url(r'^show/(?P<pk>\d+)/$', show_phrase, name = 'show_phrase'),
+	url(r'^(?P<pk>\d+)/$', show_phrase, name = 'show_phrase'),
 	url(r'^create/$', add_phrase, name = 'add_phrase'),
 	url(r'^edit/(?P<pk>\d+)/$', edit_phrase, name = 'edit_phrase'),
 	url(r'^delete/$', delete_phrase, name = 'delete_phrase'),
