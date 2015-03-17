@@ -107,7 +107,7 @@ def reset(request):
 	request.user.study_answer = ''
 	request.user.save()
 	update_learner_actives(learner = request.user)
-	add_more_active_phrases(learner = request.user, msgs = [])
+	add_more_active_phrases(learner = request.user, lang = request.LEARN_LANG, msgs = [])
 	update_learner_actives(learner = request.user)
 	add_message(request, INFO, 'Cache properties reset for "%s"' % request.user.email)
 	request.session.clear()

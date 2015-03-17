@@ -27,8 +27,11 @@ def get_current_question(learner, known_language, learn_language):
 		msgs.append((ERROR, 'You don\'t have enough phrases to start a quiz, sorry. You can add some active lists for more phrases!'))
 		return
 	""" Choose among the options. """
+	print learner.pk + learner.phrase_index + lang_seed
+	print options
 	learner.study_active = options[0]
 	if learner.add_randomness:
+		print learner.study_active
 		learner.study_active = weighted_option_choice(options, randst)
 	""" Now get the other language versions. """
 	other_li = learner.study_active.translation.phrase.translations.filter(language = known_language)
@@ -123,21 +126,22 @@ def get_options(learner, msgs, lang, amount=20):
 	return options
 
 
-def add_more_active_phrases(learner, msgs):
-	# how many active now
-	unlearned_count = ActiveTranslation.objects.filter(active = True, score__lte = 0).count()
-	# how many active max
+def add_more_active_phrases(learner, msgs, lang):
+	""" how many active now """
+	#unlearned_count = ActiveTranslation.objects.filter(active = True, score__lte = 0).count()
+	unlearned_count = ActiveTranslation.objects.filter(active = True, score__lte = 0, translation__language = lang).count()
+	""" how many active max """
 	goal_count = learner.new_count
-	# add more according to priority until satisfied
+	""" add more according to priority until satisfied """
 	if unlearned_count < goal_count:
-		# get possible translations to add (options)
+		""" get possible translations to add (options) """
 		accesses = ListAccess.objects.filter(learner = learner, active = True).order_by('-priority')
 		options = sum([list(access.translations_list.translations.all()) for access in accesses], [])
 		already_active_pks = [active.translation.pk for active in ActiveTranslation.objects.filter(learner = learner)]
-		# add them one by one (order of decreasing priority) until enough
+		""" add them one by one (order of decreasing priority) until enough """
 		cnt = goal_count - unlearned_count
 		for option in options:
-			if option.pk not in already_active_pks:
+			if option.pk not in already_active_pks and option.language == lang:
 				ActiveTranslation(
 					learner = learner,
 					translation = option,
@@ -148,7 +152,7 @@ def add_more_active_phrases(learner, msgs):
 				if cnt <= 0:
 					learner.need_update()
 					return
-	msgs.append((WARNING, 'Tried to add more phrases to the active collection but it seems there are not enough left in your lists.'))
+	msgs.append((WARNING, 'Tried to add more phrases to the active collection but it seems there are not enough left in your lists for the current language.'))
 	#todo: maybe use some random sampling when choosing which phrase to activate
 
 

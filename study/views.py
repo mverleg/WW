@@ -79,7 +79,7 @@ def study(request):
 		"""
 		msgs = []
 		if not learner.study_shown or not learner.study_hidden:
-			add_more_active_phrases(learner = learner, msgs = msgs)
+			add_more_active_phrases(learner = learner, lang = request.LEARN_LANG, msgs = msgs)
 			update_learner_actives(learner = learner)
 			learner.study_hidden, learner.study_shown, msgs = get_current_question(learner = learner, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
 			learner.save()
