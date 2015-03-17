@@ -1,0 +1,5 @@
+study: http://pixabay.com/en/chinese-characters-fortune-prayer-399493/
+list: http://commons.wikimedia.org/wiki/File:Blue_Room_-_Milk_Glass_Collection.jpg
+search: http://www.geograph.org.uk/photo/318677
+account: http://commons.wikimedia.org/wiki/File:Gears_large.jpg
+stats: http://pixabay.com/en/green-network-dark-black-light-80610/

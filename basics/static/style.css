@@ -10,4 +10,9 @@ form[role=form]
 	margin: 1em 0 2em 0;
 }
 
+.thumbnail .caption p:nth-child(2)
+{
+	min-height: 4.5em;
+}
+
 
