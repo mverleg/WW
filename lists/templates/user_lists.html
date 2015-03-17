@@ -25,7 +25,7 @@
     		{% for access in edit_accesses %}
     			<tr>
 				    <td>{% if access.translations_list.language %}{{ access.translations_list.language_disp }}{% else %}<span title="Or maybe it just wasn't set yet">mixed</span>{% endif %}</td>
-				    <td><a href="{% url 'show_list' pk=access.translations_list.pk slug=access.translations_list.slug %}">{{ access.translations_list.name }}</a></td>
+				    <td><a href="{{ access.translations_list.get_absolute_url }}">{{ access.translations_list.name }}</a></td>
 				    <td>{{ access.translations_list.translations.count }}</td>
 				    <td>{% if access.active %}yes{% else %}no{% endif %}</td>
 				    <td>
@@ -59,7 +59,7 @@
     		{% for access in view_accesses %}
     			<tr>
 				    <td>{% if access.translations_list.language %}{{ access.translations_list.language_disp }}{% else %}<span title="Or maybe it just wasn't set yet">mixed</span>{% endif %}</td>
-				    <td><a href="{% url 'show_list' pk=access.translations_list.pk slug=access.translations_list.slug %}">{{ access.translations_list.name }}</a></td>
+				    <td><a href="{{ access.translations_list.get_absolute_url }}">{{ access.translations_list.name }}</a></td>
 				    <td>{{ access.translations_list.translations.count }}</td>
 				    <td>{% if access.active %}yes{% else %}no{% endif %}</td>
 				    <td>

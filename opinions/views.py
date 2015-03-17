@@ -31,7 +31,7 @@ def add_translation_vote(request):
 		vote = TranslationVote(translation = translation, up = up, learner = request.user)
 		vote.save()
 		add_message(request, INFO, 'Your vote for "%s" was added.' % (translation.text))
-	return redirect(request.POST['next'] or reverse('show_phrase', kwargs = {'pk': translation.phrase.pk}))
+	return redirect(request.POST['next'] or translation.phrase.get_absolute_url())
 
 
 @login_required

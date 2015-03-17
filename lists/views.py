@@ -99,7 +99,7 @@ def add_list(request):
 		access.learner = request.user
 		access.access = ListAccess.EDIT
 		access.save()
-		return redirect(reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
+		return redirect(li.get_absolute_url())
 	return render(request, 'edit_list.html', {
 		'list_form': list_form,
 		'access_form': access_form,
@@ -121,11 +121,11 @@ def edit_list(request, translations_list, slug = None, next = None):
 		if list_form.is_valid() and access_form.is_valid():
 			list_form.save()
 			access_form.save()
-			return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': translations_list.pk, 'slug': translations_list.slug}))
+			return redirect(request.POST['next'] or translations_list.get_absolute_url())
 	else:
 		if list_form.is_valid() and access_form.is_valid():
 			access_form.save()
-			return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': translations_list.pk, 'slug': translations_list.slug}))
+			return redirect(request.POST['next'] or translations_list.get_absolute_url())
 	return render(request, 'edit_list.html', {
 		'list_form': list_form,
 		'access_form': access_form,
@@ -148,20 +148,18 @@ def add_translation_by_search(request):
 	else:
 		results = form.search()
 		other_language_results = None
-	print results
 	if len(results) == 1:
-		print results[0].language_key, li.language
 		if results[0].language_key == li.language or li.language is None:
 			""" Only one results, apply directly. """
 			if results[0].object in li.translations.all():
 				add_message(request, WARNING, '"%s" (the only result) is already on the list.' % results[0].object)
 			else:
 				li.translations.add(results[0].object)
-				# everyone who follows this list needs to update active cards
+				""" everyone who follows this list needs to update active translations """
 				for need_update_access in ListAccess.objects.filter(translations_list = li):
 					need_update_access.learner.need_update()
 				add_message(request, INFO, '"%s" (the only result) was added to the list.' % results[0].object)
-			return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
+			return redirect(request.POST['next'] or li.get_absolute_url())
 	""" Show options to the user """
 	return render(request, 'add_choose.html', {
 		'results': results,
@@ -181,11 +179,11 @@ def add_translation_by_pk(request, translation):
 		add_message(request, WARNING, '"%s" is already on the list.' % translation)
 	else:
 		li.translations.add(translation)
-		# everyone who follows this list needs to update active cards
+		""" everyone who follows this list needs to update active translations """
 		for need_update_access in ListAccess.objects.filter(translations_list = li):
 			need_update_access.learner.need_update()
 		add_message(request, INFO, '"%s" was added to the list.' % translation)
-	return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
+	return redirect(request.POST['next'] or li.get_absolute_url())
 
 
 def _list_access_from_post_pk(request, post, need_access = True, need_edit = True):
@@ -227,7 +225,7 @@ def remove_translation(request):
 		return notification(request, 'Translation not found for key %s.' % request.POST['pk']), None, None
 	li.translations.remove(translation)
 	add_message(request, INFO, '"%s" was removed from the list.' % translation)
-	return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
+	return redirect(request.POST['next'] or li.get_absolute_url())
 
 
 @confirm_delete
@@ -249,7 +247,7 @@ def follow_list(request):
 		return notification(request, 'You are already following the list "%s"' % li.name)
 	ListAccess(access = ListAccess.VIEW, translations_list = li, learner = request.user).save()
 	add_message(request, INFO, 'You are not following the list "%s".' % li)
-	return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
+	return redirect(request.POST['next'] or li.get_absolute_url())
 
 
 @login_required
@@ -259,6 +257,6 @@ def unfollow_list(request):
 	resp, li, access = _list_access_from_post_pk(request, request.POST, need_access = True, need_edit = False)
 	if resp: return resp
 	access.delete()
-	return redirect(request.POST['next'] or reverse('show_list', kwargs = {'pk': li.pk, 'slug': li.slug}))
+	return redirect(request.POST['next'] or li.get_absolute_url())
 
 

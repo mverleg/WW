@@ -12,6 +12,7 @@ class TranslationIndex(indexes.SearchIndex, indexes.Indexable):
 	language_key = indexes.CharField(model_attr = 'language')
 	other_languages = indexes.IntegerField(model_attr = 'other_languages')
 	phrase_pk = indexes.IntegerField(model_attr = 'phrase_id')
+	vote_score = indexes.IntegerField(model_attr = 'score')
 
 	def get_model(self):
 		return Translation

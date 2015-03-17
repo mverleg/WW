@@ -1,4 +1,4 @@
-
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.text import slugify
 from learners.models import Learner
@@ -24,6 +24,9 @@ class TranslationsList(models.Model):
 
 	def language_disp(self):
 		return self.get_language_display().split('(')[0].strip()
+
+	def get_absolute_url(self):
+		return reverse('show_list', kwargs = {'pk': self.pk, 'slug': self.slug})
 
 
 class ListAccess(models.Model):

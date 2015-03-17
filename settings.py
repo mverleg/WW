@@ -11,6 +11,7 @@
 
 from django.utils.translation import ugettext_lazy as _
 from os.path import join, dirname
+import sys
 
 
 SUPPORTED_LANGUAGES = (
@@ -150,7 +151,7 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 try:
 	from local import *
 except ImportError:
-	print 'created local.py settings directory'
+	sys.stdout.write('created local.py settings directory')
 	with open(join(BASE_DIR, 'local.py'), 'w+') as fh:
 		fh.write('# store your local settings here (e.g. database)')
 

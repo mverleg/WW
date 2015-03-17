@@ -25,7 +25,7 @@
 					<td>{{ translation.language_disp }}</td>
 					<td>{{ translation.text }}</td>
 		            <td>
-			            {#{% if phrase.public_view %}#}
+			            {% if request.user.is_authenticated %}
                             <div class="btn-group" role="group">
                                 <form class="form form-inline" method="POST" action="{% url 'add_translation_vote' %}">
                                     <input type="hidden" name="trans_pk" value="{{ translation.pk }}" />
@@ -36,13 +36,15 @@
                                     <button type="submit" class="btn btn-xs btn-default" name="up" value="1"><i class="glyphicon glyphicon-plus"></i></button>
                                 </form>
                             </div>
-		                {#{% endif %}#}
-                        <form role="form" action="{% url 'remove_translation' %}" method="POST" style="display: inline;">
-                            <input type="hidden" name="pk" value="{{ translation.pk }}" />
-                            <input type="hidden" name="next" value="{{ next }}" />
-                            {% csrf_token %}
-	                        <button type="submit" class="btn btn-xs btn-default" title="Remove this item if it has a negative vote count."><i class="glyphicon glyphicon-trash"></i></button>
-                        </form>
+                            <form role="form" action="{% url 'remove_translation' %}" method="POST" style="display: inline;">
+                                <input type="hidden" name="pk" value="{{ translation.pk }}" />
+                                <input type="hidden" name="next" value="{{ next }}" />
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-xs btn-default" title="Remove this item if it has a negative vote count."><i class="glyphicon glyphicon-trash"></i></button>
+                            </form>
+			            {% else %}
+				            <a type="button" class="btn btn-xs {% if translation.score > 0 %}btn-success{% elif translation.score < 0 %}btn-danger{% else %}btn-default{% endif %} disabled" style="width: 3em;"><strong>{% if translation.score > 0 %}+{% endif %}{{ translation.score }}</strong></a>
+		                {% endif %}
 		            </td>
 				</tr>
 			{% endfor %}

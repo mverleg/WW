@@ -62,7 +62,7 @@
         {% endif %}
 	{% endif %}
 
-	<a href="{% url 'show_list' pk=list.pk slug=list.slug %}" class="btn btn-default">Back to {{ list.name }} (don't add)</a>
+	<a href="{{ list.get_absolute_url }}" class="btn btn-default">Back to {{ list.name }} (don't add)</a>
 
 {% endblock content %}
 

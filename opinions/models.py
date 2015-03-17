@@ -1,4 +1,4 @@
-
+from django.core.urlresolvers import reverse
 from django.db import models
 from learners.models import Learner
 from phrasebook.models import Translation
@@ -21,6 +21,7 @@ class TranslationVote(models.Model):
 
 
 class TranslationComment(models.Model):
+	# (these are not ivisible/implemented yet)
 	translation = models.ForeignKey(Translation, related_name = 'comments')
 	learner = models.ForeignKey(Learner)
 	added = models.DateTimeField(auto_now_add = True)
@@ -29,5 +30,8 @@ class TranslationComment(models.Model):
 
 	def __unicode__(self):
 		return u'%s comments on %s' % (self.learner, self.translation)
+
+	def get_absolute_url(self):
+		return self.translation.phrase.get_absolute_url()
 
 

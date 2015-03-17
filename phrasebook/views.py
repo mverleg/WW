@@ -41,7 +41,7 @@ def add_phrase(request):
 		translation = translation_form.save(commit = False)
 		translation.phrase = phrase
 		translation.save()
-		return redirect(reverse('show_phrase', kwargs = {'pk': phrase_form.instance.pk}))
+		return redirect(phrase_form.instance.get_absolute_url())
 	return render(request, 'add_phrase.html', {
 		'phrase_form': phrase_form,
 		'translation_form': translation_form,
@@ -57,7 +57,7 @@ def edit_phrase(request, phrase, next = None):
 	phrase_form = EditPhraseForm(request.POST or None, instance = phrase)
 	if phrase_form.is_valid():
 		phrase_form.save()
-		return redirect(request.POST['next'] or reverse('show_phrase', kwargs = {'pk': phrase.pk}))
+		return redirect(request.POST['next'] or phrase.get_absolute_url())
 	return render(request, 'edit_phrase.html', {
 		'phrase': phrase,
 		'phrase_form': phrase_form,
@@ -95,7 +95,7 @@ def create_translation(request):
 		else:
 			add_message(request, INFO, 'Your translation "%s" has been added!' % form.cleaned_data['phrase'])
 			form.save()
-		return redirect(request.POST['next'] or reverse('show_phrase', kwargs = {'pk': phrase.pk}))
+		return redirect(request.POST['next'] or phrase.get_absolute_url())
 	return notification(request, 'The submitted phrase was not valid, sorry. %s' % ' '.join('%s: %s' % (field, msg) for field, msg in form.errors.items()))
 
 
@@ -111,6 +111,6 @@ def delete_translation(request):
 	else:
 		add_message(request, INFO, 'The translation has been deleted')
 		translation.delete()
-	return redirect(request.POST['next'] or reverse('show_phrase', kwargs = {'pk': translation.phrase.pk}))
+	return redirect(request.POST['next'] or translation.phrase.get_absolute_url())
 
 

@@ -31,6 +31,7 @@
 		        <td>Language</td>
 		        <td style="min-width: 60%;">Text</td>
 		        <td>Translations</td>
+		        <td>Score</td>
 		    </thead>
 		    <tbody>
                 {% for item in items %}
@@ -38,11 +39,13 @@
 	                    <td>{{ item.language }}</td>
                         <td>{{ item.words }}{% if item.romanization %} ({{ item.romanization }}){% endif %}</td>
                         <td><a href="{% url 'show_phrase' pk=item.phrase_pk %}">{% if item.other_languages %}{{ item.other_languages }} other{{ item.other_languages|pluralize }}{% else %}no others{% endif %}</a></td>
+	                    <td><a type="button" class="btn btn-xs {% if item.vote_score > 0 %}btn-success{% elif item.vote_score < 0 %}btn-danger{% else %}btn-default{% endif %} disabled" style="width: 3em;"><strong>{% if item.vote_score > 0 %}+{% endif %}{{ item.vote_score }}</strong></a></td>
 	                </tr>
                 {% endfor %}
 		    </tbody>
 	    </table>
         {% include 'pagination_controls.html' with extraquery="&q="|add:query %}
+		<p>Search results may lag behind a little on the real data; click a link to get live information.</p>
 	{% else %}
         <p>No results for this query.</p>
 	{% endif %}

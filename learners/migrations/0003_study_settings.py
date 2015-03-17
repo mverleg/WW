@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='learner',
             name='new_count',
-            field=models.PositiveIntegerField(default=10, help_text=b'How many first-time cards to keep active at once.'),
+            field=models.PositiveIntegerField(default=10, help_text=b'How many unlearned translations to keep active at once.'),
             preserve_default=True,
         ),
         migrations.AddField(

@@ -30,7 +30,7 @@
     		{% for item in items %}
     			<tr>
 			        <td>{% if item.language %}{{ item.language_disp }}{% else %}<span title="Or maybe it just wasn't set yet">mixed</span>{% endif %}</td>
-				    <td><a href="{% url 'show_list' pk=item.pk slug=item.slug %}">{{ item.name }}</a></td>
+				    <td><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></td>
 				    <td>{{ item.translations.count }}</td>
 				    <td>
 					    {% if not item.following %}

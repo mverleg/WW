@@ -7,7 +7,7 @@ from phrasebook.models import Translation
 class ActiveTranslation(models.Model):
 	"""
 		A user has a set of active phrases he is currently learning - he can limit the number of new ones.
-		The phrases all have a score that is based on correct/incorrect answers (and possibly more); the lowest score card is asked next unless shown too recently.
+		The phrases all have a score that is based on correct/incorrect answers (and possibly more); the lowest score phrase is asked next unless shown too recently.
 	"""
 	learner = models.ForeignKey(Learner)
 	translation = models.ForeignKey(Translation)
@@ -19,6 +19,7 @@ class ActiveTranslation(models.Model):
 
 	class Meta:
 		unique_together = ('learner', 'translation',)
+		ordering = ('score',)
 
 	def __unicode__(self):
 		return u'active "%s" for "%s"' % (self.translation, self.learner)

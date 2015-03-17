@@ -14,6 +14,7 @@ from study.function import update_learner_actives, add_more_active_phrases, get_
 from lists.models import ListAccess, TranslationsList
 from study.forms import SolutionForm, AnonStudyForm
 from study.models import Result, ActiveTranslation
+from study.score import update_score
 
 
 @login_required
@@ -31,14 +32,8 @@ def study(request):
 		learner.study_answer = result_form.cleaned_data['solution'].strip()
 		if learner.study_answer == learner.study_hidden.text.strip():
 			#todo: also check other languages in the future maybe
-			Result(
-				learner = learner,
-				asked = learner.study_hidden,
-				known = learner.study_shown,
-				result = Result.CORRECT,
-				verified = True
-			).save()
-			learner.phrase_index += 1
+			""" Update the score (so it can be set to 'verified') but only go on to next card when user click 'go on'. """
+			update_score(learner, Result.CORRECT, verified=True)
 			learner.study_state = Learner.JUDGED
 		else:
 			learner.study_state = Learner.REVEALED
@@ -52,17 +47,12 @@ def study(request):
 			result = result_map[request.POST['result']]
 		except KeyError:
 			return notification(request, 'The result you submitted, "%s", was not of expected format.' % request.POST['result'])
-		Result(
-			learner = learner,
-			asked = learner.study_hidden,
-			known = learner.study_shown,
-			result = result,
-			verified = False
-		).save()
+		if learner.study_state == Learner.REVEALED:
+			update_score(learner, result)
 		learner.study_shown = learner.study_hidden = None
 		learner.study_answer = ''
-		learner.study_state = Learner.ASKING
 		learner.phrase_index += 1
+		learner.study_state = Learner.ASKING
 		learner.save()
 		""" Skip the judged page; set to asking and match later. """
 	if learner.study_state in [Learner.REVEALED, Learner.JUDGED]:

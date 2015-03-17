@@ -17,7 +17,7 @@ def get_current_question(learner, known_language, learn_language):
 
 		:return: hidden_translation, shown_translation, messages
 	"""
-	""" Use a fixed random seed, so that question and answer refer to the same card. """
+	""" Use a fixed random seed, so that question and answer refer to the same translation. """
 	lang_seed = sum(ord(letter) for letter in known_language) - sum(ord(letter) for letter in learn_language)
 	randst = Random(x = learner.pk + learner.phrase_index + lang_seed)
 	""" Get all ActiveTranslations to choose from. """
@@ -27,29 +27,30 @@ def get_current_question(learner, known_language, learn_language):
 		msgs.append((ERROR, 'You don\'t have enough phrases to start a quiz, sorry. You can add some active lists for more phrases!'))
 		return
 	""" Choose among the options. """
-	choice = options[0]
+	learner.study_active = options[0]
 	if learner.add_randomness:
-		choice = weighted_option_choice(options, randst)
+		learner.study_active = weighted_option_choice(options, randst)
 	""" Now get the other language versions. """
-	other_li = choice.translation.phrase.translations.filter(language = known_language)
+	other_li = learner.study_active.translation.phrase.translations.filter(language = known_language)
 	#todo: order shown_li by votes to get the best one
 	if not other_li:
-		other_li = choice.translation.phrase.translations.exclude(language = learn_language)
+		other_li = learner.study_active.translation.phrase.translations.exclude(language = learn_language)
 	if not other_li:
-		""" There is only one translation so we don't know what to ask. Disable the bad card, try again (note that messages are intentionally lost). """
-		msgs.append((ERROR, 'The phrase "%s" was skipped because there are no alternative language versions.' % choice.translation.text))
-		choice.active = False
-		choice.save()
+		""" There is only one translation so we don't know what to ask. Disable the bad translation, try again (note that messages are intentionally lost). """
+		msgs.append((ERROR, 'The phrase "%s" was skipped because there are no alternative language versions.' % learner.study_active.translation.text))
+		learner.study_active.active = False
+		learner.study_active.save()
 		update_learner_actives(learner = learner)
 		return get_current_question(learner, known_language, learn_language)
 	""" Choice.translation is in the unknown language; should we show this or ask for this? """
+	learner.save()
 	if randst.random() * 100 < learner.ask_direction:
 		""" We'll ask the learning language and show a (hopefully) known one. """
-		hidden = choice.translation
+		hidden = learner.study_active.translation
 		shown = other_li[0]
 	else:
 		hidden = other_li[0]
-		shown = choice.translation
+		shown = learner.study_active.translation
 	return hidden, shown, msgs
 
 
@@ -85,7 +86,7 @@ def update_learner_actives(learner, specific_translation = None, force = False):
 
 def get_options(learner, msgs, lang, amount=20):
 	"""
-		Returns amount ActiveTranslations for the specified learner.
+		Returns ActiveTranslations sorted by urgency for the specified learner.
 	"""
 	msg = None
 	options = ActiveTranslation.objects.filter(
@@ -94,6 +95,7 @@ def get_options(learner, msgs, lang, amount=20):
 		last_shown__lt = learner.phrase_index - learner.minimum_delay - (amount if learner.add_randomness else 0),
 		translation__language = lang,
 	).extra(
+		#todo: score should also have a capped penalty for oldness (otherwise score never changes, so new phrases keep being added and old ones never show up again)
 		select = {'sum': 'score + priority'},
 		order_by = ('sum', 'last_shown',)
 	)[:amount]
@@ -115,7 +117,7 @@ def get_options(learner, msgs, lang, amount=20):
 			select = {'sum': 'score + priority'},
 			order_by = ('sum', 'last_shown',)
 		)[:amount]
-		msg = 'There are not enough active cards, so inactive phrases are shown and the minimum delay is ignored. You can activate lists for more phrases, control selection in account settings or change your learning language in the language menu.'
+		msg = 'There are not enough active translations, so inactive phrases are shown and the minimum delay is ignored. You can activate lists for more phrases, control selection in account settings or change your learning language in the language menu.'
 	if msg:
 		msgs.append((WARNING, msg))
 	return options
@@ -146,7 +148,7 @@ def add_more_active_phrases(learner, msgs):
 				if cnt <= 0:
 					learner.need_update()
 					return
-	msgs.append((WARNING, 'Tried to add more cards to the active collection but it seems there are not enough left in your lists.'))
+	msgs.append((WARNING, 'Tried to add more phrases to the active collection but it seems there are not enough left in your lists.'))
 	#todo: maybe use some random sampling when choosing which phrase to activate
 
 

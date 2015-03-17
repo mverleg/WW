@@ -5,9 +5,10 @@
 	The instances are specific items, which become rows in the database.
 """
 
+from django.core.urlresolvers import reverse
 from django.db import models
 from pinyin import get as to_pinyin
-from basics.language import get_in_each_language
+from basics.functions import get_in_each_language
 from learners.models import Learner
 from settings import SUPPORTED_LANGUAGES
 
@@ -23,6 +24,9 @@ class Phrase(models.Model):
 
 	def __unicode__(self):
 		return u'phrase #%d' % self.pk
+
+	def get_absolute_url(self):
+		return reverse('show_phrase', kwargs = {'pk': self.pk})
 
 
 class Translation(models.Model):
@@ -67,4 +71,5 @@ class Translation(models.Model):
 			return pin
 		return u''
 
-
+	def get_absolute_url(self):
+		return self.phrase.get_absolute_url()

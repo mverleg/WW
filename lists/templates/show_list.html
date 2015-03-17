@@ -48,7 +48,7 @@
                                 {% endif %}
                             {% endif %}
                         </td>
-                        <td><a href="{% url 'show_phrase' pk=translation.phrase.pk %}">{{ translation.other_languages }} other{{ translation.other_languages|pluralize }}</a></td>
+                        <td><a href="{{ phrase.get_absolute_url }}">{{ translation.other_languages }} other{{ translation.other_languages|pluralize }}</a></td>
                         {% if access.editable %}
                             <td>
                                 <form class="form form-inline" method="POST" action="{% url 'remove_translation' %}">

@@ -4,8 +4,7 @@ from django.utils.translation import get_language
 from django.views.i18n import set_language
 from basics.decorators import next_GET_or
 from basics.forms import ChooseLanguagesForm
-from basics.language import get_in_each_language
-from settings import DEFAULT_LEARN_LANGUAGE, SUPPORTED_LANGUAGES
+from settings import DEFAULT_LEARN_LANGUAGE
 
 
 def notification(request, message):

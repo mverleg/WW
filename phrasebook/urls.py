@@ -1,7 +1,5 @@
 
 from django.conf.urls import patterns, url
-from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
 from phrasebook.views import show_phrase, add_phrase, edit_phrase, delete_phrase, create_translation, delete_translation
 
 
