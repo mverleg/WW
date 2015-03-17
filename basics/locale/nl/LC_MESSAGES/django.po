@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-16 23:43+0000\n"
+"POT-Creation-Date: 2015-03-17 16:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,13 +18,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: basics/forms.py:12
+#: basics/forms.py:13
 msgid "Known language"
 msgstr "Bekende taal"
 
-#: basics/forms.py:13
+#: basics/forms.py:14
 msgid "Learning language"
 msgstr "Te leren taal"
+
+#: basics/forms.py:19
+msgid "You can't learn the same language you already know."
+msgstr ""
 
 #: basics/templates/features.html:8
 msgctxt "Main page options header"
@@ -38,18 +42,15 @@ msgstr "Wat wil je doen?"
 msgid "Study"
 msgstr "leer"
 
-#: basics/templates/features.html:20
-#msgid "Lists"
-#msgstr "Lijsten"
-
-#: basics/templates/features.html:20
-#msgid "Study"
-#msgstr "Studeer"
-
+# msgid "Lists"
+# msgstr "Lijsten"
+# msgid "Study"
+# msgstr "Studeer"
 #: basics/templates/features.html:20
 msgid ""
 "Jump in immediately by learning some words! Get ahead of the competition now!"
-msgstr "Ga meteen van start met het leren van zinnen! Begin met een voorsprong!"
+msgstr ""
+"Ga meteen van start met het leren van zinnen! Begin met een voorsprong!"
 
 #: basics/templates/features.html:22
 msgid "More Info"
@@ -73,7 +74,9 @@ msgstr "Lijsten"
 msgid ""
 "Seperate your phrases into \"animal names\" and \"Chinese - naughty\" and "
 "control which to learn first!"
-msgstr "Verdeel je zinnen in \"dierennamen\" en \"Chinese scheldwoorden\" en kies welke je eerst leert!"
+msgstr ""
+"Verdeel je zinnen in \"dierennamen\" en \"Chinese scheldwoorden\" en kies "
+"welke je eerst leert!"
 
 #: basics/templates/features.html:36
 msgid "View all"
@@ -94,7 +97,9 @@ msgstr "Zoeken"
 msgid ""
 "Search all the phrases other people have made available, translated into "
 "many languages at once!"
-msgstr "Doorzoek alle zinnen die andere mensen beschikbaar maken, vertaald in vele taken tegelijk!"
+msgstr ""
+"Doorzoek alle zinnen die andere mensen beschikbaar maken, vertaald in vele "
+"taken tegelijk!"
 
 #: basics/templates/features.html:50
 #, fuzzy
@@ -115,7 +120,8 @@ msgstr "Statistiek"
 msgid ""
 "Follow your learning progress automatically and improve your strategy as "
 "needed!"
-msgstr "Volg je leerproces automatisch zodat je je strategie meteen kan bijsturen!"
+msgstr ""
+"Volg je leerproces automatisch zodat je je strategie meteen kan bijsturen!"
 
 #: basics/templates/features.html:65
 msgid "Show me"
@@ -223,19 +229,19 @@ msgctxt "Home page"
 msgid "Give it a try!"
 msgstr "Probeer het!"
 
-#: settings.py:18
+#: settings.py:19
 msgid "English (British)"
 msgstr "Engels (Brits)"
 
-#: settings.py:19
+#: settings.py:20
 msgid "Chinese (simplified Mandarin)"
 msgstr "Chinees (versimpeld Mandarijn)"
 
-#: settings.py:20
+#: settings.py:21
 msgid "German"
 msgstr "Duits"
 
-#: settings.py:21
+#: settings.py:22
 msgid "Dutch"
 msgstr "Nederlands"
 

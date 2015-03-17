@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-16 23:43+0000\n"
+"POT-Creation-Date: 2015-03-17 16:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: basics/forms.py:12
+#: basics/forms.py:13
 msgid "Known language"
 msgstr ""
 
-#: basics/forms.py:13
+#: basics/forms.py:14
 msgid "Learning language"
+msgstr ""
+
+#: basics/forms.py:19
+msgid "You can't learn the same language you already know."
 msgstr ""
 
 #: basics/templates/features.html:8
@@ -192,19 +196,19 @@ msgctxt "Home page"
 msgid "Give it a try!"
 msgstr ""
 
-#: settings.py:18
+#: settings.py:19
 msgid "English (British)"
 msgstr ""
 
-#: settings.py:19
+#: settings.py:20
 msgid "Chinese (simplified Mandarin)"
 msgstr ""
 
-#: settings.py:20
+#: settings.py:21
 msgid "German"
 msgstr ""
 
-#: settings.py:21
+#: settings.py:22
 msgid "Dutch"
 msgstr ""
 
