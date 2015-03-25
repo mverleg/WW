@@ -9,6 +9,7 @@ from lists.models import TranslationsList, ListAccess
 from phrasebook.models import Phrase
 from phrasebook.models import Translation
 
+
 CNY, EN = 'zh-cn', 'en-gb'
 @login_required
 def import_hackingchinese_radicals(request):
@@ -34,17 +35,15 @@ def import_hackingchinese_radicals(request):
 		return data
 
 	@transaction.atomic
-	def make_list(show_pinyin):
+	def make_list(data, learner, show_pinyin):
 		if show_pinyin:
 			li = TranslationsList(name = 'top 100 radical (hackingchinese) radical & pinyin', public = True, language = CNY)
 		else:
 			li = TranslationsList(name = 'top 100 radical (hackingchinese) radical (pinyin hidden)', public = True, language = CNY)
-		if not len(data):
-			return notification(request, 'No data found.')
 		li.save()
-		ListAccess(translations_list = li, learner = request.user, access = ListAccess.EDIT).save()
+		ListAccess(translations_list = li, learner = learner, access = ListAccess.EDIT).save()
 		for radical, pinyin, definition in data:
-			phrase = Phrase(learner = request.user, public_edit = False)
+			phrase = Phrase(learner = learner, public_edit = False)
 			phrase.save()
 			if show_pinyin:
 				trans_cny = Translation(phrase = phrase, language = CNY, text = u'%s %s' % (radical, pinyin))
@@ -65,8 +64,10 @@ def import_hackingchinese_radicals(request):
 		except Exception:
 			return notification(request, 'Sorry, there was a problem parsing this file.')
 		""" Make the first list, which shows Pinyin """
-		list_show_pinyin = make_list(show_pinyin = True)
-		list_hide_pinyin = make_list(show_pinyin = False)
+		if not len(data):
+			return notification(request, 'No data found')
+		list_show_pinyin = make_list(data = data, learner = request.user, show_pinyin = True)
+		list_hide_pinyin = make_list(data = data, learner = request.user, show_pinyin = False)
 		return notification(request, 'Succesfully imported %d phrases! See the lists with <a href="%s">visible</a> and <a href="%s">hidden</a> pinyin.' % (
 			list_show_pinyin.translations.count(),
 			reverse('show_list', kwargs = {'pk': list_show_pinyin.pk}),
