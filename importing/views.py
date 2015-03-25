@@ -39,6 +39,8 @@ def import_hackingchinese_radicals(request):
 			li = TranslationsList(name = 'top 100 radical (hackingchinese) radical & pinyin', public = True, language = CNY)
 		else:
 			li = TranslationsList(name = 'top 100 radical (hackingchinese) radical (pinyin hidden)', public = True, language = CNY)
+		if not len(data):
+			return notification(request, 'No data found.')
 		li.save()
 		ListAccess(translations_list = li, learner = request.user, access = ListAccess.EDIT).save()
 		for radical, pinyin, definition in data:
