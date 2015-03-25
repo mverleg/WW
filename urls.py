@@ -9,7 +9,7 @@ from django.template import add_to_builtins
 from django.views.generic import TemplateView
 from basics.search import search
 from basics.views import choose_language
-import learners.urls, lists.urls, opinions.urls, phrasebook.urls, study.urls
+import learners.urls, lists.urls, opinions.urls, phrasebook.urls, study.urls, importing.urls
 
 
 urlpatterns = patterns('',
@@ -22,6 +22,7 @@ urlpatterns = patterns('',
 	url(r'^opinion/', include(opinions.urls)),
 	url(r'^phrase/', include(phrasebook.urls)),
 	url(r'^study/', include(study.urls)),
+	url(r'^import/', include(importing.urls)),
 	url(r'^languages/$', choose_language, name = 'choose_languages'),
 	url(r'^admin/', include(admin.site.urls)),
 )

@@ -73,3 +73,5 @@ class Translation(models.Model):
 
 	def get_absolute_url(self):
 		return self.phrase.get_absolute_url()
+
+

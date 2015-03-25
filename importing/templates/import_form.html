@@ -1,0 +1,29 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+    Import
+	-
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	<h1>Import</h1>
+	<p>{{ message|safe }}</p>
+	<p title="If you do both, the file will be ignored.">You can either enter a text here or upload a file containing the relevant text.</p>
+
+	<form action="." method="POST" enctype="multipart/form-data">
+		{{ form.as_p }}
+		{% csrf_token %}
+		<input type="submit" value="Submit">
+	</form>
+
+	<p>Note that this may take a while (don't re-submit to try and make it faster).</p>
+
+{% endblock content %}
+
+{% block features %}{% include 'features.html' %}{% endblock %}
+
+

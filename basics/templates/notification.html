@@ -16,7 +16,7 @@
 
 {% block content %}
 	<header class="jumbotron hero-spacer">
-	    <h1>{{ message }}</h1>
+	    <h1>{{ message|safe }}</h1>
 	</header>
 {% endblock content %}
 

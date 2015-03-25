@@ -60,6 +60,7 @@ INSTALLED_APPS = (
 	'lists',
 	'study',
 	'opinions',
+	'importing',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -132,6 +133,9 @@ LOCALE_PATHS = (join(BASE_DIR, 'basics/locale/'),)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT = join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+STATIC_ROOT = join(BASE_DIR, 'media')
 
 TEMPLATE_DIRS = (
 	join(BASE_DIR,  'templates'),
