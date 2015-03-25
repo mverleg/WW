@@ -28,18 +28,18 @@ def import_hackingchinese_radicals(request):
 			if line:
 				parts = line.split('\t')
 				data.append((
-					parts[0],  # radical
-					parts[3],  # pinyin
-					u'[Chinese radical] {0} ; e.g. {1} ; note: {2}'.format(parts[2], parts[4], parts[5]),  # definition
+					u'{0} [radical]'.format(parts[0]),  # radical
+					u'{0}'.format(parts[4].strip(' ()')),  # pinyin
+					u'{0} [radical] e.g. {1} ; note: {2}'.format(parts[3], parts[5], parts[6]),  # definition
 				))
 		return data
 
 	@transaction.atomic
 	def make_list(data, learner, show_pinyin):
 		if show_pinyin:
-			li = TranslationsList(name = 'top 100 radical (hackingchinese) radical & pinyin', public = True, language = CNY)
+			li = TranslationsList(name = 'top 100 radicals (hackingchinese) show pinyin', public = True, language = CNY)
 		else:
-			li = TranslationsList(name = 'top 100 radical (hackingchinese) radical (pinyin hidden)', public = True, language = CNY)
+			li = TranslationsList(name = 'top 100 radicals (hackingchinese) hide pinyin', public = True, language = CNY)
 		li.save()
 		ListAccess(translations_list = li, learner = learner, access = ListAccess.EDIT).save()
 		for radical, pinyin, definition in data:

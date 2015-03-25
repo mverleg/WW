@@ -9,10 +9,10 @@ class ImportForm(forms.Form):
 
 	def __init__(self, data, files, *args, **kwargs):
 		super(ImportForm, self).__init__(data, files, *args, **kwargs)
-		self.uploaded_file = None
+		self.file_content = None
 		if files:
 			if 'file' in files:
-				self.uploaded_file = files['file']
+				self.file_content = files['file'].read().decode('utf-8')
 
 	def clean(self):
 		if not (self.cleaned_data.get('text', '').strip() or self.cleaned_data.get('file', None)):
@@ -23,6 +23,6 @@ class ImportForm(forms.Form):
 			raise Exception('This only works on validated forms.')
 		if self.cleaned_data['text'].strip():
 			return self.cleaned_data['text']
-		return self.uploaded_file.read().decode('utf-8')
+		return self.file_content
 
 
