@@ -16,6 +16,10 @@ def show_phrase(request, phrase):
 	#todo: there is of course room for improvement, e.g. show whether you have voted for an item, sort by number of votes and active language, ... These are not overly complicated but require some coding and queries (performance).
 	#if not (phrase.public_view or phrase.learner == request.user):
 	#	return notification(request, 'You don\'t have permission to view this phrase')
+	try:
+		translation_list = TranslationsList.objects.get(pk = int(request.GET['list']))
+	except (TranslationsList.DoesNotExist, ValueError, KeyError):
+		translation_list = None
 	translations = Translation.objects.filter(phrase = phrase)
 	learn_translations, known_translations, other_translations = [], [], []
 	for translation in translations:
@@ -30,16 +34,17 @@ def show_phrase(request, phrase):
 		'phrase': phrase,
 		'translations': translations,
 		'create_translation_form': create_translation_form,
+		'from_list': translation_list,
 	})
 
 
 def add_phrase(request):
-	phrase_form = EditPhraseForm(request.POST or None, initial = {'language': request.KNOWN_LANG})
-	translation_form = PhraselessTranslationForm(request.POST or None)
 	try:
 		translation_list = TranslationsList.objects.get(pk = int(request.GET['list']))
 	except (TranslationsList.DoesNotExist, ValueError, KeyError):
 		translation_list = None
+	phrase_form = EditPhraseForm(request.POST or None, initial = {'language': request.KNOWN_LANG})
+	translation_form = PhraselessTranslationForm(request.POST or None, initial = {'language': translation_list.language if translation_list else None})
 	if phrase_form.is_valid() and translation_form.is_valid():
 		phrase = phrase_form.save(commit = False)
 		phrase.learner = request.user
@@ -47,12 +52,12 @@ def add_phrase(request):
 		translation = translation_form.save(commit = False)
 		translation.phrase = phrase
 		translation.save()
-		if translation_list:
+		if 'add_to_list' in request.POST and translation_list:
 			translation_list.translations.add(translation)
 			translation_list.save()
+			return redirect('{0:s}?list={1:d}'.format(phrase_form.instance.get_absolute_url(), translation_list.pk))
 		""" No need for translations update since a phrase with one translation is never valid for study. """
 		return redirect(phrase_form.instance.get_absolute_url())
-	print translation_list
 	return render(request, 'add_phrase.html', {
 		'phrase_form': phrase_form,
 		'translation_form': translation_form,

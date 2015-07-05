@@ -9,7 +9,7 @@ Requirements
 --------------------
 
 Python:
-* django (and dependencies, automatic with pip)
+* django 1.7.8 (and dependencies, automatic with pip)
 * django-haystack
 * whoosh
 * pinyin (literal name of a python module)
@@ -29,11 +29,10 @@ Setup
 
 * Install the requirements::
 
-    pip install --upgrade django django-haystack whoosh pinyin pytz
+    pip install --upgrade django==1.7.8 django-haystack whoosh pinyin pytz
 
 * Create the database using (this will also create and show your account info the first time)::
 
-    python2 manage.py makemigrations
     python2 manage.py migrate
 
 * Compile translations using (if you get about four paths, it works)::

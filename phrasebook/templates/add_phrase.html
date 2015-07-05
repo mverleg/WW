@@ -16,20 +16,22 @@
 
 	<div class="alert alert-success" role="alert"><strong>Kindly note</strong>: You are about to create a new phrase. That's great! To prevent clutter and extra work, <a class="alert-link" href="{% url 'search' %}?q=">please check</a> first if it doesn't exist yet.</div>
 
-	<form role="form" action="." method="POST">
+	<form role="form" action="{% if add_list %}?list={{ add_list.pk }}{% else %}.{% endif %}" method="POST">
 		{{ translation_form|as_bootstrap }}
 		{{ phrase_form|as_bootstrap }}
 		<input type="hidden" name="next" value="{{ next }}" />
-<div class="form-group  " id="div_id_public_edit">
-	<div class="">
-		<div class="checkbox">
-			<label class="" for="id_public_edit">
-				<input type="checkbox" name="public_edit" id="id_public_edit" checked="checked">
-				Add to list <strong>{{ add_list.name }}</strong>
-			</label>
-		</div>
-	</div>
-</div>
+		{% if add_list %}
+			<div class="form-group" id="div_id_add_to_list">
+				<div class="">
+					<div class="checkbox">
+						<label class="" for="id_add_to_list">
+							<input type="checkbox" name="add_to_list" id="id_add_to_list" checked="checked">
+							Add to list <strong>{{ add_list.name }}</strong>
+						</label>
+					</div>
+				</div>
+			</div>
+		{% endif %}
 		{% csrf_token %}
 		<button type="submit" class="btn btn-success">Create</button>
 	</form>

@@ -61,9 +61,9 @@
 		{% else %}
 			You are the owner of this entry. You can add more translations to the list using the form below. Note that other people can help you add translations if you make this list publicly editable.
 		{% endif %} </p>
-        <form role="form" action="{% url 'create_translation' %}" method="POST">
+		<form role="form" action="{% url 'create_translation' %}" method="POST">
             {{ create_translation_form|as_bootstrap }}
-            <input type="hidden" name="next" value="{{ next }}" />
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             {% csrf_token %}
             <button type="submit" class="btn btn-success">Add translation</button>
         </form>
@@ -76,6 +76,11 @@
             {% csrf_token %}
             <button type="submit" class="btn btn-danger" title="This deleted all the translations!">Delete this phrase</button>
         </form>
+
+		{% if from_list %}
+			<a href="{{ from_list.get_absolute_url }}" class="btn btn-default">Back to list {{ from_list.name }}</a>
+		{% endif %}
+
 	{% endif %}
 
 	{# #todo info about lists #}
