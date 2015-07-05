@@ -16,6 +16,7 @@ from phrasebook.models import Translation
 
 @instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
 def show_list(request, translations_list, slug = None):
+	access_instance = None
 	try:
 		# learner = request.user should work here, but it doesn't, so use request.user.id as a kind of hack
 		# http://stackoverflow.com/questions/15878860/int-argument-must-be-a-string-or-a-number-not-simplelazyobject
@@ -23,7 +24,6 @@ def show_list(request, translations_list, slug = None):
 	except ListAccess.DoesNotExist:
 		if not translations_list.public:
 			return notification(request, 'No access for list "%s".' % translations_list)
-		access_instance = {'editable': False}
 	translations = translations_list.translations.all()
 	paginator = Paginator(translations, 50)
 	page = request.GET.get('page', 1)
@@ -36,6 +36,7 @@ def show_list(request, translations_list, slug = None):
 	return render(request, 'show_list.html', {
 		'list': translations_list,
 		'access': access_instance,
+		'editable': access_instance.editable if access_instance else False,
 		'items': items,
 		'nearby_pages': _nearby_pages(items),
 	})
@@ -70,7 +71,6 @@ def _nearby_pages(items):
 
 def all_lists(request):
 	public_lists = TranslationsList.objects.filter(public = True)
-	#todo: add user lists with access
 	paginator = Paginator(public_lists, 15)
 	page = request.GET.get('page', 1)
 	try:
@@ -169,6 +169,7 @@ def list_followers(request, translations_list, slug = None, next = None):
 
 @require_POST
 @login_required
+#@confirm_first(message = 'Are you sure you want to remove the privilege from this user?', submit_class = 'btn-danger')
 def demote_follower(request):
 	resp, li, access = _list_access_from_post_pk(request, request.POST, need_edit = True)
 	if resp: return resp
@@ -313,12 +314,14 @@ def remove_translation(request):
 	return redirect(request.POST['next'] or li.get_absolute_url())
 
 
-@confirm_delete
 @login_required
 @require_POST
+@confirm_first(message = 'Are you sure you want to delete this list? Please consider handing control of the list to someone else if you\'ve lost interest but it could still be of use.', submit_class = 'btn-danger')
 def delete_list(request):
 	resp, li, access = _list_access_from_post_pk(request, request.POST, need_edit = True)
 	if resp: return resp
+	if ListAccess.objects.filter(translations_list = li, access = ListAccess.EDIT).count() > 1:
+		return notification(request, 'There are other editors for this list. This means you cannot delete it. Unfollow it instead.')
 	li.delete()
 	return redirect(reverse('user_lists'))
 
@@ -339,8 +342,11 @@ def follow_list(request):
 @require_POST
 @confirm_first(message = 'Are you sure you want to unfollow this list? You can only refollow it if it\'s a public list.', submit_class = 'btn-danger')
 def unfollow_list(request):
+	#todo: only confirm if it's not public
 	resp, li, access = _list_access_from_post_pk(request, request.POST, need_access = True, need_edit = False)
 	if resp: return resp
+	if access.access == ListAccess.EDIT:
+		return notification(request, 'You are an editor for this list, you cannot unfollow it. First go to the followers page and hand over editorship. Or delete the list if you\re sure it\'s of no use to anyone.')
 	access.delete()
 	return redirect(request.POST['next'] or reverse('all_lists'))
 

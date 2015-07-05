@@ -45,6 +45,9 @@
             {% endfor %}
         </tbody>
     </table>
+	{% if current_access.editable and editors.count == 1 %}
+		<p>There has to be at least one editor, so if you want to give up your editorship, promote someone else. Alternatively you can <a href="{% url 'edit_list' pk=list.pk slug=list.slug %}">delete</a> the list.</p>
+	{% endif %}
 
 	<h2>Followers</h2>
 	{% if followers %}
@@ -94,24 +97,22 @@
 	{% endif %}
 
 	{% if current_access.editable %}
-		{% if not list.public %}
-	        <div>
-	            <p>You can add followers by their email address. This will not send any emails, it just verifies that you know them.</p>
-		        <form class="form form-inline" method="POST" action=".">
-			        <div class="form-group" style="float: left;">
-				        {# <input style="width: 700px; max-width: 100%;" name="email" type="text" class="form-control" placeholder="follower email..."> #}
-				        {{ user_form.as_p }}
-			        </div>
-	                <input type="hidden" name="next" value="{{ request.get_full_path }}" />
-		            {% csrf_token %}
-		            <button type="submit" class="btn btn-default" title="Add the phrase to this list."><i class="glyphicon glyphicon-plus"></i></button>
-		        </form>
-	        </div>
-			<br /><br />
-		{% endif %}
+        <div>
+            <p>You can add followers by their email address. This will not send any emails, it just verifies that you know them.</p>
+	        <form class="form form-inline" method="POST" action=".">
+		        <div class="form-group" style="float: left;">
+			        {# <input style="width: 700px; max-width: 100%;" name="email" type="text" class="form-control" placeholder="follower email..."> #}
+			        {{ user_form.as_p }}
+		        </div>
+                <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+	            {% csrf_token %}
+	            <button type="submit" class="btn btn-default" title="Add the phrase to this list."><i class="glyphicon glyphicon-plus"></i></button>
+	        </form>
+        </div>
+		<br /><br />
 	{% endif %}
 
-	<p><a href="{{ list.get_absolute_url }}" class="btn btn-default">Return to the list</a></p>
+	<p><a href="{{ list.get_absolute_url }}" class="btn btn-default"><i class="glyphicon glyphicon-arrow-left"></i> Return to the list</a></p>
 
 {% endblock content %}
 

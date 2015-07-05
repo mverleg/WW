@@ -18,7 +18,7 @@
         {{ phrase_form|as_bootstrap }}
 		<input type="hidden" name="next" value="{{ next }}" />
 		{% csrf_token %}
-		<button type="submit" class="btn btn-success">Save</button>
+		<button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> Save</button>
 	</form>
 
 {% endblock content %}

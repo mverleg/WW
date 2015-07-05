@@ -69,7 +69,8 @@
                             {% csrf_token %}
 						    <button type="submit" class="btn btn-xs btn-default" title="Click to remove this list from your followed lists collection."><i class="glyphicon glyphicon-remove"></i></button>
                         </form>
-					    <a class="btn btn-xs btn-default" href="{% url 'edit_list' pk=access.translations_list.pk slug=access.translations_list.slug %}"><i class="glyphicon glyphicon-pencil"></i></a></td>
+					    <a class="btn btn-xs btn-default" href="{% url 'edit_list' pk=access.translations_list.pk slug=access.translations_list.slug %}"><i class="glyphicon glyphicon-zoom-in"></i></a>
+				    </td>
 			    </tr>
     	    {% endfor %}
 	    </tbody>

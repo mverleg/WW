@@ -17,9 +17,9 @@
 	<h1>{{ list.name }}</h1>
 
 	{% if list.language %}
-	    <p>This list is for learning <strong>{{ list.language_disp }}</strong>.</p>
+	    <p>This list is for learning <strong>{{ list.language_disp }}</strong>. It has <a href="{% url 'list_followers' pk=list.pk slug=list.slug %}">{{ list.followers.count }} follower{{ list.followers.count|pluralize }}</a>.</p>
 	{% else %}
-		<p>This is a mixed-language list, phrases of multiple languages may appear.</p>
+		<p>This is a mixed-language list, phrases of multiple languages may appear. It has <a href="{% url 'list_followers' pk=list.pk slug=list.slug %}">{{ list.followers.count }} follower{{ list.followers.count|pluralize }}</a>.</p>
 	{% endif %}
 
 	{% if items.paginator.count %}
@@ -30,7 +30,7 @@
                 {% endif %}
                 <td style="min-width: 50%;">Text</td>
                 <td>Translations</td>
-                {% if access.editable %}
+                {% if editable %}
                     <td>Action</td>
                 {% endif %}
             </thead>
@@ -51,7 +51,7 @@
                             {% endif %}
                         </td>
                         <td><a href="{{ translation.phrase.get_absolute_url }}?list={{ list.pk }}">{{ translation.other_languages }} other{{ translation.other_languages|pluralize }}</a></td>
-                        {% if access.editable %}
+                        {% if editable %}
                             <td>
                                 <form class="form form-inline" method="POST" action="{% url 'remove_translation' %}">
                                     <input type="hidden" name="pk" value="{{ list.pk }}" />
@@ -71,7 +71,7 @@
 		<p>There are no phrases in this list.</p>
 	{% endif %}
 
-	{% if access.editable %}
+	{% if editable %}
         <div>
             <p>You can add existing translations to the list below, or <a href="{% url 'add_phrase' %}?list={{ list.pk }}">create new ones</a>.</p>
 	        <form class="form form-inline" role="search" method="POST" action="{% url 'insert_translation_search' %}">
@@ -86,7 +86,7 @@
         </div>
         <br />
 
-		<a href="{% url 'edit_list' pk=list.pk slug=list.slug %}?next={{ request.get_full_path }}" class="btn btn-primary">Edit this list</a>
+		<a href="{% url 'edit_list' pk=list.pk slug=list.slug %}?next={{ request.get_full_path }}" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i> Edit this list</a>
 
         {% comment %}<form style="display: inline;" role="form" action="{% url 'delete_list' %}" method="POST">
             <input type="hidden" name="pk" value="{{ list.pk }}" />
@@ -96,8 +96,27 @@
         </form>{% endcomment %}
 	{% endif %}
 
-	<a href="{% url 'list_followers' pk=list.pk slug=list.slug %}" class="btn btn-warning">Followers</a>
-	<a href="{% url 'study_list_ask' pk=list.pk slug=list.slug %}" class="btn btn-success">Study this list</a>
+	{% if not access %}
+		<form class="form form-inline" method="POST" action="{% url 'follow_list' %}" style="float: left; margin-right: .4em;">
+			<input type="hidden" name="pk" value="{{ list.pk }}" />
+			<input type="hidden" name="next" value="{{ request.get_full_path }}" />
+			{% csrf_token %}
+			<button type="submit" class="btn btn-default" title="Click to add this list to your followed lists collection."><i class="glyphicon glyphicon-ok"></i> Follow</button>
+		</form>
+	{% else %}
+		<form class="form form-inline" method="POST" action="{% url 'unfollow_list' %}" style="float: left; margin-right: .4em;">
+			<input type="hidden" name="pk" value="{{ list.pk }}" />
+			<input type="hidden" name="next" value="{{ request.get_full_path }}" />
+			{% csrf_token %}
+			<button type="submit" class="btn btn-danger disabled" title="Click to remove this list from your followed lists collection."><i class="glyphicon glyphicon-remove"></i> Unfollow</button>
+		</form>
+	{% endif %}
+
+	<a href="{% url 'study_list_ask' pk=list.pk slug=list.slug %}" class="btn btn-success"><i class="glyphicon glyphicon-share"></i> Study this list</a>
+
+	{% if editable %}
+		<p style="padding-top: .6em;">You are an editor of this list. If you lost interest, you have to <a href="{% url 'list_followers' pk=list.pk slug=list.slug %}">give up</a> your editorship before you can unfollow.</p>
+	{% endif %}
 
 {% endblock content %}
 

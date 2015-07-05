@@ -45,8 +45,8 @@
 		<input type="hidden" name="next" value="{{ next }}" />
 		{% csrf_token %}
 	    <!-- "I don't know" doesn't do anything special but might be more clear -->
-		<button type="submit" class="btn btn-default" title="This is the same as just submitting - an empty submission will be understood as 'I don't know'." tabindex="-1">{% blocktrans context 'study question button idk' %}I don't know{% endblocktrans %}</button>
-		<button type="submit" class="btn btn-primary">{% blocktrans context 'study question button submit' %}Submit solution{% endblocktrans %}</button>
+		<button type="submit" class="btn btn-default" title="This is the same as just submitting - an empty submission will be understood as 'I don't know'." tabindex="-1">{% blocktrans context 'study question button idk' %}<i class="glyphicon glyphicon-unchecked"></i> I don't know{% endblocktrans %}</button>
+		<button type="submit" class="btn btn-primary">{% blocktrans context 'study question button submit' %}<i class="glyphicon glyphicon-log-in"></i> Submit solution{% endblocktrans %}</button>
 	</form>
 
 {% endblock content %}
