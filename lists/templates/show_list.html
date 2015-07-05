@@ -8,6 +8,8 @@
 	{{ block.super }}
 {% endblock title %}
 
+{% block add_phrase_button %}<li><a href='{% url 'add_phrase' %}?list={{ list.pk }}'><i class="glyphicon glyphicon-plus"></i> {% blocktrans context 'menu option: addphrase' %}add{% endblocktrans %}</a></li>{% endblock add_phrase_button %}
+
 {% block menu_autofocus %}{% endblock menu_autofocus %}
 
 {% block content %}
@@ -71,7 +73,7 @@
 
 	{% if access.editable %}
         <div>
-            <p>You can add translations to the list.</p>
+            <p>You can add existing translations to the list below, or <a href="{% url 'add_phrase' %}?list={{ list.pk }}">create new ones</a>.</p>
 	        <form class="form form-inline" role="search" method="POST" action="{% url 'insert_translation_search' %}">
 	       		<div class="form-group">
 	       			<input style="width: 700px; max-width: 100%;" name="q" type="text" class="form-control" placeholder="{% blocktrans context 'Search placeholder' %}search{% endblocktrans %}..." autofocus>

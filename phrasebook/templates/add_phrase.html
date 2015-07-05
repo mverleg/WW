@@ -20,6 +20,16 @@
 		{{ translation_form|as_bootstrap }}
 		{{ phrase_form|as_bootstrap }}
 		<input type="hidden" name="next" value="{{ next }}" />
+<div class="form-group  " id="div_id_public_edit">
+	<div class="">
+		<div class="checkbox">
+			<label class="" for="id_public_edit">
+				<input type="checkbox" name="public_edit" id="id_public_edit" checked="checked">
+				Add to list <strong>{{ add_list.name }}</strong>
+			</label>
+		</div>
+	</div>
+</div>
 		{% csrf_token %}
 		<button type="submit" class="btn btn-success">Create</button>
 	</form>

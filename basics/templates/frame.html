@@ -55,7 +55,7 @@
 						<li><a href='{% url 'choose_languages' %}?next={{ request.path }}'><i class="glyphicon glyphicon-flag"></i> {% blocktrans context 'menu option: languages' %}languages{% endblocktrans %}</a></li>
 						<li><a href='{% url 'all_lists' %}'><i class="glyphicon glyphicon-th-list"></i> {% blocktrans context 'menu option: lists' %}lists{% endblocktrans %}</a></li>
 						{% if request.user.is_authenticated %}
-						    <li><a href='{% url 'add_phrase' %}'><i class="glyphicon glyphicon-plus"></i> {% blocktrans context 'menu option: addphrase' %}add{% endblocktrans %}</a></li>
+						    {% block add_phrase_button %}<li><a href='{% url 'add_phrase' %}'><i class="glyphicon glyphicon-plus"></i> {% blocktrans context 'menu option: addphrase' %}add{% endblocktrans %}</a></li>{% endblock add_phrase_button %}
 							<li><a href='{% url 'study_ask' %}'><i class="glyphicon glyphicon-check"></i> {% blocktrans context 'menu option: study' %}study{% endblocktrans %}</a></li>
 							{% if correct_count %}
                                 <li><a href='{% url 'stats' %}'>

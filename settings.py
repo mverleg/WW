@@ -135,7 +135,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
-STATIC_ROOT = join(BASE_DIR, 'media')
+MEDIA_ROOT = join(BASE_DIR, 'media')
 
 TEMPLATE_DIRS = (
 	join(BASE_DIR,  'templates'),

@@ -1,3 +1,4 @@
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import add_message, INFO, WARNING, ERROR
 from django.core.urlresolvers import reverse
@@ -5,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from basics.decorators import instantiate, next_GET, confirm_delete
 from basics.views import notification
+from lists.models import TranslationsList
 from phrasebook.forms import CreateTranslationForm, EditPhraseForm, PhraselessTranslationForm
 from phrasebook.models import Phrase, Translation
 
@@ -34,6 +36,10 @@ def show_phrase(request, phrase):
 def add_phrase(request):
 	phrase_form = EditPhraseForm(request.POST or None, initial = {'language': request.KNOWN_LANG})
 	translation_form = PhraselessTranslationForm(request.POST or None)
+	try:
+		translation_list = TranslationsList.objects.get(pk = int(request.GET['list']))
+	except (TranslationsList.DoesNotExist, ValueError, KeyError):
+		translation_list = None
 	if phrase_form.is_valid() and translation_form.is_valid():
 		phrase = phrase_form.save(commit = False)
 		phrase.learner = request.user
@@ -41,11 +47,16 @@ def add_phrase(request):
 		translation = translation_form.save(commit = False)
 		translation.phrase = phrase
 		translation.save()
+		if translation_list:
+			translation_list.translations.add(translation)
+			translation_list.save()
 		""" No need for translations update since a phrase with one translation is never valid for study. """
 		return redirect(phrase_form.instance.get_absolute_url())
+	print translation_list
 	return render(request, 'add_phrase.html', {
 		'phrase_form': phrase_form,
 		'translation_form': translation_form,
+		'add_list': translation_list,
 	})
 
 
