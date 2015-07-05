@@ -1,0 +1,118 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+	Followers
+	-
+	{{ list.name }}
+	-
+	{{ block.super }}
+{% endblock title %}
+
+{% block menu_autofocus %}{% endblock menu_autofocus %}
+
+{% block content %}
+
+	<h1>{{ list.name }}</h1>
+
+	<h2>Editors</h2>
+    <table class="table table-striped table-hover table-condensed">
+        <thead>
+            <td style="min-width: 50%;">User</td>
+            {% if current_access.editable %}
+                <td>Action</td>
+            {% endif %}
+        </thead>
+        <tbody>
+            {% for access in editors %}
+                <tr>
+                    <td>
+	                    {{ access.learner.name }}
+                    </td>
+                    <td>
+	                    {% if current_access.editable and editors.count > 1 %}
+	                        <form class="form form-inline" method="POST" action="{% url 'demote_follower' %}">
+	                            <input type="hidden" name="pk" value="{{ list.pk }}" />
+		                        <input type="hidden" name="access_pk" value="{{ access.pk }}" />
+	                            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+	                            {% csrf_token %}
+	                            <button type="submit" class="btn btn-xs btn-danger" title="Demote this editor to a follower (remove edit rights)."><i class="glyphicon glyphicon-hand-down"></i></button>
+	                        </form>
+	                    {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+	<h2>Followers</h2>
+	{% if followers %}
+        <table class="table table-striped table-hover table-condensed">
+	        <thead>
+	            <td style="min-width: 50%;">User</td>
+	            {% if current_access.editable %}
+	                <td>Action</td>
+	            {% endif %}
+	        </thead>
+	        <tbody>
+	            {% for access in followers %}
+	                <tr>
+	                    <td>
+		                    {{ access.learner.name }}
+	                    </td>
+						<td>
+							{% if current_access.editable %}
+								{% if not list.public %}
+									<form class="form form-inline" method="POST" action="{% url 'demote_follower' %}" style="float: left; margin-right: .5em;">
+										<input type="hidden" name="pk" value="{{ list.pk }}" />
+										<input type="hidden" name="access_pk" value="{{ access.pk }}" />
+										<input type="hidden" name="next" value="{{ request.get_full_path }}" />
+										{% csrf_token %}
+										<button type="submit" class="btn btn-xs btn-danger" title="Remove this user as a follower."><i class="glyphicon glyphicon-trash"></i></button>
+									</form>
+								{% endif %}
+								<form class="form form-inline" method="POST" action="{% url 'promote_follower' %}" style="float: left; margin-right: .5em;">
+									<input type="hidden" name="pk" value="{{ list.pk }}" />
+									<input type="hidden" name="access_pk" value="{{ access.pk }}" />
+									<input type="hidden" name="next" value="{{ request.get_full_path }}" />
+									{% csrf_token %}
+									<button type="submit" class="btn btn-xs btn-success" title="Promote this follower to an editor (give edit rights) this editor to a follower."><i class="glyphicon glyphicon-hand-up"></i></button>
+								</form>
+							{% endif %}
+						</td>
+	                </tr>
+	            {% endfor %}
+	        </tbody>
+	    </table>
+	{% else %}
+		<p>This list has no followers.</p>
+	{% endif %}
+
+	{% if list.public %}
+		This is a public list. Note that you cannot block people from following as long as it remains public.
+	{% endif %}
+
+	{% if current_access.editable %}
+		{% if not list.public %}
+	        <div>
+	            <p>You can add followers by their email address. This will not send any emails, it just verifies that you know them.</p>
+		        <form class="form form-inline" method="POST" action=".">
+			        <div class="form-group" style="float: left;">
+				        {# <input style="width: 700px; max-width: 100%;" name="email" type="text" class="form-control" placeholder="follower email..."> #}
+				        {{ user_form.as_p }}
+			        </div>
+	                <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+		            {% csrf_token %}
+		            <button type="submit" class="btn btn-default" title="Add the phrase to this list."><i class="glyphicon glyphicon-plus"></i></button>
+		        </form>
+	        </div>
+			<br /><br />
+		{% endif %}
+	{% endif %}
+
+	<p><a href="{{ list.get_absolute_url }}" class="btn btn-default">Return to the list</a></p>
+
+{% endblock content %}
+
+

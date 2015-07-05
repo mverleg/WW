@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from haystack.forms import HighlightedModelSearchForm
 from basics.decorators import instantiate, confirm_delete, confirm_first, next_GET
 from basics.views import notification
+from learners.forms import IdentifyUserByEmail
 from lists.forms import ListForm, ListAccessForm
 from lists.models import ListAccess, TranslationsList
 from phrasebook.models import Translation
@@ -69,6 +70,7 @@ def _nearby_pages(items):
 
 def all_lists(request):
 	public_lists = TranslationsList.objects.filter(public = True)
+	#todo: add user lists with access
 	paginator = Paginator(public_lists, 15)
 	page = request.GET.get('page', 1)
 	try:
@@ -77,7 +79,7 @@ def all_lists(request):
 		return redirect('%s?page=1' % request.path)
 	except EmptyPage:
 		return redirect('%s?page=%d' % (request.path, paginator.num_pages))
-	access_lists = [ac.translations_list for ac in ListAccess.objects.filter(translations_list__public = True)]
+	access_lists = [ac.translations_list for ac in ListAccess.objects.filter(translations_list__public = True, learner = request.user)]
 	for li in items.object_list:
 		if li in access_lists:
 			li.following = True
@@ -134,6 +136,88 @@ def edit_list(request, translations_list, slug = None, next = None):
 		'access': access_instance,
 		'next': next,
 	})
+
+
+@instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
+@next_GET
+def list_followers(request, translations_list, slug = None, next = None):
+	editors = ListAccess.objects.filter(translations_list = translations_list, access = ListAccess.EDIT)
+	followers = ListAccess.objects.filter(translations_list = translations_list, access = ListAccess.VIEW)
+
+	try:
+		access_instance = ListAccess.objects.get(translations_list = translations_list, learner = request.user)
+	except ListAccess.DoesNotExist:
+		pass
+	form = IdentifyUserByEmail(request.POST or None)
+	if form.is_valid():
+		learner = form.instance
+		if ListAccess.objects.filter(learner = learner, translations_list = translations_list).count():
+			add_message(request, WARNING, 'the user with email "%s" already has access to this list.' % learner.email)
+		else:
+			access = ListAccess(learner = learner, translations_list = translations_list, access = ListAccess.VIEW)
+			access.save()
+			add_message(request, INFO, 'the user with email "%s" has been added!' % learner.email)
+		return redirect(to = reverse('list_followers', kwargs = {'pk': translations_list.pk, 'slug': translations_list.slug}))
+	return render(request, 'show_followers.html', {
+		'list': translations_list,
+		'editors': editors,
+		'followers': followers,
+		'current_access': access_instance,
+		'user_form': form,
+	})
+
+
+@require_POST
+@login_required
+def demote_follower(request):
+	resp, li, access = _list_access_from_post_pk(request, request.POST, need_edit = True)
+	if resp: return resp
+	try:
+		access = ListAccess.objects.get(pk = int(request.POST['access_pk']))
+	except KeyError:
+		return notification(request, 'No access key found.')
+	except ValueError:
+		return notification(request, 'Access key "%s" is not a valid format found.' % request.POST['access_pk'])
+	except ListAccess.DoesNotExist:
+		return notification(request, 'Access not found for key %s.' % request.POST['access_pk'])
+	if access.access == ListAccess.EDIT:
+		if ListAccess.objects.filter(translations_list = li, access = ListAccess.EDIT).count() <= 1:
+			return notification(request, 'You cannot remove the last editor from a list.')
+		access.access = ListAccess.VIEW
+		access.save()
+		add_message(request, INFO, '"%s" was demoted to a follower of the list.' % access.learner)
+	elif access.access == ListAccess.VIEW:
+		if li.public:
+			return notification(request, 'You cannot remove followers from a public list.')
+		access.delete()
+		add_message(request, INFO, '"%s" was removed from the list.' % access.learner)
+	else:
+		raise AssertionError('unknown access state')
+	return redirect(request.POST['next'] or reverse('list_followers', kwargs = {'pk': li.pk, 'slug': li.slug}))
+
+
+@require_POST
+@login_required
+def promote_follower(request):
+	resp, li, access = _list_access_from_post_pk(request, request.POST, need_edit = True)
+	if resp: return resp
+	try:
+		access = ListAccess.objects.get(pk = int(request.POST['access_pk']))
+	except KeyError:
+		return notification(request, 'No access key found.')
+	except ValueError:
+		return notification(request, 'Access key "%s" is not a valid format found.' % request.POST['access_pk'])
+	except ListAccess.DoesNotExist:
+		return notification(request, 'Access not found for key %s.' % request.POST['access_pk'])
+	if access.access == ListAccess.EDIT:
+		return notification(request, 'User %s already has all privileges.' % access.learner)
+	elif access.access == ListAccess.VIEW:
+		access.access = ListAccess.EDIT
+		access.save()
+	else:
+		raise AssertionError('unknown access state')
+	add_message(request, INFO, '"%s" was promoted to editor of the list.' % access.learner)
+	return redirect(request.POST['next'] or reverse('list_followers', kwargs = {'pk': li.pk, 'slug': li.slug}))
 
 
 @require_POST
@@ -215,14 +299,15 @@ def _list_access_from_post_pk(request, post, need_access = True, need_edit = Tru
 @login_required
 def remove_translation(request):
 	resp, li, access = _list_access_from_post_pk(request, request.POST, need_edit = True)
+	if resp: return resp
 	try:
 		translation = Translation.objects.get(pk = int(request.POST['trans_pk']))
 	except KeyError:
-		return notification(request, 'No translation key found.'), None, None
+		return notification(request, 'No translation key found.')
 	except ValueError:
-		return notification(request, 'Translation key "%s" is not a valid format found.' % request.POST['pk']), None, None
+		return notification(request, 'Translation key "%s" is not a valid format found.' % request.POST['trans_pk'])
 	except TranslationsList.DoesNotExist:
-		return notification(request, 'Translation not found for key %s.' % request.POST['pk']), None, None
+		return notification(request, 'Translation not found for key %s.' % request.POST['trans_pk'])
 	li.translations.remove(translation)
 	add_message(request, INFO, '"%s" was removed from the list.' % translation)
 	return redirect(request.POST['next'] or li.get_absolute_url())
@@ -246,7 +331,7 @@ def follow_list(request):
 	if access:
 		return notification(request, 'You are already following the list "%s"' % li.name)
 	ListAccess(access = ListAccess.VIEW, translations_list = li, learner = request.user).save()
-	add_message(request, INFO, 'You are not following the list "%s".' % li)
+	add_message(request, INFO, 'You are now following the list "%s".' % li)
 	return redirect(request.POST['next'] or li.get_absolute_url())
 
 
@@ -257,6 +342,6 @@ def unfollow_list(request):
 	resp, li, access = _list_access_from_post_pk(request, request.POST, need_access = True, need_edit = False)
 	if resp: return resp
 	access.delete()
-	return redirect(request.POST['next'] or li.get_absolute_url())
+	return redirect(request.POST['next'] or reverse('all_lists'))
 
 

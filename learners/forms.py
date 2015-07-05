@@ -7,7 +7,7 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import PasswordChangeForm
-
+from learners.models import Learner
 
 User = get_user_model()
 
@@ -74,5 +74,22 @@ class RegistrationForm(forms.ModelForm):
 		if commit:
 			user.save()
 		return user
+
+
+class IdentifyUserByEmail(forms.Form):
+	email = forms.EmailField(label = '')
+
+	def __init__(self, *args, **kwargs):
+		super(IdentifyUserByEmail, self).__init__(*args, **kwargs)
+		self.fields['email'].widget.attrs.update({'style': "width: 700px; max-width: 100%;", 'class': "form-control", 'placeholder': "follower email..."})
+
+	def clean_email(self):
+		email = self.cleaned_data['email']
+		try:
+			learner = Learner.objects.get(email = email)
+		except Learner.DoesNotExist:
+			raise forms.ValidationError('This email address is not known')
+		self.instance = learner
+		return email
 
 

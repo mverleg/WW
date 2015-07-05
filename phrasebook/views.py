@@ -128,6 +128,7 @@ def delete_translation(request):
 		translation = Translation.objects.get(pk = int(request.POST['pk']))
 	except (KeyError, ValueError, Translation.DoesNotExist):
 		return notification(request, 'The translation you were looking for was not found; the submitted data may be invalid.')
+	next = request.POST['next'] or translation.phrase.get_absolute_url()
 	if translation.score >= 0 and not translation.phrase.learner == request.user:
 		add_message(request, ERROR, 'You can only remove translations that have a negative vote score (unless you\'re the owner)')
 	else:
@@ -135,6 +136,6 @@ def delete_translation(request):
 		translation.delete()
 		request.user.need_active_update = True
 		request.user.save()
-	return redirect(request.POST['next'] or translation.phrase.get_absolute_url())
+	return redirect(next)
 
 

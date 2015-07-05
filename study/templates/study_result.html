@@ -74,7 +74,7 @@
             </div>
         </form>
 	{% else %}
-		<form role="form" action="{% url 'study_respond' %}" method="POST">
+		<form role="form" action="{% if list %}{% url 'study_list_ask' pk=list.pk slug=list.slug %}{% else %}{% url 'study_respond' %}{% endif %}" method="POST">
 			{% csrf_token %}
 			<div class="row">
 				<div class="col-12">

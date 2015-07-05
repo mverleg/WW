@@ -36,7 +36,7 @@
                                     <button type="submit" class="btn btn-xs btn-default" name="up" value="1"><i class="glyphicon glyphicon-plus"></i></button>
                                 </form>
                             </div>
-                            <form role="form" action="{% url 'remove_translation' %}" method="POST" style="display: inline;">
+                            <form role="form" action="{% url 'delete_translation' %}" method="POST" style="display: inline;">
                                 <input type="hidden" name="pk" value="{{ translation.pk }}" />
                                 <input type="hidden" name="next" value="{{ next }}" />
                                 {% csrf_token %}

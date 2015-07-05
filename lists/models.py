@@ -1,3 +1,4 @@
+
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.text import slugify
@@ -39,6 +40,7 @@ class ListAccess(models.Model):
 
 	class Meta:
 		ordering = ('-priority',)
+		unique_together = ('translations_list', 'learner',)
 
 	def __unicode__(self):
 		return u'%s %s' % (self.learner, self.translations_list)

@@ -88,15 +88,16 @@
 
 		<a href="{% url 'edit_list' pk=list.pk slug=list.slug %}?next={{ request.get_full_path }}" class="btn btn-primary">Edit this list</a>
 
-        <form style="display: inline;" role="form" action="{% url 'delete_list' %}" method="POST">
+        {% comment %}<form style="display: inline;" role="form" action="{% url 'delete_list' %}" method="POST">
             <input type="hidden" name="pk" value="{{ list.pk }}" />
             <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">Delete this list</button>
-        </form>
+        </form>{% endcomment %}
 	{% endif %}
 
-	<a href="{% url 'study_list_ask' pk=list.pk slug=list.slug %}" class="btn btn-default">Study this list</a>
+	<a href="{% url 'list_followers' pk=list.pk slug=list.slug %}" class="btn btn-warning">Followers</a>
+	<a href="{% url 'study_list_ask' pk=list.pk slug=list.slug %}" class="btn btn-success">Study this list</a>
 
 {% endblock content %}
 
