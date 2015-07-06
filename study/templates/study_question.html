@@ -49,6 +49,16 @@
 		<button type="submit" class="btn btn-primary">{% blocktrans context 'study question button submit' %}<i class="glyphicon glyphicon-log-in"></i> Submit solution{% endblocktrans %}</button>
 	</form>
 
+	{% if not list %}
+		<p>
+			You are studying {{ active_lists.count }} lists. The highest priority ones are
+			{% for active in active_lists|slice:":3" %}
+				<a href="{{ active.translations_list.get_absolute_url }}">{{ active.translations_list.name }}</a>{% if forloop.revcounter == 2 %} and{% elif forloop.revcounter == 1 %}.{% else %},{% endif %}
+			{% endfor %}
+			Control <a href="{% url 'list_activities' %}?next={{ request.path }}">active lists</a>.
+		</p>
+	{% endif %}
+
 {% endblock content %}
 
 

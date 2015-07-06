@@ -28,6 +28,15 @@ class Phrase(models.Model):
 	def get_absolute_url(self):
 		return reverse('show_phrase', kwargs = {'pk': self.pk})
 
+	def public_lists(self):
+		from lists.models import TranslationsList
+		lists = []
+		for translation in Translation.objects.filter(phrase = self):
+			for li in TranslationsList.objects.filter(translations = translation, public = True):
+				if li not in lists:
+					lists.append(li)
+		return lists
+
 
 class Translation(models.Model):
 	"""

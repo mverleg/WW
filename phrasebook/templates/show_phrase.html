@@ -83,7 +83,14 @@
 
 	{% endif %}
 
-	{# #todo info about lists #}
+	<p style="margin-top: 1.3em;">
+		{% with lists=phrase.public_lists %}
+			These translations are in {{ lists|length }} list{{ lists|pluralize }}{% if lists|length > 10 %}, among them{% endif %}:
+			{% for list in lists|slice:":10" %}
+				<a href="{{ list.get_absolute_url }}">{{ list.name }}</a>{% if forloop.revcounter == 2 %} and{% elif forloop.revcounter == 1 %}.{% else %},{% endif %}
+			{% endfor %}
+		{% endwith %}
+	</p>
 
 {% endblock content %}
 

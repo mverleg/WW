@@ -25,6 +25,7 @@
 	{% if items.paginator.count %}
         <table class="table table-striped table-hover table-condensed">
             <thead>
+                <td>#</td>
                 {% if not list.language %}
                     <td>Language</td>
                 {% endif %}
@@ -37,6 +38,7 @@
             <tbody>
                 {% for translation in items %}
                     <tr {% if list.language %}{% if not list.language == translation.language %}class="danger"{% endif %}{% endif %}>
+                        <td>{{ forloop.counter }}</td>
                         {% if not list.language %}
                             <td>
                                 {{ translation.language_disp }}

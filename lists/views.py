@@ -3,13 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.messages import add_message, INFO, WARNING
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse
+from django.forms import formset_factory, modelformset_factory
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 from haystack.forms import HighlightedModelSearchForm
-from basics.decorators import instantiate, confirm_delete, confirm_first, next_GET
+from basics.decorators import instantiate, confirm_first, next_GET
 from basics.views import notification
 from learners.forms import IdentifyUserByEmail
-from lists.forms import ListForm, ListAccessForm
+from lists.forms import ListForm, ListAccessForm, ListActivationForm
 from lists.models import ListAccess, TranslationsList
 from phrasebook.models import Translation
 
@@ -79,10 +80,11 @@ def all_lists(request):
 		return redirect('%s?page=1' % request.path)
 	except EmptyPage:
 		return redirect('%s?page=%d' % (request.path, paginator.num_pages))
-	access_lists = [ac.translations_list for ac in ListAccess.objects.filter(translations_list__public = True, learner = request.user)]
-	for li in items.object_list:
-		if li in access_lists:
-			li.following = True
+	if request.user.is_authenticated():
+		access_lists = [ac.translations_list for ac in ListAccess.objects.filter(translations_list__public = True, learner = request.user)]
+		for li in items.object_list:
+			if li in access_lists:
+				li.following = True
 	return render(request, 'all_lists.html', {
 		'items': items,
 		'nearby_pages': _nearby_pages(items),
@@ -349,5 +351,23 @@ def unfollow_list(request):
 		return notification(request, 'You are an editor for this list, you cannot unfollow it. First go to the followers page and hand over editorship. Or delete the list if you\re sure it\'s of no use to anyone.')
 	access.delete()
 	return redirect(request.POST['next'] or reverse('all_lists'))
+
+
+@login_required
+def list_activities(request):
+	list_accesses = ListAccess.objects.filter(learner = request.user).order_by('-active', '-priority')
+	FormFac = modelformset_factory(ListAccess, form = ListActivationForm, extra = 0)
+	forms = FormFac(request.POST or None, queryset = list_accesses)
+	next = request.GET.get('next', request.POST.get('next', ''))
+	if forms.is_valid():
+		forms.save()
+		add_message(request, INFO, 'Your lists have been updated')
+		if next:
+			return redirect(to = '{0:s}?next={1:s}'.format(reverse('list_activities'), next))
+		return redirect(to = reverse('list_activities'))
+	return render(request, 'activations.html', {
+		'forms': forms,
+		'next': next,
+	})
 
 

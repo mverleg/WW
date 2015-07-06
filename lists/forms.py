@@ -22,3 +22,9 @@ class ListAccessForm(ModelForm):
 		return super(ListAccessForm, self).save(commit, *args, **kwargs)
 
 
+class ListActivationForm(ModelForm):
+	class Meta:
+		model = ListAccess
+		fields = ('active', 'priority',)
+
+

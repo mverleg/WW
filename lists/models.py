@@ -3,8 +3,9 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.text import slugify
 from learners.models import Learner
-from phrasebook.models import Phrase, Translation
+from phrasebook.models import Translation
 from settings import SUPPORTED_LANGUAGES
+from study.models import ActiveTranslation
 
 
 class TranslationsList(models.Model):
@@ -48,5 +49,13 @@ class ListAccess(models.Model):
 	@property
 	def editable(self):
 		return self.access == ListAccess.EDIT
+
+	def active_count(self):
+		translations = Translation.objects.filter(lists = self.translations_list)
+		actives = ActiveTranslation.objects.filter(learner = self.learner, translation__in = translations)
+		return '{0:d} / {1:d}'.format(
+			actives.count(),
+			translations.count()
+		)
 
 

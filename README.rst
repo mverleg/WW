@@ -1,10 +1,4 @@
 
-Goals
---------------------
-
-* Lots...
-* ...
-
 Requirements
 --------------------
 
@@ -100,5 +94,11 @@ Bugs
 * Translation problems for study/Study case sensitivity when making but only one translated
 * Make it a little harder (it's never impossible) to copy-paste the question sentence or to use mouse-over addons
 *
+
+License
+--------------------
+
+The MIT License, see LICENSE file.
+
 
 

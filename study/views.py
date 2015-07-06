@@ -86,16 +86,19 @@ def study(request):
 				learner.study_active, learner.study_hidden, learner.study_shown, msgs = get_next_question(
 					learner = learner, known_language = request.KNOWN_LANG, learn_language = request.LEARN_LANG)
 			except ActiveTranslation.DoesNotExist:
-				return notification(request, 'There are no phrases on your lists which are available in both your known and study languages.')
+				add_message(request, ERROR, 'There are no phrases on your lists which are available in both your known and study languages. Please select some.')
+				return redirect(to = reverse('list_activities'))
 			learner.save()
 		for lvl, txt in msgs:
 			add_message(request, lvl, txt)
 		form = SolutionForm(None)
+		active_lists = ListAccess.objects.filter(active = True, learner = request.user).order_by('-priority')
 		return render(request, 'study_question.html', {
 			'shown': learner.study_shown,
 			'hidden_language': learner.study_hidden.language_disp(),
 			'form': form,
 			'list': None,
+			'active_lists': active_lists,
 		})
 	raise Exception('nothing matched')
 

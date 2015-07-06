@@ -26,6 +26,8 @@
 	<link rel='stylesheet' href="{% static 'css/heroic-features.css' %}">
 	<link rel='stylesheet' href='{% static 'style.css' %}' />
 
+	<link rel="icon" href="{% static 'favicon.ico' %}">
+	<!-- favicon from: http://www.iconarchive.com/show/square-animal-icons-by-martin-berube/Fish-icon.html -->
 </head>
 
 <body>
@@ -136,8 +138,10 @@
 		<footer>
 			<div class="row">
 				<div class="col-lg-12">
-					<p>
-						&copy; 2014 Werner's Wacky Words
+					<p style="color: #666;">
+						&copy; 2015 <a href="http://markv.nl" style="color: #999;">markv</a>
+						|
+						<a href="https://bitbucket.org/mverleg/wernerwords" style="color: #999;">source</a>
 						{% if request.user.is_staff %}
 							| <a href="/admin/">control panel</a>
 						{% endif %}

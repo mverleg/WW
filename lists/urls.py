@@ -3,7 +3,8 @@ from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from lists.views import show_list, user_lists, all_lists, add_list, edit_list, delete_list, follow_list, unfollow_list, \
-	add_translation_by_search, add_translation_by_pk, remove_translation, list_followers, promote_follower, demote_follower
+	add_translation_by_search, add_translation_by_pk, remove_translation, list_followers, promote_follower, demote_follower, \
+	list_activities
 
 
 urlpatterns = patterns('',
@@ -11,6 +12,7 @@ urlpatterns = patterns('',
 	url(r'^(?P<pk>\d+)/$', show_list, name = 'show_list'),
 	url(r'^my/$', user_lists, name = 'user_lists'),
 	url(r'^all/$', all_lists, name = 'all_lists'),
+	url(r'^active/$', list_activities, name = 'list_activities'),
 	url(r'^add/$', add_list, name = 'add_list'),
 	url(r'^edit/(?P<pk>\d+)-(?P<slug>[-\w]+)/$', edit_list, name = 'edit_list'),
 	url(r'^edit/(?P<pk>\d+)/$', edit_list, name = 'edit_list'),

@@ -1,0 +1,50 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+	Active lists
+	-
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	<h1>Active lists</h1>
+
+	<form class="form form-inline" method="POST" action="{% url 'list_activities' %}">
+		<input type="hidden" name="next" value="{{ next }}" />
+		{% csrf_token %}
+		<table class="table table-striped table-hover">
+			<thead>
+				<td>List</td>
+				<td>Active?</td>
+				<td>Priority</td>
+				<td>Note</td>
+			</thead>
+			<tbody>
+				{% for form in forms %}
+					<tr>
+					<td><a href="{{ form.instance.translations_list.get_absolute_url }}">{{ form.instance.translations_list.name }}</a> {{ form.id }}</td>
+					<td>{{ form.active }}</td>
+					<td>{{ form.priority }}</td>
+					<td><span title="active phrases / total phrases in list">{{ form.instance.active_count }}</span> {{ form.active.errors }} {{ form.priority.errors }} {{ form.non_field_errors }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{{ forms.management_form }}
+
+		<button type="submit" class="btn btn-primary" title="Click to add this list to your followed lists collection."><i class="glyphicon glyphicon-ok"></i> Update active lists</button>
+		{% if next %}
+			<a href="{{ next }}" class="btn btn-default"><i class="glyphicon glyphicon-arrow-right"></i> Continue</a>
+		{% endif %}
+		<a href="{% url 'study_ask' %}" class="btn btn-success"><i class="glyphicon glyphicon-share"></i> Study selection</a>
+	</form>
+
+	<br />
+	<p>For more lists to appear here, you have to <a href="{% url 'all_lists' %}">follow some</a>. There's a button at the top.</p>
+
+{% endblock content %}
+
+
