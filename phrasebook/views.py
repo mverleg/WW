@@ -44,7 +44,10 @@ def add_phrase(request):
 	except (TranslationsList.DoesNotExist, ValueError, KeyError):
 		translation_list = None
 	phrase_form = EditPhraseForm(request.POST or None, initial = {'language': request.KNOWN_LANG})
-	translation_form = PhraselessTranslationForm(request.POST or None, initial = {'language': translation_list.language if translation_list else None})
+	translation_form = PhraselessTranslationForm(request.POST or None, initial = {
+		'language': translation_list.language if translation_list else None,
+		'text': request.GET.get('phrase', ''),
+	})
 	if phrase_form.is_valid() and translation_form.is_valid():
 		phrase = phrase_form.save(commit = False)
 		phrase.learner = request.user
@@ -62,6 +65,7 @@ def add_phrase(request):
 		'phrase_form': phrase_form,
 		'translation_form': translation_form,
 		'add_list': translation_list,
+		'suggested_phrase': request.GET.get('phrase', ''),
 	})
 
 

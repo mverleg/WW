@@ -34,7 +34,9 @@
 		<button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-pencil"></i> Save</button>
 	</form>
 
-	<a href="{% url 'list_followers' pk=list.pk slug=list.slug %}" class="btn btn-warning"><i class="glyphicon glyphicon-user"></i> Followers & editors</a>
+	{% if not add %}
+		<a href="{% url 'list_followers' pk=list.pk slug=list.slug %}" class="btn btn-warning"><i class="glyphicon glyphicon-user"></i> Followers & editors</a>
+	{% endif %}
 
 	{% if access.editable and not add %}
         <form role="form" action="{% url 'delete_list' %}" method="POST">
