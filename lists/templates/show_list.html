@@ -110,7 +110,7 @@
 			<input type="hidden" name="pk" value="{{ list.pk }}" />
 			<input type="hidden" name="next" value="{{ request.get_full_path }}" />
 			{% csrf_token %}
-			<button type="submit" class="btn btn-danger disabled" title="Click to remove this list from your followed lists collection."><i class="glyphicon glyphicon-remove"></i> Unfollow</button>
+			<button type="submit" class="btn btn-danger" title="Click to remove this list from your followed lists collection."><i class="glyphicon glyphicon-remove"></i> Unfollow</button>
 		</form>
 	{% endif %}
 
