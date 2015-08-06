@@ -27,20 +27,20 @@ Setup
 
 * Create the database using (this will also create and show your account info the first time)::
 
-    python2 manage.py migrate
+    python2 source/manage.py migrate
 
 * Compile translations using (if you get about four paths, it works)::
 
-    python2 manage.py makemessages --all --ignore 'env'
-    python2 manage.py compilemessages
+    python2 source/manage.py makemessages --all --ignore 'env'
+    python2 source/manage.py compilemessages
 
 * Build the search index using::
 
-    python2 manage.py rebuild_index --noinput
+    python2 source/manage.py rebuild_index --noinput
 
 * Start the server using (you can always start the server with this command, and stop it with ctrl + C; after syntax etc errors it needs to be restarted)::
 
-    python2 manage.py runserver
+    python2 source/manage.py runserver
 
 * Open your browser and go to::
 
@@ -84,21 +84,9 @@ The specific ones at this point are:
 
 What you could do: Have a look at the site. If you want to change data or see the structure, see the control panel. For normal pages, if you are curious or notice a problem, find the page's url in urls.py to see which views.py function is responsible. Notice that the general pattern is to do some of these: Maybe check permissions. Get some data using models (instance = ModelName.objects.filter(...)). Maybe create a form (empty: FormName(None), filled out: FormName(request.POST)), if it's filled then check if it's valid. Maybe change some data (instance.save). Then either redirect or render a page (return render(request, 'templatename.html', {context}). Rendering happens by taking an HTML file and replacing all {{var}} with provided variables, possibly with simple logic like {%if...%} and {%for...%}. Templates are usually given a 'context', which is a dictionary whose keys will be available variables in the template (like {{var}} before). That's the basic idea of views. Just change some things and commit a lot so you can always go back. Do ask for help!
 
-Bugs
---------------------
-
-* For some reason, the menu does fold for small windows, but the open button doesn't work.
-* Deleting a phrase also deletes all statistics derived from; maybe hide the phrase instead
-* Random DjangoUnicodeDecodeError even in admin with strings coming coming from database
-* Add images or other context markers to Phrase, to distinguish double meanings (and it's cool anyway)
-* Translation problems for study/Study case sensitivity when making but only one translated
-* Make it a little harder (it's never impossible) to copy-paste the question sentence or to use mouse-over addons
-*
-
 License
 --------------------
 
 The MIT License, see LICENSE file.
-
 
 

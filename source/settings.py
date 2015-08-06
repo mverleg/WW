@@ -26,7 +26,7 @@ DEFAULT_KNOWN_LANGUAGE = 'zh-cn'
 DEFAULT_LEARN_LANGUAGE = 'nl'
 
 # Build paths inside the project like this: join(BASE_DIR, ...)
-BASE_DIR = dirname(__file__)
+BASE_DIR = dirname(dirname(__file__))
 
 
 # Quick-start development settings - unsuitable for production
@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': join(BASE_DIR, 'database.sqlite3'),
+		'NAME': join(BASE_DIR, 'data', 'database.sqlite3'),
 	},
 	## reaplce with this to us mySQL (make sure the database is UTF8):
 	#'default': {
@@ -127,7 +127,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-LOCALE_PATHS = (join(BASE_DIR, 'basics/locale/'),)
+LOCALE_PATHS = (join(BASE_DIR, 'locale'),)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
