@@ -23,7 +23,7 @@ Setup
 
 * Install the requirements::
 
-    pip install --upgrade django==1.7.8 django-haystack whoosh pinyin pytz
+    pip install --upgrade django==1.7.8 mysql_python django-haystack whoosh pinyin pytz
 
 * Create the database using (this will also create and show your account info the first time)::
 
