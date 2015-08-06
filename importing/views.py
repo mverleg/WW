@@ -1,16 +1,17 @@
-
+from urllib2 import build_opener
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.shortcuts import render
 from basics.views import notification
-from importing.forms import ImportForm
+from importing.forms import ImportForm, ChinesepodForm
 from lists.models import TranslationsList, ListAccess
 from phrasebook.models import Phrase
 from phrasebook.models import Translation
 
 
 CNY, EN = 'zh-cn', 'en-gb'
+
 @login_required
 def import_hackingchinese_radicals(request):
 
@@ -75,6 +76,24 @@ def import_hackingchinese_radicals(request):
 		))
 	return render(request, 'import_form.html', {
 		'message': 'Import the top 100 most common radicals from <a href="http://www.hackingchinese.com/kickstart-your-character-learning-with-the-100-most-common-radicals/">hackingchinese.com</a>.',
+		'form': form,
+	})
+
+
+@login_required
+def import_chinesepod_dialogue(request):
+	#todo: make sure everything is imported privately
+	form = ChinesepodForm(request.POST or None)
+	if form.is_valid():
+		opener = build_opener()
+		opener.addheaders.append(('Cookie', '{0:s}={1:s}'.format(ChinesepodForm.COOKIE_NAME, form.cleaned_data['session'])))
+		for url in form.cleaned_data['urls'].splitlines():
+			if '#' in url:
+				url = url.split('#')[0]
+			url += '#dialogue-tab'
+			html = opener.open(url).read()
+	raise NotImplementedError('Not ready yet')
+	return render(request, 'import_chinesepod.html', {
 		'form': form,
 	})
 

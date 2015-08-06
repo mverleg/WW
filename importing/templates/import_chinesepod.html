@@ -1,0 +1,29 @@
+
+{% extends 'frame.html' %}
+
+
+{% block title %}
+    Import Chinesepod
+	-
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	<h1>Import Chinesepod</h1>
+
+	<h2>Dialogue files</h2>
+
+	<form action="." method="POST">
+		{{ form.as_p }}
+		{% csrf_token %}
+		<input type="submit" value="Submit">
+	</form>
+
+	<p>Note that this may take a while (don't re-submit to try and make it faster).</p>
+
+{% endblock content %}
+
+{% block features %}{% include 'features.html' %}{% endblock %}
+
+
