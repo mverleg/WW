@@ -20,12 +20,15 @@
 	<meta name="author" content="">
 
 	<title>{% block title %}WordsProgram{% endblock title %}</title>
+	<link rel="icon" href="{% static 'favicon.ico' %}">
 
 	<!-- styles -->
 	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css' />
 	<link rel='stylesheet' href="{% static 'css/heroic-features.css' %}">
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css' />
 	<link rel='stylesheet' href='{% static 'style.css' %}' />
-	<link rel="icon" href="{% static 'favicon.ico' %}">
+	<style type="text/css">{% block extra_css %}{% endblock extra_css %}</style>
+
 	<!-- favicon from: http://www.iconarchive.com/show/square-animal-icons-by-martin-berube/Fish-icon.html -->
 </head>
 
@@ -171,8 +174,9 @@
     <script type="text/javascript" src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
 	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
 	<script src='{% static 'script.js' %}'></script>
-
     <script>
     /* Extra javascript code on some pages. */
 	    {% block extrajs %}
