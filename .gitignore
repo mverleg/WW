@@ -7,5 +7,5 @@ data/database.sqlite3
 /env/
 /static/
 local.py
+/build/
 /data/
-

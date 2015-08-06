@@ -146,7 +146,7 @@ TEMPLATE_DIRS = (
 HAYSTACK_CONNECTIONS = {
 	'default': {
 		'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-		'PATH': join(BASE_DIR, 'searchindex.whoosh'),
+		'PATH': join(BASE_DIR, 'data', 'searchindex.whoosh'),
 	},
 }
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
