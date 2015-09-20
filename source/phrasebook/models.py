@@ -23,7 +23,7 @@ class Phrase(models.Model):
 	public_edit = models.BooleanField(default = True, verbose_name = 'publicly editable')
 
 	def __unicode__(self):
-		return u'phrase #%d' % self.pk
+		return 'phrase #%d' % self.pk
 
 	def get_absolute_url(self):
 		return reverse('show_phrase', kwargs = {'pk': self.pk})
@@ -47,7 +47,7 @@ class Translation(models.Model):
 	text = models.TextField()
 
 	def __unicode__(self):
-		return self.text[:47] + u'...' if len(self.text) > 50 else self.text
+		return self.text[:47] + '...' if len(self.text) > 50 else self.text
 
 	def preview_text(self):
 		return self.text[:47] + '...' if len(self.text) > 50 else self.text
@@ -63,7 +63,7 @@ class Translation(models.Model):
 
 	def language_all(self):
 		""" This makes sure you can search for 荷兰语 and get all English phrases """
-		return u' '.join(get_in_each_language(self.get_language_display()))
+		return ' '.join(get_in_each_language(self.get_language_display()))
 
 	def get_votes(self):
 		# this import needs to be here to prevent circular import problems
@@ -78,7 +78,7 @@ class Translation(models.Model):
 		pin = to_pinyin(self.text)
 		if not pin == self.text:
 			return pin
-		return u''
+		return ''
 
 	def get_absolute_url(self):
 		return self.phrase.get_absolute_url()

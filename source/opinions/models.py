@@ -15,7 +15,7 @@ class TranslationVote(models.Model):
 		unique_together = ('translation', 'learner',)
 
 	def __unicode__(self):
-		return u'%s %svotes %s' % (self.learner, 'up' if self.up else 'down', self.translation)
+		return '%s %svotes %s' % (self.learner, 'up' if self.up else 'down', self.translation)
 
 	@property
 	def score(self):
@@ -35,7 +35,7 @@ class TranslationComment(models.Model):
 	text = models.TextField()
 
 	def __unicode__(self):
-		return u'%s comments on %s' % (self.learner, self.translation)
+		return '%s comments on %s' % (self.learner, self.translation)
 
 	def get_absolute_url(self):
 		return self.translation.phrase.get_absolute_url()

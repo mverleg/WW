@@ -195,14 +195,14 @@ def stats(request):
 			'total': Result.objects.filter(learner = request.user, when__gt = now()).count(),
 		}),
 	))
-	for label, data in summaries.items():
+	for label, data in list(summaries.items()):
 		summaries[label]['percentage'] = 100 * summaries[label]['correct'] / max(summaries[label]['total'], 1)
 	results_today = Result.objects.filter(learner = request.user, when__gt = now() - timedelta(days = 1))[:100]
 	all_lists = ListAccess.objects.filter(learner = request.user)
 	active_lists = ListAccess.objects.filter(learner = request.user, active = True)
 	all_translations_duplicates = sum([list(li.translations_list.translations.all()) for li in all_lists], [])
 	all_translations_map = {trans.pk: trans for trans in all_translations_duplicates}
-	all_translations = all_translations_map.values()
+	all_translations = list(all_translations_map.values())
 	active_translations = ActiveTranslation.objects.filter(learner = request.user)
 	possible_translations = ActiveTranslation.objects.filter(learner = request.user, active = True)
 	return render(request, 'show_stats.html', {

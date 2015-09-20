@@ -1,4 +1,5 @@
-from urllib2 import build_opener
+
+from urllib.request import build_opener
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.db import transaction
@@ -29,9 +30,9 @@ def import_hackingchinese_radicals(request):
 			if line:
 				parts = line.split('\t')
 				data.append((
-					u'{0} [radical]'.format(parts[0]),  # radical
-					u'{0}'.format(parts[4].strip(' ()')),  # pinyin
-					u'{0} [radical] e.g. {1} ; note: {2}'.format(parts[3], parts[5], parts[6]),  # definition
+					'{0} [radical]'.format(parts[0]),  # radical
+					'{0}'.format(parts[4].strip(' ()')),  # pinyin
+					'{0} [radical] e.g. {1} ; note: {2}'.format(parts[3], parts[5], parts[6]),  # definition
 				))
 		return data
 
@@ -47,11 +48,11 @@ def import_hackingchinese_radicals(request):
 			phrase = Phrase(learner = learner, public_edit = False)
 			phrase.save()
 			if show_pinyin:
-				trans_cny = Translation(phrase = phrase, language = CNY, text = u'%s %s' % (radical, pinyin))
+				trans_cny = Translation(phrase = phrase, language = CNY, text = '%s %s' % (radical, pinyin))
 				trans_en = Translation(phrase = phrase, language = EN, text = definition)
 			else:
-				trans_cny = Translation(phrase = phrase, language = CNY, text = u'%s' % radical)
-				trans_en = Translation(phrase = phrase, language = EN, text = u'%s ; %s' % (pinyin, definition))
+				trans_cny = Translation(phrase = phrase, language = CNY, text = '%s' % radical)
+				trans_en = Translation(phrase = phrase, language = EN, text = '%s ; %s' % (pinyin, definition))
 			trans_cny.save()
 			trans_en.save()
 			li.translations.add(trans_cny)

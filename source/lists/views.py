@@ -62,12 +62,12 @@ def _nearby_pages(items):
 		Shows up to 12 values, always shows the fist and last two elements and the two elements left and right of the current one.
 	"""
 	if items.paginator.num_pages <= 10:
-		return range(1, items.paginator.num_pages + 1)
+		return list(range(1, items.paginator.num_pages + 1))
 	if items.number <= 6:
-		return range(1, 9) + [None, items.paginator.num_pages, items.paginator.num_pages + 1]
+		return list(range(1, 9)) + [None, items.paginator.num_pages, items.paginator.num_pages + 1]
 	if items.number >= items.paginator.num_pages - 6:
-		return [1, 2, None] + range(items.paginator.num_pages - 8, items.paginator.num_pages + 1)
-	return [1, 2, None] + range(items.number - 2, items.number + 3) + [None, items.paginator.num_pages, items.paginator.num_pages + 1]
+		return [1, 2, None] + list(range(items.paginator.num_pages - 8, items.paginator.num_pages + 1))
+	return [1, 2, None] + list(range(items.number - 2, items.number + 3)) + [None, items.paginator.num_pages, items.paginator.num_pages + 1]
 
 
 def all_lists(request):

@@ -3,7 +3,7 @@ Requirements
 --------------------
 
 Python:
-* django 1.7.8 (and dependencies, automatic with pip)
+* django (and dependencies, automatic with pip)
 * django-haystack
 * whoosh
 * pinyin (literal name of a python module)
@@ -23,24 +23,24 @@ Setup
 
 * Install the requirements::
 
-    pip install --upgrade django==1.7.8 mysql_python django-haystack whoosh pinyin pytz
+    pip3 install --upgrade django mysql_python django-haystack whoosh pinyin pytz
 
 * Create the database using (this will also create and show your account info the first time)::
 
-    python2 source/manage.py migrate
+    python3 source/manage.py migrate
 
 * Compile translations using (if you get about four paths, it works)::
 
-    python2 source/manage.py makemessages --all --ignore 'env'
-    python2 source/manage.py compilemessages
+    python3 source/manage.py makemessages --all --ignore 'env'
+    python3 source/manage.py compilemessages
 
 * Build the search index using::
 
-    python2 source/manage.py rebuild_index --noinput
+    python3 source/manage.py rebuild_index --noinput
 
 * Start the server using (you can always start the server with this command, and stop it with ctrl + C; after syntax etc errors it needs to be restarted)::
 
-    python2 source/manage.py runserver
+    python3 source/manage.py runserver
 
 * Open your browser and go to::
 
@@ -58,7 +58,7 @@ General files:
 * settings.py: Settings for the project; no need to understand all of them at first.
 * urls.py: This tells Django which URL should be handled by which code (like an index table).
 * database.sqlite3: Database file, you can ignore it (contains all the data though, so be careful).
-* searchindex.whoosh/: Contains search index stuff, can be recreated with python2 manage.py rebuild_index.
+* searchindex.whoosh/: Contains search index stuff, can be recreated with python3 manage.py rebuild_index.
 
 Then there are a bunch of apps, which each have their own directory. They are semi-isolated pieces of code that together make the whole website. They can't always be well isolated, but ideally they are completely independent so they can be re-used in new projects. They are built like this:
 

@@ -122,7 +122,7 @@ def create_translation(request):
 			request.user.need_active_update = True
 			request.user.save()
 		return redirect(request.POST['next'] or phrase.get_absolute_url())
-	return notification(request, 'The submitted phrase was not valid, sorry. %s' % ' '.join('%s: %s' % (field, msg) for field, msg in form.errors.items()))
+	return notification(request, 'The submitted phrase was not valid, sorry. %s' % ' '.join('%s: %s' % (field, msg) for field, msg in list(form.errors.items())))
 
 
 @require_POST

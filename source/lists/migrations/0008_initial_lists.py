@@ -4,7 +4,6 @@
 	This is for database upgrades, you can ignore it and preferably don't change anything.
 """
 
-from __future__ import unicode_literals
 from django.db import migrations
 
 
@@ -25,7 +24,7 @@ def create_admin(apps, schema_editor):
 	[li3.translations.add(trans) for trans in Translation.objects.filter(language = 'nl')]
 	li4 = TranslationsList(name = 'unusable', public = True, language = None)
 	li4.save()
-	[li4.translations.add(trans) for trans in Translation.objects.filter(text = u'gezellig')]
+	[li4.translations.add(trans) for trans in Translation.objects.filter(text = 'gezellig')]
 	acc1 = ListAccess(translations_list = li1, learner = admin, access = 'edit', priority = 0, active = True)
 	acc1.save()
 	acc2 = ListAccess(translations_list = li2, learner = admin, access = 'view', priority = 10, active = False)

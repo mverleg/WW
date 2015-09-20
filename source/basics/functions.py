@@ -9,7 +9,7 @@ def get_in_each_language(txt):
 	old_lang = get_language()
 	for code, name in SUPPORTED_LANGUAGES:
 		activate(code)
-		txts.add(unicode(_(txt)))
+		txts.add(str(_(txt)))
 	activate(old_lang)
 	return txts
 

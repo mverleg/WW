@@ -44,7 +44,7 @@ class ListAccess(models.Model):
 		unique_together = ('translations_list', 'learner',)
 
 	def __unicode__(self):
-		return u'%s %s' % (self.learner, self.translations_list)
+		return '%s %s' % (self.learner, self.translations_list)
 
 	@property
 	def editable(self):

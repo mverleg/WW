@@ -14,7 +14,7 @@ def update_learner_actives(learner, specific_translation = None, force = False):
 		return
 	accesses = ListAccess.objects.filter(learner = learner, active = True)
 	actives_map = {active.translation.pk: active for active in ActiveTranslation.objects.filter(learner = learner)}
-	for pk, active in actives_map.items():
+	for pk, active in list(actives_map.items()):
 		active.active = False
 		active.priority = 0
 	for access in accesses:
@@ -29,7 +29,7 @@ def update_learner_actives(learner, specific_translation = None, force = False):
 			active.active = True
 			if access.priority > active.priority:
 				active.priority = access.priority
-	for active in actives_map.values():
+	for active in list(actives_map.values()):
 		active.save()
 	learner.need_active_update = False
 	learner.save()

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 """
 	At this point I reverted a bunch of migrations, a.o. removing view permission for phrases.

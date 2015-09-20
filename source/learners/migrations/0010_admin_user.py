@@ -4,7 +4,6 @@
 	This is for database upgrades, you can ignore it and preferably don't change anything.
 """
 
-from __future__ import unicode_literals
 from sys import stderr
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import BaseUserManager

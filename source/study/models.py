@@ -22,7 +22,7 @@ class ActiveTranslation(models.Model):
 		ordering = ('score',)
 
 	def __unicode__(self):
-		return u'active "%s" for "%s"' % (self.translation, self.learner)
+		return 'active "%s" for "%s"' % (self.translation, self.learner)
 
 
 class Result(models.Model):
@@ -42,6 +42,6 @@ class Result(models.Model):
 		ordering = ('-when',)
 
 	def __unicode__(self):
-		return u'"%s" got "%s" %s' % (self.learner, self.asked, self.get_result_display())
+		return '"%s" got "%s" %s' % (self.learner, self.asked, self.get_result_display())
 
 
