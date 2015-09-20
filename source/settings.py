@@ -9,8 +9,10 @@
 	is not in a public git repository...
 """
 
+from random import SystemRandom
 from django.utils.translation import ugettext_lazy as _
-from os.path import join, dirname
+from os.path import join, dirname, exists
+import string
 import sys
 
 
@@ -152,10 +154,19 @@ HAYSTACK_CONNECTIONS = {
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 try:
-	from local import *
-except ImportError:
-	sys.stdout.write('created local.py settings directory')
-	with open(join(BASE_DIR, 'local.py'), 'w+') as fh:
-		fh.write('# store your local settings here (e.g. database)')
+	if not exists(join(BASE_DIR, 'source', 'local.py')):
+		with open(join(BASE_DIR, 'source', 'local.py'), 'w+') as fh:
+			fh.write('"""\nLocal (machine specific) settings that overwrite the general ones.\n"""\n\n')
+			fh.write('from os.path import join, realpath, dirname\n\n\n')
+			fh.write('BASE_DIR = dirname(dirname(realpath(__file__)))\n\n')
+			fh.write('DATABASES = {\'default\': {\n\t\'ENGINE\': \'django.db.backends.sqlite3\',\n\t\'NAME\': join(BASE_DIR, \'data\', \'aqua.db\'),\n}}\n\n')
+			fh.write('ALLOWED_HOSTS = [\'localhost\', \'.localhost.markv.nl\',]\n\n')
+			fh.write('SECRET_KEY = "{0:s}"\n\n'.format(''.join(SystemRandom().choice(string.ascii_letters + string.digits + '#$%&()*+,-./:;?@[]^_`{|}~') for _ in range(50))))
+			fh.write('NOTIFICATION_PATH = join(BASE_DIR, \'notification.html\')\n\n')
+			fh.write('TEMPLATE_DEBUG = DEBUG = False\n\n\n')
+except Exception as err:
+	print('could not create local.py settings file:', err)
+
+from local import *
 
 
