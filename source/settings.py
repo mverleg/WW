@@ -163,7 +163,7 @@ try:
 			fh.write('ALLOWED_HOSTS = [\'localhost\', \'.localhost.markv.nl\',]\n\n')
 			fh.write('SECRET_KEY = "{0:s}"\n\n'.format(''.join(SystemRandom().choice(string.ascii_letters + string.digits + '#$%&()*+,-./:;?@[]^_`{|}~') for _ in range(50))))
 			fh.write('NOTIFICATION_PATH = join(BASE_DIR, \'notification.html\')\n\n')
-			fh.write('TEMPLATE_DEBUG = DEBUG = False\n\n\n')
+			fh.write('TEMPLATE_DEBUG = DEBUG = True\n\n\n')
 except Exception as err:
 	print('could not create local.py settings file: {0:s}'.format(str(err)))
 

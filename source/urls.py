@@ -5,7 +5,7 @@
 
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.template import add_to_builtins
+from django.template.base import add_to_builtins
 from django.views.generic import TemplateView
 from basics.search import search
 from basics.views import choose_language

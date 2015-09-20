@@ -2,7 +2,7 @@
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
+from django.utils.timezone import now
 
 """
 	Just ignore this for now.
@@ -11,7 +11,7 @@ class LearnerManager(UserManager):
 
 	def _create_user(self, email, password, is_staff, is_superuser, **extra_fields):
 		email = self.normalize_email(email)
-		user = self.model(email = email, is_staff = is_staff, is_superuser = is_superuser, **extra_fields)
+		user = self.model(email = email, is_staff = is_staff, is_superuser = is_superuser, last_login = now(), **extra_fields)
 		user.set_password(password)
 		user.save(using = self._db)
 		return user
