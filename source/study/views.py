@@ -31,13 +31,16 @@ def study(request):
 			add_message(request, ERROR, 'Could not find or understand the answer, sorry. Sending back to question.')
 			return redirect(reverse('study_ask'))
 		learner.study_answer = result_form.cleaned_data['solution'].strip()
-		if learner.study_answer == learner.study_hidden.text.strip():
+		if learner.study_answer == learner.study_hidden.text.strip() and not request.POST.get('idk', '').strip() == 'idk':
 			#todo: also check other languages in the future maybe
 			""" Update the score (so it can be set to 'verified') but only go on to next card when user click 'go on'. """
-			update_score(learner, Result.CORRECT, verified=True)
+			update_score(learner, Result.CORRECT, verified = True)
 			learner.study_state = Learner.JUDGED
 		else:
 			learner.study_state = Learner.REVEALED
+			if request.POST.get('idk', '').strip() == 'idk':
+				update_score(learner, Result.INCORRECT, verified = True)
+				learner.study_state = Learner.JUDGED
 		learner.save()
 	if learner.study_state in [Learner.REVEALED, Learner.JUDGED] and 'result' in request.POST:
 		"""
@@ -60,12 +63,12 @@ def study(request):
 		"""
 			Show the solution.
 		"""
-		correct = learner.study_answer == learner.study_hidden.text.strip()
-		judge = False if correct else learner.study_state == Learner.REVEALED
+		#correct = learner.study_answer == learner.study_hidden.text.strip()
+		judge = not learner.study_state == Learner.JUDGED# else learner.study_state == Learner.REVEALED
 		return render(request, 'study_result.html', {
 			'hidden': learner.study_hidden,
 			'shown': learner.study_shown,
-			'correct': correct,
+			'correct': learner.study_answer == learner.study_hidden.text.strip(),
 			'judge': judge,
 			'answer': learner.study_answer,
 			'result_form': result_form,

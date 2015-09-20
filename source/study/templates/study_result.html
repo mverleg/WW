@@ -37,16 +37,20 @@
             <h1>{{ hidden.text|capfirst }}</h1>
         </div>
         <div class="panel-footer" title="It doesn't match exactly, but there could be multiple correct solutions.">
-            {% if answer %}
-	            {% blocktrans context 'study answer footer base' %}You said <strong>{{ answer }}</strong>{% endblocktrans %},
+	        {% if not correct and not judge %}
+		        {% blocktrans context 'study answer footer didnt_know' %}You didn't know the answer{% endblocktrans %}.
             {% else %}
-	            {% blocktrans context 'study answer footer empty' %}You didn't type anything{% endblocktrans %},
+	            {% if answer %}
+		            {% blocktrans context 'study answer footer base' %}You said <strong>{{ answer }}</strong>{% endblocktrans %},
+	            {% else %}
+		            {% blocktrans context 'study answer footer empty' %}You didn't type anything{% endblocktrans %},
+	            {% endif %}
+		        {% if correct %}
+		            {% blocktrans context 'study answer footer correct' %}which is correct!{% endblocktrans %}
+	            {% else %}
+		            {% blocktrans context 'study answer footer maybecorrect' %}were you correct?{% endblocktrans %}
+		        {% endif %}
             {% endif %}
-	        {% if correct %}
-	            {% blocktrans context 'study answer footer correct' %}which is correct!{% endblocktrans %}
-            {% else %}
-	            {% blocktrans context 'study answer footer maybecorrect' %}were you correct?{% endblocktrans %}
-	        {% endif %}
         </div>
     </div>
 
@@ -79,7 +83,11 @@
 			<div class="row">
 				<div class="col-12">
                     <button id="go_on" type="submit" class="btn btn-default" name="result" value="correct" style="width: 100%;" title="hotkeys: 1, 2, 3, space, enter">
-                        <span class="glyphicon glyphicon-check"></span> {% blocktrans context 'study answer button go_on' %}Yay! Go on!{% endblocktrans %}
+                        {% if correct %}
+                            <span class="glyphicon glyphicon-check"></span> {% blocktrans context 'study answer button go_on' %}Yay! Go on!{% endblocktrans %}
+                        {% else %}
+	                        <span class="glyphicon glyphicon-triangle-right"></span> {% blocktrans context 'study answer button didnt_know' %}Next one{% endblocktrans %}
+	                    {% endif %}
 					</button>
 				</div>
 			</div>
