@@ -20,12 +20,13 @@ SUPPORTED_LANGUAGES = (
 	# the first is language key / database value (max 8 chars, don't change), the second is the display name
 	('en-gb', _('English (British)')),
 	('zh-cn', _('Chinese (simplified Mandarin)')),
+	('he', _('Hebrew')),
 	('de', _('German')),
 	('nl', _('Dutch')),
 )
 #SUPPORTED_LANGUAGES = DEFAULT_LANGUAGES  # replace this if you want to limit the available languages
-DEFAULT_KNOWN_LANGUAGE = 'zh-cn'
-DEFAULT_LEARN_LANGUAGE = 'nl'
+DEFAULT_KNOWN_LANGUAGE = 'en-gb'
+DEFAULT_LEARN_LANGUAGE = 'zh-cn'
 
 # Build paths inside the project like this: join(BASE_DIR, ...)
 BASE_DIR = dirname(dirname(__file__))

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-20 19:40+0000\n"
+"POT-Creation-Date: 2015-09-21 12:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -242,10 +242,14 @@ msgid "Chinese (simplified Mandarin)"
 msgstr "Chinees (versimpeld Mandarijn)"
 
 #: source/settings.py:23
+msgid "Hebrew"
+msgstr ""
+
+#: source/settings.py:24
 msgid "German"
 msgstr "Duits"
 
-#: source/settings.py:24
+#: source/settings.py:25
 msgid "Dutch"
 msgstr "Nederlands"
 
@@ -294,13 +298,13 @@ msgstr "Hoe zeg je dat in het %(hidden_language)s?"
 
 #: source/study/templates/study_question.html:48
 msgctxt "study question button idk"
-msgid "<i class=\"glyphicon glyphicon-unchecked\"></i> I don't know"
-msgstr ""
+msgid "I don't know"
+msgstr "Ik weet het niet"
 
 #: source/study/templates/study_question.html:49
 msgctxt "study question button submit"
-msgid "<i class=\"glyphicon glyphicon-log-in\"></i> Submit solution"
-msgstr ""
+msgid "Submit solution"
+msgstr "Stuur oplossing..."
 
 #: source/study/templates/study_result.html:27
 msgid "Did you know"
@@ -316,53 +320,58 @@ msgstr ""
 "goed' en 3 voor 'goed'"
 
 #: source/study/templates/study_result.html:41
+#, fuzzy
+#| msgctxt "study answer footer empty"
+#| msgid "You didn't type anything"
+msgctxt "study answer footer didnt_know"
+msgid "You didn't know the answer"
+msgstr "Je hebt niks ingetypt"
+
+#: source/study/templates/study_result.html:44
 #, python-format
 msgctxt "study answer footer base"
 msgid "You said <strong>%(answer)s</strong>"
 msgstr "Je zei <strong>%(answer)s</strong>"
 
-#: source/study/templates/study_result.html:43
+#: source/study/templates/study_result.html:46
 msgctxt "study answer footer empty"
 msgid "You didn't type anything"
 msgstr "Je hebt niks ingetypt"
 
-#: source/study/templates/study_result.html:46
+#: source/study/templates/study_result.html:49
 msgctxt "study answer footer correct"
 msgid "which is correct!"
 msgstr "wat juist is!"
 
-#: source/study/templates/study_result.html:48
+#: source/study/templates/study_result.html:51
 msgctxt "study answer footer maybecorrect"
 msgid "were you correct?"
 msgstr "had je het goed?"
 
-#: source/study/templates/study_result.html:59
+#: source/study/templates/study_result.html:63
 msgctxt "study answer button correct"
 msgid "Correct!"
 msgstr "Goed!"
 
-#: source/study/templates/study_result.html:65
+#: source/study/templates/study_result.html:69
 msgctxt "study answer button notquite"
 msgid "Not quite"
 msgstr "Bijna goed"
 
-#: source/study/templates/study_result.html:71
+#: source/study/templates/study_result.html:75
 msgctxt "study answer button incorrect"
 msgid "Incorrect"
 msgstr "Fout"
 
-#: source/study/templates/study_result.html:82
+#: source/study/templates/study_result.html:87
 msgctxt "study answer button go_on"
 msgid "Yay! Go on!"
 msgstr "Jeej, verder!"
 
-#~ msgctxt "study question button idk"
-#~ msgid "I don't know"
-#~ msgstr "Ik weet het niet"
-
-#~ msgctxt "study question button submit"
-#~ msgid "Submit solution"
-#~ msgstr "Stuur oplossing..."
+#: source/study/templates/study_result.html:89
+msgctxt "study answer button didnt_know"
+msgid "Next one"
+msgstr ""
 
 #~ msgctxt "study question header"
 #~ msgid "This %(shown_language)s phrase"
