@@ -4,7 +4,7 @@ from lists.models import TranslationsList, ListAccess
 
 
 class ListAccessAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'translations_list', 'learner', 'active', 'access', 'priority',)
+	list_display = ('__str__', 'translations_list', 'learner', 'active', 'access', 'priority',)
 
 	def save(self, *args, **kwargs):
 		self.instance.learner.need_update()
@@ -12,7 +12,7 @@ class ListAccessAdmin(admin.ModelAdmin):
 
 
 class TranslationListAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'language',)
+	list_display = ('__str__', 'language',)
 
 	def save(self, *args, **kwargs):
 		for need_update_access in ListAccess.objects.filter(translations_list = li):

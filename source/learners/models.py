@@ -71,7 +71,7 @@ class Learner(AbstractBaseUser, PermissionsMixin):
 	class Meta:
 		app_label = 'learners'
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.get_short_name()
 
 	def get_short_name(self):

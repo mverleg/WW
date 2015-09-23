@@ -14,7 +14,7 @@ class TranslationVote(models.Model):
 	class Meta:
 		unique_together = ('translation', 'learner',)
 
-	def __unicode__(self):
+	def __str__(self):
 		return '%s %svotes %s' % (self.learner, 'up' if self.up else 'down', self.translation)
 
 	@property
@@ -34,7 +34,7 @@ class TranslationComment(models.Model):
 	edited = models.DateTimeField(auto_now = True)
 	text = models.TextField()
 
-	def __unicode__(self):
+	def __str__(self):
 		return '%s comments on %s' % (self.learner, self.translation)
 
 	def get_absolute_url(self):

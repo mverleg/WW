@@ -17,7 +17,7 @@ class TranslationsList(models.Model):
 	class Meta:
 		verbose_name = 'list'
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.name
 
 	@property
@@ -43,7 +43,7 @@ class ListAccess(models.Model):
 		ordering = ('-priority',)
 		unique_together = ('translations_list', 'learner',)
 
-	def __unicode__(self):
+	def __str__(self):
 		return '%s %s' % (self.learner, self.translations_list)
 
 	@property

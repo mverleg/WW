@@ -21,7 +21,7 @@ class ActiveTranslation(models.Model):
 		unique_together = ('learner', 'translation',)
 		ordering = ('score',)
 
-	def __unicode__(self):
+	def __str__(self):
 		return 'active "%s" for "%s"' % (self.translation, self.learner)
 
 
@@ -41,7 +41,7 @@ class Result(models.Model):
 	class Meta:
 		ordering = ('-when',)
 
-	def __unicode__(self):
+	def __str__(self):
 		return '"%s" got "%s" %s' % (self.learner, self.asked, self.get_result_display())
 
 

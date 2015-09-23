@@ -22,7 +22,7 @@ class Phrase(models.Model):
 	learner = models.ForeignKey(Learner, blank = True, null = True, default = None)
 	public_edit = models.BooleanField(default = True, verbose_name = 'publicly editable')
 
-	def __unicode__(self):
+	def __str__(self):
 		return 'phrase #%d' % self.pk
 
 	def get_absolute_url(self):
@@ -46,7 +46,7 @@ class Translation(models.Model):
 	language = models.CharField(choices = SUPPORTED_LANGUAGES, max_length = 8)
 	text = models.TextField()
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.text[:47] + '...' if len(self.text) > 50 else self.text
 
 	def preview_text(self):
