@@ -1,8 +1,8 @@
-from sys import stderr
+
 from study.models import Result, ActiveTranslation
 
 
-def update_score(learner, result, verified=False):
+def update_score(learner, result, verified = False):
 	"""
 		Update the score after a phrase has been judged.
 
