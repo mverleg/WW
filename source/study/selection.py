@@ -23,9 +23,11 @@ def get_next_question(learner, known_language, learn_language):
 		"""
 			Find matching other language pairs (active > translation > phrase > translations = siblings)
 		"""
-		known_translations = chosen_active.translation.phrase.translations.filter(language = known_language) \
-			.annotate(vote_value = Sum('votes__value')).order_by('-vote_value')
-		#todo: the above returns None if there are no votes, and None appears below negative numbers, but the query is too beautiful and efficient to replace
+		known_translations = list(chosen_active.translation.phrase.translations.filter(language = known_language) \
+			.annotate(vote_value = Sum('votes__value')).order_by('-vote_value'))
+		""" Next line is because 'no votes' gives None in the query, which ranks below negative numbers in sorting. """
+		known_translations.sort(key = lambda kt: 0 if kt.vote_value is None else kt.vote_value)
+		print([kt.vote_value for kt in known_translations])  # todo: test after phrase activation works properly
 		try:
 			known_translation = known_translations[0]
 		except IndexError:
@@ -48,6 +50,7 @@ def get_all_options(learner, msgs, learn_language, limit = None):
 		database is really, really slow, and I can't know the PKs without getting them all so I can't use __in)
 	"""
 	msg = None
+	print(learner.phrase_index, learner.minimum_delay)
 	actives = list(ActiveTranslation.objects.filter(
 		learner = learner,
 		translation__language = learn_language,
