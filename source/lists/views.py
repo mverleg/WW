@@ -13,6 +13,7 @@ from learners.forms import IdentifyUserByEmail
 from lists.forms import ListForm, ListAccessForm, ListActivationForm
 from lists.models import ListAccess, TranslationsList
 from phrasebook.models import Translation
+from study.functions import add_more_active_phrases, update_learner_actives
 
 
 @instantiate(TranslationsList, in_kw_name = 'pk', out_kw_name = 'translations_list')
@@ -361,6 +362,8 @@ def list_activities(request):
 	next = request.GET.get('next', request.POST.get('next', ''))
 	if forms.is_valid():
 		forms.save()
+		add_more_active_phrases(learner = request.user, lang = request.LEARN_LANG, msgs = [])
+		update_learner_actives(learner = request.user)
 		add_message(request, INFO, 'Your lists have been updated')
 		if next:
 			return redirect(to = '{0:s}?next={1:s}'.format(reverse('list_activities'), next))

@@ -36,6 +36,7 @@ def update_learner_actives(learner, specific_translation = None, force = False):
 
 
 def add_more_active_phrases(learner, msgs, lang):
+	print('adding more active phrases')  #todo: remove print
 	""" how many active now """
 	unlearned_count = ActiveTranslation.objects.filter(active = True, score__lte = 0, translation__language = lang).count()
 	""" how many active max """

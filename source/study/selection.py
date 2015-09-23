@@ -95,3 +95,4 @@ def weighted_sample(options, scale = 1.):
 		if rnd < 0:
 			return option
 
+
