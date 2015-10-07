@@ -66,6 +66,14 @@ INSTALLED_APPS = (
 	'importing',
 )
 
+# use django_extensions if it's installed
+try:
+	import django_extensions
+except ImportError:
+	pass
+else:
+	INSTALLED_APPS = ('django_extensions',) + INSTALLED_APPS
+
 MIDDLEWARE_CLASSES = (
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',

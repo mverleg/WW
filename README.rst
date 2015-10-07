@@ -84,6 +84,19 @@ The specific ones at this point are:
 
 What you could do: Have a look at the site. If you want to change data or see the structure, see the control panel. For normal pages, if you are curious or notice a problem, find the page's url in urls.py to see which views.py function is responsible. Notice that the general pattern is to do some of these: Maybe check permissions. Get some data using models (instance = ModelName.objects.filter(...)). Maybe create a form (empty: FormName(None), filled out: FormName(request.POST)), if it's filled then check if it's valid. Maybe change some data (instance.save). Then either redirect or render a page (return render(request, 'templatename.html', {context}). Rendering happens by taking an HTML file and replacing all {{var}} with provided variables, possibly with simple logic like {%if...%} and {%for...%}. Templates are usually given a 'context', which is a dictionary whose keys will be available variables in the template (like {{var}} before). That's the basic idea of views. Just change some things and commit a lot so you can always go back. Do ask for help!
 
+Tricks
+--------------------
+
+It is possible to display a graph of all models using `django_extensions`. You will need to install some stuff (you might need to use python2 if python3 doesn't work):
+
+    pip install pyparsing pydot2 django-extensions
+
+Then you can show the relevant models using (possibly update the image path):
+
+    python source/manage.py graph_models --all-applications --group-models --exclude-models=Session,AbstractBaseUser,PermissionsMixin,Group,Permission,ContentType,LogEntry --output /tmp/models.png
+
+The image is now in `/tmp/models.png`.
+
 License
 --------------------
 
