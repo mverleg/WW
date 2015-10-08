@@ -1,0 +1,20 @@
+
+I was busy implementing the extensive refactoring in studysettings.txt and in study.models.*
+
+Try to get a consistent set of models again and make an image of it (as test and to see if it looks good):
+    python source/manage.py graph_models --all-applications --group-models --exclude-models=Session,AbstractBaseUser,PermissionsMixin,Group,Permission,ContentType,LogEntry --output /tmp/models.png
+
+Many relevant issues:
+https://bitbucket.org/mverleg/wernerwords/issues/37/set-up-database-indices-correctly
+https://bitbucket.org/mverleg/wernerwords/issues/21/optional-feedback-about-how-well-you-know
+https://bitbucket.org/mverleg/wernerwords/issues/22/undo-score
+https://bitbucket.org/mverleg/wernerwords/issues/32/add-images-to-phrases
+https://bitbucket.org/mverleg/wernerwords/issues/34/new-phrases-are-not-getting-activated
+https://bitbucket.org/mverleg/wernerwords/issues/16/cards-reappear-too-fast
+https://bitbucket.org/mverleg/wernerwords/issues/14/profiles
+https://bitbucket.org/mverleg/wernerwords/issues/27/difficulty-parameter
+https://bitbucket.org/mverleg/wernerwords/issues/9/show-example-uses
+https://bitbucket.org/mverleg/wernerwords/issues/38/go-back-update-scores
+https://bitbucket.org/mverleg/wernerwords/issues/39/make-a-profile-for-anonymous-user
+
+

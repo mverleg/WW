@@ -1,6 +1,7 @@
 
 remove confusion due to multiple uses of the name "active"
-might need to store current mode somewhere too
+might need to store current display mode somewhere too
+split score depending on what is shown!!
 
 
 *** PROFILE ****
@@ -37,16 +38,9 @@ filters (correct/incorrect count, score, how long ago, length, votes)
 repeat incorrect ones quickly?
 
 
-if I want to repeat wrongly answered cards within X turns, I could keep a list into the future at least that long (that'll also take care of not asking the same card again within X, but maybe this X shouldn't be the same)
-what about going back and forth in the cards? I have the results in DB so should be easy server-side, but maybe users should just check the score screen instead
+
 measure how long each card takes?
-
-
-Split score depending on what is shown
 Always store score etc on learning language, not on phrase, since you might learn the same phrase in multiple languages
-Maybe make the ask/reveal settings a model that has a M2M relation, and then have a chooser which either alternates them, chooses a random one or lets it depend on the card score (or a combination? probabilities change as score increases? well, can always add a class for that)
-    UPDATE: maybe no seperate class is needed, since the number of options is finite (and fairly limited)
-    show examples (can only be afterwards?)
 What about studying a specific list?
 How exactly is a card activated (in the part-of-phrases-being-shown set)? -> create ActiveTranslation
 
