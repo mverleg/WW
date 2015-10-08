@@ -10,6 +10,8 @@ def update_learner_actives(learner, specific_translation = None, force = False):
 	"""
 		If needed (or force is True), update all the learner's ActiveTranslation .priority and .active properties.
 	"""
+	#todo: note that actives need updating when a list changes or a card is activated or on reset, priority only when a list changes or on reset and score only on reset
+	#todo: is this active about "in an active list" or about "activated for showing"? [first one]
 	if not (force or learner.need_active_update):
 		return
 	accesses = ListAccess.objects.filter(learner = learner, active = True)

@@ -34,10 +34,10 @@ class TranslationsList(models.Model):
 class ListAccess(models.Model):
 	VIEW, EDIT = 'view', 'edit'
 	translations_list = models.ForeignKey(TranslationsList, related_name = 'followers')
-	learner = models.ForeignKey(Learner)
+	learner = models.ForeignKey(Learner)  #todo: move to profile? or scoredb? or activator? maybe activator, that one
 	access = models.CharField(choices = ((VIEW, 'view list'), (EDIT, 'edit list')), max_length = 4)
 	priority = models.SmallIntegerField(default = 0, help_text = 'Higher priority lists will show up more during learning sessions (only applies to you).')
-	active = models.BooleanField(default = False, help_text = 'Inactive lists don\'t show up during learning sessions (only applies to you).')
+	active = models.BooleanField(default = False, help_text = 'Inactive lists don\'t show up during learning sessions (only applies to you).')  #todo: remove
 
 	class Meta:
 		ordering = ('-priority',)
