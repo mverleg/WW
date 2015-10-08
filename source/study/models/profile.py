@@ -1,11 +1,15 @@
 
-from operator import itemgetter
-from random import random
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+from study.models.displayer import BaseDisplaySelector
 
 
 class StudyProfile(models.Model):
+
+	displayer = models.ForeignKey(BaseDisplaySelector)
+
+
+
 	"""
 		Contains the study settings for a user, so the user can easy switch between study methods.
 	"""

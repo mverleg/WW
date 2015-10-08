@@ -3,22 +3,34 @@ from operator import itemgetter
 from random import random
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from study.models.profile import StudyProfile
 
 
-class DisplayFixedSelector(models.Model):
+class BaseDisplaySelector(models.Model):
+	"""
+		Base display selector that the others extend (non-abstract for ForeignKeys).
+	"""
+	info = '(no info on base selector)'  # todo: not used atm
+	name = models.CharField(max_length = 48)
+	profile = models.ForeignKey(StudyProfile)
+
+
+class DisplayFixedSelector(BaseDisplaySelector):
 	"""
 		Every flashcard asks the same type of information (e.g. always 'ask image, answer written word in learning language')
 	"""
+	info = 'Simple: always ask the same thing (e.g. always show the image and request the written name).'
 	mode = models.ForeignKey(DisplayMode)
 
 	def get_mode(self):
 		return self.mode
 
 
-class DisplayRandomSelector(models.Model):
+class DisplayRandomSelector(BaseDisplaySelector):
 	"""
 		Pick a random display mode for each card based on relative weight.
 	"""
+	info = 'Random: weighted-randomly select what to show and ask.'),
 	modes = models.ManyToManyField(DisplayMode, through = DisplayRandomNode)
 
 	def get_mode(self):
@@ -41,10 +53,11 @@ class DisplayRandomNode(models.Model):
 	weight = models.FloatField(validators = [MinValueValidator(0), MaxValueValidator(100)], default = 1)
 
 
-class DisplayScoreProgressionSelector(models.Model):
+class DisplayScoreProgressionSelector(BaseDisplaySelector):
 	"""
 		Pick a display mode based on the score of the current card.
 	"""
+	info = 'Score: change the questions based on score (e.g. pronunciation first, writing after).'
 	modes = models.ManyToManyField(DisplayMode, through = DisplayScoreProgressionNode)
 
 	def get_mode(self):
