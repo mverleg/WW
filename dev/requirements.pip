@@ -1,0 +1,10 @@
+django
+# misc
+django-crispy-forms
+django-haystack>=2.4
+pyelasticsearch
+xpinyin
+django-extensions
+django-model-utils
+pyelasticsearch
+pytz
