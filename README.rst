@@ -2,12 +2,16 @@
 Requirements
 --------------------
 
-Python:
-* django (and dependencies, automatic with pip)
+Python: the packages listed in ``dev/requirements.pip``, including::
+* django
+* django_avem_theme
+* django-crispy-forms
 * django-haystack
-* whoosh
-* pinyin (literal name of a python module)
+* xpinyin
+* django-extensions
+* django-model-utils
 * pytz
+Additionally, you'll need ``whoosh`` unless you use another search backend.
 
 Client:
 * bootstrap (already included)
@@ -15,6 +19,7 @@ Client:
 
 Ubuntu:
 * sqlite3 (default on Ubuntu?)
+or another database server
 
 A real database like postgres or mysql is recommended instead of sqlite3 for live website and possibly before. But as long as you have no important data to migrate, it is easy to switch, so play around first.
 
@@ -23,7 +28,8 @@ Setup
 
 * Install the requirements::
 
-    pip3 install --upgrade django mysql_python django-haystack whoosh pinyin pytz
+    pip3 install -U -r dev/requirements.pip
+    pip3 install -U whoosh
 
 * Create the database using (this will also create and show your account info the first time)::
 

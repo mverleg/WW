@@ -8,6 +8,10 @@ Add note about a translation (e.g. '由 makes it less forceful' - should these h
 
 Split progress into a separate app
 
+I was transferring to django_avem_theme
+    (also push that to pypi)
+
+
 Many relevant issues:
 https://bitbucket.org/mverleg/wernerwords/issues/37/set-up-database-indices-correctly
 https://bitbucket.org/mverleg/wernerwords/issues/21/optional-feedback-about-how-well-you-know

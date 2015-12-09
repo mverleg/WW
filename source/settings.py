@@ -56,6 +56,7 @@ INSTALLED_APPS = (
 	'django.contrib.staticfiles',
 	'crispy_forms',
 	'haystack',
+	'avem_theme',
 	'basics',
 	'learners',
 	'phrasebook',
