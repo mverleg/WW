@@ -1,16 +1,16 @@
+
 from django.db import models
+from model_utils.managers import InheritanceManager
 
-from study.models.profile import StudyProfile
 
-
-class BaseShower(models.Model):
+class BasePhraseChooser(models.Model):
 	"""
 		Determines which enabled cards are asked next.
 
 		Non-abstract base class for foreign keys.
 	"""
 	name = models.CharField(max_length = 48)
-	profile = models.ForeignKey(StudyProfile)
+	profile = models.ForeignKey('study.StudyProfile')
 
 	def next_question(self):
 		"""
@@ -19,7 +19,7 @@ class BaseShower(models.Model):
 		#todo (see selection.py)
 
 	def _get_all_options(self):
-
+		pass
 		#todo (for use in next_question)
 
 	#todo: think about this class' interface
@@ -37,8 +37,13 @@ class BaseShower(models.Model):
 
 # there's a step active[*] -> currently learning[*]
 
-class SimpleShower(BaseActivator):
+class SimplePhraseChooser(BasePhraseChooser):
+	"""
+	Weights by score and enforces a minimum delay.
+	"""
 	#todo: how to deal with selector-specific settings?
+
+	objects = InheritanceManager()
 
 	def _get_all_actives(self):
 		pass

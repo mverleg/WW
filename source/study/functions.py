@@ -1,7 +1,10 @@
 
+from django.conf import settings
 from django.db.transaction import atomic
+from django.utils.translation import ugettext_lazy as _
 from lists.models import ListAccess
-from study.models import ActiveTranslation
+from study.models import ActiveTranslation, DisplayRandomMode, DisplayMode, DisplayRandomSelector, \
+	PriorityLimitedActivator, LinearScorer, SimplePhraseChooser, StudyProfile
 from django.contrib.messages import WARNING
 
 
@@ -67,3 +70,54 @@ def add_more_active_phrases(learner, msgs, lang):
 	#todo: maybe use some random sampling when choosing which phrase to activate
 
 
+def make_default_profile(learner=None, learn_language=settings.DEFAULT_LEARN_LANGUAGE, known_language=None):
+	"""
+	Create a simple profile including all derived fields. E.g. for when making a new user account.
+	"""
+	modeL = DisplayRandomMode(
+		writing_known=DisplayMode.QUESTION,
+		sound_known=DisplayMode.QUESTION,
+		writing_learning=DisplayMode.ANSWER,
+		sound_learning=DisplayMode.CONTEXT,
+		image=DisplayMode.CONTEXT,
+		examples=DisplayMode.CONTEXT,
+		weight=60,
+	)
+	modeK = DisplayRandomMode(
+		writing_known=DisplayMode.ANSWER,
+		sound_known=DisplayMode.CONTEXT,
+		writing_learning=DisplayMode.QUESTION,
+		sound_learning=DisplayMode.QUESTION,
+		image=DisplayMode.CONTEXT,
+		examples=DisplayMode.CONTEXT,
+		weight=40,
+	)
+	modeL.save()
+	modeK.save()
+	display_selector = DisplayRandomSelector()
+	display_selector.save()
+	display_selector.add(modeL)
+	display_selector.add(modeK)
+
+	activator = PriorityLimitedActivator()
+	activator.save()
+
+	scorer = LinearScorer()
+	scorer.save()
+
+	phrase_chooser = SimplePhraseChooser()
+	phrase_chooser.save()
+
+	profile = StudyProfile(
+		name=_('default'),
+		learner=learner,
+		learn_language=learn_language,
+		known_language=known_language,
+		display_selector=display_selector,
+		activator=activator,
+		scorer=scorer,
+		phrase_chooser=phrase_chooser
+	)
+
+	profile.save()
+	return profile

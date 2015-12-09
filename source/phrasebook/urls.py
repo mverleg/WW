@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 from phrasebook.views import show_phrase, add_phrase, edit_phrase, delete_phrase, create_translation, delete_translation
 
 
-urlpatterns = patterns('',
+urlpatterns = (
 	url(r'^(?P<pk>\d+)/$', show_phrase, name = 'show_phrase'),
 	url(r'^create/$', add_phrase, name = 'add_phrase'),
 	url(r'^edit/(?P<pk>\d+)/$', edit_phrase, name = 'edit_phrase'),

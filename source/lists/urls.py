@@ -7,7 +7,7 @@ from lists.views import show_list, user_lists, all_lists, add_list, edit_list, d
 	list_activities
 
 
-urlpatterns = patterns('',
+urlpatterns = (
 	url(r'^(?P<pk>\d+)-(?P<slug>[-\w]+)/$', show_list, name = 'show_list'),
 	url(r'^(?P<pk>\d+)/$', show_list, name = 'show_list'),
 	url(r'^my/$', user_lists, name = 'user_lists'),

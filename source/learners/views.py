@@ -71,6 +71,9 @@ def register(request, next):
 		if form.is_valid():
 			user = form.save()
 			user = authenticate(username = user.email, password = form.cleaned_data['password'])
+			#todo: I think the user manager does this, but otherwise call make_default_profile here
+			user.active_profile.learn_language = request.LEARN_LANG
+			user.active_profile.known_language = request.KNOWN_LANG
 			auth_login(request, user)
 			add_message(request, INFO, 'Your account %s has been created! Welcome to the site!' % user.email)
 			return redirect(to = request.POST['next'] or LOGIN_REDIRECT_URL)

@@ -1,6 +1,20 @@
-from django.db import models
 
-from study.models.profile import StudyProfile
+from django.db import models
+from model_utils.managers import InheritanceManager
+from phrasebook.models import Translation
+
+
+class BaseScorer(models.Model):
+	"""
+	Scorers keep track of the scores achieved for each card, as well as updating the score if an answer is given.
+	As such, profiles that share a scorer share results. Note that this is independent of which cards are actually
+	being asked, which is governed by Activator.
+	"""
+	name = models.CharField(max_length = 48)
+	profile = models.ForeignKey('study.StudyProfile')
+
+	def __str__(self):
+		return '{0:s} [{1:s}]'.format(self.name, self.learner)
 
 
 class Result(models.Model):
@@ -19,6 +33,8 @@ class Result(models.Model):
 	when = models.DateTimeField(auto_now_add = True)
 	verified = models.BooleanField(default = False, help_text = "True if the user typed the solution correctly, False otherwise (if he judged himself)")
 
+	objects = InheritanceManager()
+
 	class Meta:
 		ordering = ('-when',)
 
@@ -26,16 +42,13 @@ class Result(models.Model):
 		return '"{0:s}" got "{1:s}" {2:s}'.format(self.learner, self.asked, self.get_result_display())
 
 
-class BaseScorer(models.Model):
+class LinearScorer(models.Model):
 	"""
-		Scorers keep track of the scores achieved for each card, as well as updating the score if an answer is given.
-		As such, profiles that share a scorer share results. Note that this is independent of which cards are actually
-		being asked, which is governed by Activator.
-	"""
-	name = models.CharField(max_length = 48)
-	profile = models.ForeignKey(StudyProfile)
+	Score updates that depend correct/incorrect, but not on history.
 
-	def __str__(self):
-		return '{0:s} [{1:s}]'.format(self.name, self.learner)
+	(It does not depend on direction, because score is kept separately based on what's revealed).
+	"""
+	correct = models.IntegerField(default=+100)
+	incorrect = models.IntegerField(default=-200)
 
 

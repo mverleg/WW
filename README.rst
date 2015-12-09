@@ -29,7 +29,7 @@ Setup
 
     python3 source/manage.py migrate
 
-* Compile translations using (if you get about four paths, it works)::
+* Compile translations using (if you get about five paths, it works)::
 
     python3 source/manage.py makemessages --all --ignore 'env'
     python3 source/manage.py compilemessages

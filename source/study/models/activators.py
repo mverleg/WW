@@ -1,14 +1,18 @@
-from django.db import models
 
-from study.models.profile import StudyProfile
+from django.db import models
+from model_utils.managers import InheritanceManager
+from phrasebook.models import Translation
+from study.models.scorers import BaseScorer
 
 
 class ActiveTranslation(models.Model):
 	"""
-		A user has a set of active phrases he is currently learning - he can limit the number of new ones.
-		The phrases all have a score that is based on correct/incorrect answers (and possibly more); the lowest score phrase is asked next unless shown too recently.
+	A user has a set of active phrases he is currently learning - he can limit the number of new ones.
+	The phrases all have a score that is based on correct/incorrect answers (and possibly more);
+	the lowest score phrase is asked next unless shown too recently.
 	"""
-	scoredb = models.ForeignKey(ScoreDB)
+	scorer = models.ForeignKey(BaseScorer)
+	direction = models.IntegerField()
 	translation = models.ForeignKey(Translation)
 	last_shown = models.PositiveIntegerField()
 	""" Note that score, active and priority are derived properties, stored for performance; it can be recalculated from other data. """
@@ -25,7 +29,7 @@ class ActiveTranslation(models.Model):
 	# 	#see update_learner_actives
 
 	class Meta:
-		unique_together = ('scoredb', 'translation',)
+		unique_together = ('scorer', 'translation',)
 		ordering = ('score',)
 
 	def __str__(self):
@@ -34,15 +38,17 @@ class ActiveTranslation(models.Model):
 
 class BaseActivator(models.Model):
 	"""
-		Determines which cards from enabled lists are activated next.
+	Determines which cards from enabled lists are activated next.
 
-		Non-abstract base class for foreign keys.
+	Non-abstract base class for foreign keys.
 	"""
 	#todo: could be expanded to suggest things like adding complements, examples, etc. when a phrase is activated
 	#todo: make auto-upgrade
 	#todo: how to deal with selector-specific settings?
 	name = models.CharField(max_length = 48)
-	profile = models.ForeignKey(StudyProfile)
+	profile = models.ForeignKey('study.StudyProfile')
+
+	objects = InheritanceManager()
 
 	def update_actives(self):
 		"""
@@ -54,7 +60,7 @@ class BaseActivator(models.Model):
 
 class PriorityLimitedActivator(models.Model):
 	"""
-		Simply activates the highest priority inactive translations until enough translations are active.
+	Simply activates the highest priority inactive translations until enough translations are active.
 	"""
 	bla = 0 #todo
 
@@ -68,6 +74,9 @@ class PriorityLimitedActivator(models.Model):
 # there's a step active[*] -> currently learning[*]
 
 class SimpleSelector(BaseActivator):
+	"""
+	???
+	"""
 	#todo: how to deal with selector-specific settings?
 
 	def _get_all_actives(self):

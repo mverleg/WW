@@ -4,6 +4,10 @@ I was busy implementing the extensive refactoring in studysettings.txt and in st
 Try to get a consistent set of models again and make an image of it (as test and to see if it looks good):
     python source/manage.py graph_models --all-applications --group-models --exclude-models=Session,AbstractBaseUser,PermissionsMixin,Group,Permission,ContentType,LogEntry --output /tmp/models.png
 
+Add note about a translation (e.g. '由 makes it less forceful' - should these have a language?)
+
+Split progress into a separate app
+
 Many relevant issues:
 https://bitbucket.org/mverleg/wernerwords/issues/37/set-up-database-indices-correctly
 https://bitbucket.org/mverleg/wernerwords/issues/21/optional-feedback-about-how-well-you-know

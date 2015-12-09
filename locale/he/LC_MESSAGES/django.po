@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 12:18+0000\n"
+"POT-Creation-Date: 2015-12-09 21:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: source/basics/forms.py:13
+#: source/basics/forms.py:16
 msgid "Known language"
 msgstr ""
 
-#: source/basics/forms.py:14
+#: source/basics/forms.py:17
 msgid "Learning language"
 msgstr ""
 
-#: source/basics/forms.py:19
+#: source/basics/forms.py:23
 msgid "You can't learn the same language you already know."
 msgstr ""
 
@@ -221,55 +221,71 @@ msgstr ""
 msgid "Dutch"
 msgstr ""
 
-#: source/study/forms.py:9
+#: source/study/forms.py:11
 msgid "Solution"
 msgstr ""
 
-#: source/study/forms.py:13
+#: source/study/forms.py:15
 msgid "Type your solution..."
 msgstr ""
 
-#: source/study/templates/study_question.html:21
+#: source/study/forms.py:45
+msgid ""
+"None of the fields is marked as question; you need at least some hint while "
+"studying!"
+msgstr ""
+
+#: source/study/forms.py:46
+msgid ""
+"None of the fields is marked as answer; what are you expected to reply to "
+"the question?"
+msgstr ""
+
+#: source/study/functions.py:112
+msgid "default"
+msgstr ""
+
+#: source/study/templates/study_question.html:23
 #: source/study/templates/study_result.html:17
 msgid "Careful"
 msgstr ""
 
-#: source/study/templates/study_question.html:22
+#: source/study/templates/study_question.html:24
 #: source/study/templates/study_result.html:18
 msgctxt "study anonymous warning base"
 msgid "Your results are not being stored."
 msgstr ""
 
-#: source/study/templates/study_question.html:24
+#: source/study/templates/study_question.html:26
 #: source/study/templates/study_result.html:20
 msgctxt "study anonymous warning mode"
 msgid "Use normal study mode to store results."
 msgstr ""
 
-#: source/study/templates/study_question.html:26
+#: source/study/templates/study_question.html:28
 #: source/study/templates/study_result.html:22
 msgctxt "study anonymous warning login"
 msgid "Log in to store results."
 msgstr ""
 
-#: source/study/templates/study_question.html:33
+#: source/study/templates/study_question.html:35
 #, python-format
 msgctxt "study question header"
 msgid "This %(shown_language)s phrase..."
 msgstr ""
 
-#: source/study/templates/study_question.html:39
+#: source/study/templates/study_question.html:41
 #, python-format
 msgctxt "study question footer"
 msgid "How to say it in %(hidden_language)s?"
 msgstr ""
 
-#: source/study/templates/study_question.html:48
+#: source/study/templates/study_question.html:50
 msgctxt "study question button idk"
 msgid "I don't know"
 msgstr ""
 
-#: source/study/templates/study_question.html:49
+#: source/study/templates/study_question.html:51
 msgctxt "study question button submit"
 msgid "Submit solution"
 msgstr ""

@@ -19,6 +19,7 @@ def choose_language(request, next):
 	form = ChooseLanguagesForm(request.POST or None, initial = {
 		'learn': request.session.get('learn_lang', DEFAULT_LEARN_LANGUAGE),
 		'language': get_language(),
+		'next': next,
 	})
 
 	"""
@@ -36,7 +37,6 @@ def choose_language(request, next):
 		return redirect(request.POST['next'] or '/')
 	return render(request, 'languages.html', {
 		'form': form,
-		'next': next
 	})
 
 

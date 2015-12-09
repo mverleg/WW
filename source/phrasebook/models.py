@@ -7,9 +7,7 @@
 
 from django.core.urlresolvers import reverse
 from django.db import models
-from pinyin import get as to_pinyin
-from basics.functions import get_in_each_language
-from learners.models import Learner
+from basics.functions import get_in_each_language, to_pinyin
 from settings import SUPPORTED_LANGUAGES
 
 
@@ -19,7 +17,7 @@ class Phrase(models.Model):
 	"""
 	#todo you can add e.g. an image here, which would be the same for each language
 	#todo: maybe public_view should not be optional, it would make things easier and more open
-	learner = models.ForeignKey(Learner, blank = True, null = True, default = None)
+	learner = models.ForeignKey('learners.Learner', blank = True, null = True, default = None)
 	public_edit = models.BooleanField(default = True, verbose_name = 'publicly editable')
 
 	def __str__(self):

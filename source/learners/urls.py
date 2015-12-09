@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from learners.views import login, logout, register, password, profile, reset
 
 
-urlpatterns = patterns('',
+urlpatterns = (
 	url(r'^$', lambda request: redirect(reverse('profile_actions')), name = 'profile'),
 	url(r'^login/$', login, name = 'login'),
 	url(r'^logout/$', logout, name = 'logout'),

@@ -1,6 +1,8 @@
 
 {% extends 'frame.html' %}
 
+{% load crispy_forms_tags %}
+
 
 {% block title %}
     Choose your languages
@@ -14,12 +16,13 @@
 
 	<p>Here you can choose the language you want to study, in which the phrases will be displayed.</p>
 
-	<form role="form" action="{% url 'choose_languages' %}" method="POST">
-	    {{ form|as_bootstrap }}
+	{% crispy form %}
+	{% comment %}<form role="form" action="{% url 'choose_languages' %}" method="POST">
+	    {% crispy form %}
 		<input type="hidden" name="next" value="{{ next }}" />
 		{% csrf_token %}
 		<button type="submit" class="btn btn-success">Save</button>
-	</form>
+	</form>{% endcomment %}
 
 	<p>(This requires session cookies to be enabled.)</p>
 

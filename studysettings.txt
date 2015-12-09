@@ -2,6 +2,8 @@
 remove confusion due to multiple uses of the name "active"
 might need to store current display mode somewhere too
 split score depending on what is shown!!
+score kept separately based on what is revealed (using mode hash perhaps)
+test DisplayMode.hash and __str__
 
 
 *** PROFILE ****
@@ -21,6 +23,7 @@ bookkeeping of scores (multiple profiles can share score)
 limit consecutive updates in one day
 what counts as learned
 cache_expired flag (need_active_update)
+more or less score depending on ask direction
 
 
 *** ACTIVATOR ***
@@ -40,7 +43,7 @@ repeat incorrect ones quickly?
 
 
 measure how long each card takes?
-Always store score etc on learning language, not on phrase, since you might learn the same phrase in multiple languages
+Always store score etc on learning language translation, not on phrase, since you might learn the same phrase in multiple languages
 What about studying a specific list?
 How exactly is a card activated (in the part-of-phrases-being-shown set)? -> create ActiveTranslation
 

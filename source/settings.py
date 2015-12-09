@@ -25,8 +25,8 @@ SUPPORTED_LANGUAGES = (
 	('nl', _('Dutch')),
 )
 #SUPPORTED_LANGUAGES = DEFAULT_LANGUAGES  # replace this if you want to limit the available languages
-DEFAULT_KNOWN_LANGUAGE = 'en-gb'
-DEFAULT_LEARN_LANGUAGE = 'zh-cn'
+# DEFAULT_KNOWN_LANGUAGE = 'en-gb' # removed because it's always the user language
+DEFAULT_LEARN_LANGUAGE = 'en-gb'
 
 # Build paths inside the project like this: join(BASE_DIR, ...)
 BASE_DIR = dirname(dirname(__file__))
@@ -41,8 +41,6 @@ SECRET_KEY = '=)z3(+)z!jaizz^$ggqme0q)49vy2qs-9g+5@h&340qopx^$4w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
 ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'learners.Learner'
@@ -56,6 +54,7 @@ INSTALLED_APPS = (
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
+	'crispy_forms',
 	'haystack',
 	'basics',
 	'learners',
@@ -86,17 +85,29 @@ MIDDLEWARE_CLASSES = (
 	'basics.middleware.SetLearningLanguage'  # should be after LocaleMiddleWare
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-	'django.contrib.auth.context_processors.auth',
-	'django.core.context_processors.debug',
-	'django.core.context_processors.i18n',
-	'django.core.context_processors.media',
-	'django.core.context_processors.static',
-	'django.core.context_processors.tz',
-	'django.contrib.messages.context_processors.messages',
-	'django.core.context_processors.request',
-	'basics.context.statistics',
-)
+TEMPLATES = [
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				# Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+				# list if you haven't customized them:
+				'django.contrib.auth.context_processors.auth',
+				'django.template.context_processors.debug',
+				'django.template.context_processors.i18n',
+				'django.template.context_processors.media',
+				'django.template.context_processors.static',
+				'django.template.context_processors.tz',
+				'django.contrib.messages.context_processors.messages',
+				'django.core.context_processors.request',
+				'basics.context.statistics',
+			],
+		},
+	},
+]
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
@@ -147,10 +158,6 @@ STATIC_ROOT = join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = join(BASE_DIR, 'media')
 
-TEMPLATE_DIRS = (
-	join(BASE_DIR,  'templates'),
-)
-
 # search engine
 # http://django-haystack.readthedocs.org/en/latest/tutorial.html
 # should probably be changed once performance becomes an issue
@@ -172,7 +179,7 @@ try:
 			fh.write('ALLOWED_HOSTS = [\'localhost\', \'.localhost.markv.nl\',]\n\n')
 			fh.write('SECRET_KEY = "{0:s}"\n\n'.format(''.join(SystemRandom().choice(string.ascii_letters + string.digits + '#$%&()*+,-./:;?@[]^_`{|}~') for _ in range(50))))
 			fh.write('NOTIFICATION_PATH = join(BASE_DIR, \'notification.html\')\n\n')
-			fh.write('TEMPLATE_DEBUG = DEBUG = True\n\n\n')
+			fh.write('DEBUG = True\n\n\n')
 except Exception as err:
 	print('could not create local.py settings file: {0:s}'.format(str(err)))
 

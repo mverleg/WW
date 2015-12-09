@@ -8,6 +8,7 @@ from django import forms
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import PasswordChangeForm
 from learners.models import Learner
+from study.models import StudyProfile
 
 User = get_user_model()
 
@@ -42,10 +43,9 @@ PasswordForm = PasswordChangeForm
 
 class ProfileForm(forms.ModelForm):
 	class Meta:
-		model = get_user_model()
-		#todo: ask_direction should be a slider
-		fields = ('name', 'ask_direction', 'favor_unknown', 'minimum_delay', 'new_count', 'show_medium_correctness',
-			'show_correct_count', 'reward_magnitude',)
+		#todo: need large rewrite
+		model = StudyProfile
+		fields = ('name', 'learn_language', 'known_language',)
 
 
 class RegistrationForm(forms.ModelForm):
@@ -66,7 +66,7 @@ class RegistrationForm(forms.ModelForm):
 			raise forms.ValidationError('The passwords are not the same!')
 		return password
 
-	def save(self, commit = True):
+	def save(self, commit=True):
 		user = super(RegistrationForm, self).save(commit = False)
 		password = self.cleaned_data.get('password')
 		user.set_password(password)

@@ -1,10 +1,10 @@
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import HiddenInput
 from django.utils.translation import ugettext_lazy as _
-
 from phrasebook.models import Translation
-from study.models.profile import DisplaySettings, DisplayMode
+from study.models import DisplayMode
 
 
 class SolutionForm(forms.Form):
@@ -14,6 +14,7 @@ class SolutionForm(forms.Form):
 		super(SolutionForm, self).__init__(*args, **kwargs)
 		self.FIELDS['solution'].widget.attrs['placeholder'] = _('Type your solution...')
 		self.FIELDS['solution'].widget.attrs['autofocus'] = 'autofocus'
+		self.FIELDS['solution'].widget.attrs['autocomplete'] = 'off'
 
 
 class AnonStudyForm(SolutionForm):
