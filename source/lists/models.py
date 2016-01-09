@@ -12,6 +12,7 @@ class TranslationsList(models.Model):
 	translations = models.ManyToManyField(Translation, related_name = 'lists', blank = True)
 	public = models.BooleanField(default = True, help_text = 'Can anyone follow this list?')
 	language = models.CharField(choices = SUPPORTED_LANGUAGES, max_length = 8, blank = True, null = True, help_text = 'You can select the language to learn for this list, or leave it blank for a mixed-language list.')
+	note = models.TextField(default='', blank=True, help_text='If you found these entries somewhere, you can add the source here.')
 
 	class Meta:
 		verbose_name = 'list'
