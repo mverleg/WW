@@ -3,7 +3,7 @@
 	This file is like the index in a book: it shows which url will lead to which code.
 """
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 from basics.search import search
@@ -11,7 +11,7 @@ from basics.views import choose_language
 import learners.urls, lists.urls, opinions.urls, phrasebook.urls, study.urls, importing.urls
 
 
-urlpatterns = (
+urlpatterns = [
 	url(r'^$', TemplateView.as_view(template_name = 'home.html'), name = 'home'),
 	url(r'^about/$', TemplateView.as_view(template_name = 'about.html'), name = 'about'),
 	url(r'^about/study/$', TemplateView.as_view(template_name = 'about_study.html'), name = 'about_study'),
@@ -24,6 +24,6 @@ urlpatterns = (
 	url(r'^import/', include(importing.urls)),
 	url(r'^languages/$', choose_language, name = 'choose_languages'),
 	url(r'^admin/', include(admin.site.urls)),
-)
+]
 
 

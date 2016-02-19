@@ -1,5 +1,5 @@
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from lists.views import show_list, user_lists, all_lists, add_list, edit_list, delete_list, follow_list, unfollow_list, \
@@ -7,7 +7,7 @@ from lists.views import show_list, user_lists, all_lists, add_list, edit_list, d
 	list_activities
 
 
-urlpatterns = (
+urlpatterns = [
 	url(r'^(?P<pk>\d+)-(?P<slug>[-\w]+)/$', show_list, name = 'show_list'),
 	url(r'^(?P<pk>\d+)/$', show_list, name = 'show_list'),
 	url(r'^my/$', user_lists, name = 'user_lists'),
@@ -27,6 +27,6 @@ urlpatterns = (
 	url(r'^insert/(?P<pk>\d+)/$', add_translation_by_pk, name = 'insert_translation_pk'),
 	url(r'^remove/$', remove_translation, name = 'remove_translation'),
 	url(r'^$', lambda request: redirect(reverse('user_lists'))),
-)
+]
 
 
