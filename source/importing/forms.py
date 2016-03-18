@@ -1,7 +1,10 @@
-import string
+
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django import forms
-from re import findall
+from re import findall, split
+from lists.models import TranslationsList, ListAccess
+from phrasebook.models import Translation, Phrase
 
 
 class ImportForm(forms.Form):
@@ -46,6 +49,14 @@ class ChinesepodForm(forms.Form):
 		return session
 
 
-#CPODSESSID=g43q7j96ho4579tds23djilkq2; expires=Sun, 17 Jul 2016 10:07:42 GMT; path=/; domain=.chinesepod.com
+class TextForm(forms.Form):
+	text = forms.CharField(required=True, widget = forms.Textarea(attrs=dict(rows=20, cols=100)))
+	list = forms.ModelChoiceField(TranslationsList)
+	public_edit = forms.BooleanField(initial=True, label='Publicly editable')
+
+	def __init__(self, learner, *args, **kwargs):
+		super(TextForm, self).__init__(*args, **kwargs)
+		self.fields['list'].queryset = TranslationsList.objects.filter(followers__in=
+			ListAccess.objects.filter(learner=learner, access=ListAccess.EDIT))
 
 

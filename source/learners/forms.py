@@ -20,7 +20,7 @@ class EmailLoginForm(forms.Form):
 
 	def __init__(self, *args, **kwargs):
 		super(EmailLoginForm, self).__init__(*args, **kwargs)
-		self.FIELDS['email'].widget.attrs['placeholder'] = 'email@address.com'
+		self.fields['email'].widget.attrs['placeholder'] = 'email@address.com'
 
 	def clean(self):
 		identifier = self.cleaned_data.get('email')
@@ -81,7 +81,8 @@ class IdentifyUserByEmail(forms.Form):
 
 	def __init__(self, *args, **kwargs):
 		super(IdentifyUserByEmail, self).__init__(*args, **kwargs)
-		self.FIELDS['email'].widget.attrs.update({'style': "width: 700px; max-width: 100%;", 'class': "form-control", 'placeholder': "follower email..."})
+		self.fields['email'].widget.attrs.update({'style': "width: 700px; max-width: 100%;", 'class': "form-control",
+			'placeholder': "follower email..."})
 
 	def clean_email(self):
 		email = self.cleaned_data['email']

@@ -17,8 +17,8 @@ class Phrase(models.Model):
 	"""
 	#todo you can add e.g. an image here, which would be the same for each language
 	#todo: maybe public_view should not be optional, it would make things easier and more open
-	learner = models.ForeignKey('learners.Learner', blank = True, null = True, default = None)
-	public_edit = models.BooleanField(default = True, verbose_name = 'publicly editable')
+	learner = models.ForeignKey('learners.Learner', blank=True, null=True, default=None)
+	public_edit = models.BooleanField(default=True, verbose_name='publicly editable')
 
 	def __str__(self):
 		return 'phrase #%d' % self.pk

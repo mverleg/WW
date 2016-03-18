@@ -1,11 +1,13 @@
-
+from re import split
 from urllib.request import build_opener
+
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.shortcuts import render
 from basics.views import notification
-from importing.forms import ImportForm, ChinesepodForm
+from importing.forms import ImportForm, ChinesepodForm, TextForm
 from lists.models import TranslationsList, ListAccess
 from phrasebook.models import Phrase
 from phrasebook.models import Translation
@@ -99,3 +101,44 @@ def import_chinesepod_dialogue(request):
 	})
 
 
+LANG_CODES = set(lang[0] for lang in settings.LANGUAGES)
+
+
+@login_required
+def import_structured_text(request, limit=100):
+	#todo: search for duplicates
+	form = TextForm(request.user)
+	if form.is_valid():
+		added_count = 0
+		trans_li = form.cleaned_data['list']
+		phrases = split(r'\s*\n\s*\n\s*', form.cleaned_data['text'])
+		for phrasetxt in phrases:
+			if not phrasetxt.strip():
+				continue
+			phrase = Phrase(learner=request.user, public_edit=form.cleaned_data['public_edit'])
+			phrase.save()
+			first = True
+			translationtxts = phrasetxt.split('\n')
+			for transtxt in translationtxts:
+				try:
+					langcode, txt = transtxt.split(None, maxsplit=1)
+				except ValueError:
+					return notification(request, 'like "{0:s}" seems not to consist of a langauge code + text'.format(
+						transtxt))
+				if not langcode in LANG_CODES:
+					return notification(request, 'unknown language {0:s}; try one of {1:s}'.format(langcode,
+						', '.join(LANG_CODES)))
+				translation = Translation(phrase=phrase, langauge=langcode, text=txt)
+				translation.save()
+				added_count += 1
+				if first:
+					trans_li.translations.add(translation)
+					first=False
+				if added_count >= limit:
+					return notification(request, ('Only {0:d} translations were added, the rest was skipped because '
+						'the limit per submission was exceeded').format(added_count))
+		return notification(request, 'All {0:d} translations added'.format(added_count))
+	return render(request, 'import_structured_text.html', {
+		'lang_codes': LANG_CODES,
+		'form': LANG_CODES,
+	})

@@ -1,0 +1,43 @@
+
+{% extends 'frame.html' %}
+
+{% load basictags %}
+
+
+{% block title %}
+	Import structured text
+	-
+	{{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+	<h1>Import structured text</h1>
+
+	<p>
+		This page can be used to import a lot of phrases into a list. The structure of the text should strictly be a
+		block of lines, each starting with a language code and containing precisely one translation. An empty line
+		should be used between different batches of translations (e.g. texts that are not eachother's translation).
+		The acceptable language codes are:
+		{% for lang_code in lang_codes %}
+			<var>{{ lang_code }}</var>
+		{% endif %}
+	</p>
+
+	<code>
+	nl Goedemorgen
+	en-gb Good morning
+
+	let's see later
+	</code>
+
+	<form role="form" action="." method="POST">
+        {{ form|as_bootstrap }}
+{#		<input type="hidden" name="next" value="{{ next }}" />#}
+		{% csrf_token %}
+		<button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-arrow-down"></i> Import</button>
+	</form>
+
+{% endblock content %}
+
+
